@@ -172,6 +172,7 @@ public class BoniGarciaPageTests {
             prevButton = driver.findElement(By.xpath("//a[text()='Previous']"));
         }
         assertThat(driver.findElement(By.cssSelector("p.lead")).getText()).isEqualTo("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+
     }
 
 
