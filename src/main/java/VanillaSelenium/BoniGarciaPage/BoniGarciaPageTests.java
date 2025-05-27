@@ -7,7 +7,9 @@
 package VanillaSelenium.BoniGarciaPage;
 
 import ch.qos.logback.core.spi.LogbackLock;
+import ch.qos.logback.core.util.FileUtil;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.apache.commons.io.FileUtils;
 import org.apache.hc.core5.util.Asserts;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -17,6 +19,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.LoggerFactory;
@@ -25,10 +28,16 @@ import ch.qos.logback.core.*;
 import org.slf4j.Logger;
 
 import static java.lang.invoke.MethodHandles.lookup;
+import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.*;
 
 
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Array;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -46,8 +55,12 @@ public class BoniGarciaPageTests {
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     Logger logger = LoggerFactory.getLogger(lookup().lookupClass());
     Actions actions;
-    Random random = new Random();
+    Random random = new Random(4);
     JavascriptExecutor js;
+    LocalDateTime localDateTime = LocalDateTime.now();
+
+
+
 
 
     @BeforeClass
@@ -60,6 +73,12 @@ public class BoniGarciaPageTests {
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(10));*/
+    }
+
+
+    @AfterClass
+    public void end(){
+        driver.quit();
     }
 
 
@@ -242,9 +261,7 @@ public class BoniGarciaPageTests {
         int scale = 10;
 
         List<Point> heartCoords = HeartCoordinatesGenerator.generateHeartPoints(centerX, centerY, scale, 50);
-
         Point canvasLocation = canvas.getLocation();
-
         Point prev = heartCoords.get(0);
         int startX = prev.x - canvasLocation.getX();
         int startY = prev.y - canvasLocation.getY();
@@ -259,11 +276,7 @@ public class BoniGarciaPageTests {
             actions.moveByOffset(dx, dy);
             prev = current;
         }
-
         actions.release().build().perform();
-
-
-
     }
 
 
@@ -282,12 +295,63 @@ public class BoniGarciaPageTests {
         }
     }
 
+    @Test
+    void test8(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html");
+        FluentWait<WebDriver> fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(3))
+                .withMessage("Czekam na element")
+                .withTimeout(Duration.ofSeconds(45));
+        fluentWait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector("div > img"), 4));
+        WebElement landscapeImg = driver.findElement(By.cssSelector("div > img#landscape"));
+        assertThat(landscapeImg.isDisplayed()).isTrue();
 
+    }
 
+    @Test
+    void test9(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html");
+        WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
+        assertThat(header.getText()).isEqualTo("Slow calculator");
+        WebElement calculator = driver.findElement(By.id("calculator"));
+        WebElement delayInput = driver.findElement(By.id("delay"));
+        useBtn("5", calculator);
+        useBtn("+", calculator);
+        useBtn("6", calculator);
+        useBtn("-", calculator);
+        useBtn("8", calculator);
+        useBtn("=", calculator);
+        WebElement spinner = driver.findElement(By.id("spinner"));
+        logger.info("Kalkulator będzie czekać na wynik {} sekund", delayInput.getAttribute("value"));
+        wait.until(ExpectedConditions.visibilityOf(spinner));
+        wait.until(ExpectedConditions.invisibilityOf(spinner));
+        logger.info("Wynik działania to: {}", driver.findElement(By.cssSelector("div.screen")).getText());
+    }
 
-    @AfterClass
-    public void end(){
-        driver.quit();
+    public static void useBtn(String x, WebElement e) {
+        e.findElement(By.xpath(String.format("//*[text()='%s']", x))).click();
+    }
+    @Test
+    void test10() throws IOException {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/long-page.html");
+        WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
+        assertThat(header.getText()).isEqualTo("This is a long page");
+        actions = new Actions(driver);
+        WebElement lastParagraph = driver.findElement(By.cssSelector("p:last-of-type"));
+        actions.scrollToElement(lastParagraph);
+//        File screenshot = wait.until(ExpectedConditions.visibilityOf(lastParagraph)).getScreenshotAs(OutputType.FILE);
+        assertThat(lastParagraph.isDisplayed()).isTrue();
+         TakesScreenshot ts = (TakesScreenshot) driver;
+//      File screenshot = ts.getScreenshotAs(OutputType.FILE);
+        File screenshot = lastParagraph.getScreenshotAs(OutputType.FILE);
+        DateTimeFormatter dt = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm");
+        String formattedDate = dt.format(localDateTime);
+
+        Path destination = Paths.get(formattedDate.concat("--").concat(String.valueOf(random.nextInt())).concat(".png"));
+        try {
+            Files.move(screenshot.toPath(), destination, REPLACE_EXISTING);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
 
