@@ -11,6 +11,7 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.hc.core5.util.Asserts;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.Color;
@@ -38,16 +39,23 @@ import java.util.logging.Level;
 
 public class BoniGarciaPageTests {
 
+    ChromeOptions options = new ChromeOptions();
+
+
     WebDriver driver;
     WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     Logger logger = LoggerFactory.getLogger(lookup().lookupClass());
+    Actions actions;
     Random random = new Random();
+    JavascriptExecutor js;
+
 
     @BeforeClass
     public void webDriverInitialize() {
         WebDriverManager.chromedriver()
                 .setup();
-        driver = new ChromeDriver();
+        options.addArguments("--kiosk");
+        driver = new ChromeDriver(options);
         /* wyłączone ze względu na ExpliciteWait
         driver.manage()
                 .timeouts()
@@ -175,7 +183,104 @@ public class BoniGarciaPageTests {
 
     }
 
+    @Test
+    void test4(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/dropdown-menu.html");
+        assertThat(driver.findElement(By.cssSelector("h1.display-6")).getText()).isEqualTo("Dropdown menu");
+        actions = new Actions(driver);
+        WebElement dropdownBtn1 = driver.findElement(By.id("my-dropdown-1"));
+        actions.click(dropdownBtn1).build().perform();
+        assertThat(driver.findElement(By.xpath("//ul[@class='dropdown-menu show']")).isDisplayed()).isTrue();
+        WebElement dropdownBtn2 = driver.findElement(By.id("my-dropdown-2"));
+        actions.contextClick(dropdownBtn2).build().perform();
+        assertThat(driver.findElement(By.id("context-menu-2")).isDisplayed()).isTrue();
+        WebElement dropdownBtn3 = driver.findElement(By.id("my-dropdown-3"));
+        actions.doubleClick(dropdownBtn3).build().perform();
+        assertThat(driver.findElement(By.id("context-menu-3")).isDisplayed()).isTrue();
+    }
 
+    @Test
+    void test5(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/mouse-over.html");
+        List<WebElement> imgList = driver.findElements(By.cssSelector("div > img.img-fluid"));
+        String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
+        actions = new Actions(driver);
+        for (int i = 0; i < imgList.size(); i++){
+            actions.moveToElement(imgList.get(i)).build().perform();
+            assertThat(driver.findElement(By.xpath(String.format("//*[text()='%s']", imgCaptions[i]))).isDisplayed()).isTrue();
+        }
+    }
+
+    @Test
+    void test6(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/drag-and-drop.html");
+        assertThat(driver.findElement(By.xpath("//h1[text()='Drag and drop']")).isDisplayed()).isTrue();
+        WebElement draggablePanel = driver.findElement(By.id("draggable"));
+        WebElement target = driver.findElement(By.id("target"));
+        Point elementLocal = draggablePanel.getLocation();
+        actions = new Actions(driver);
+        actions.clickAndHold(draggablePanel).moveToElement(target).build().perform();
+        Point movedLocal = draggablePanel.getLocation();
+        assertThat(movedLocal).isNotEqualTo(elementLocal);
+        logger.info("Pierwonta lokalizacja elementu to: {}, po przeniesieniu znajduje się w miejscu: {}", elementLocal, movedLocal);
+
+    }
+
+    @Test
+    void test7(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/draw-in-canvas.html");
+        WebElement canvas = driver.findElement(By.id("my-canvas"));
+        js = (JavascriptExecutor) driver;
+        js.executeScript("arguments[0].setAttribute('height', 700)", canvas);
+        assertThat(canvas.getDomAttribute("height")).isEqualTo("700");
+        actions = new Actions(driver);
+        int canvasWidth = canvas.getSize().getWidth();
+        int canvasHeight = canvas.getSize().getHeight();
+
+        int centerX = canvasWidth - 100;
+        int centerY = canvasHeight - 500;
+        int scale = 10;
+
+        List<Point> heartCoords = HeartCoordinatesGenerator.generateHeartPoints(centerX, centerY, scale, 50);
+
+        Point canvasLocation = canvas.getLocation();
+
+        Point prev = heartCoords.get(0);
+        int startX = prev.x - canvasLocation.getX();
+        int startY = prev.y - canvasLocation.getY();
+
+        Actions actions = new Actions(driver);
+        actions.moveToElement(canvas, startX, startY).clickAndHold();
+
+        for (int i = 1; i < heartCoords.size(); i++) {
+            Point current = heartCoords.get(i);
+            int dx = current.x - prev.x;
+            int dy = current.y - prev.y;
+            actions.moveByOffset(dx, dy);
+            prev = current;
+        }
+
+        actions.release().build().perform();
+
+
+
+    }
+
+
+    public class HeartCoordinatesGenerator {
+        public static List<Point> generateHeartPoints(int centerX, int centerY, int scale, int numPoints) {
+            List<Point> points = new ArrayList<>();
+            for (int i = 0; i <= numPoints; i++) {
+                double t = 2 * Math.PI * i / numPoints;
+                double x = 16 * Math.pow(Math.sin(t), 3);
+                double y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+                int px = centerX + (int)(x * scale);
+                int py = centerY - (int)(y * scale);
+                points.add(new Point(px, py));
+            }
+            return points;
+        }
+    }
 
 
 
