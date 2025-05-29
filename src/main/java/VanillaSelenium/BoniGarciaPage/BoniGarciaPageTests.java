@@ -308,7 +308,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test9(){
+    void test9SlowCalculator(){
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html");
         WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
         assertThat(header.getText()).isEqualTo("Slow calculator");
@@ -331,7 +331,7 @@ public class BoniGarciaPageTests {
         e.findElement(By.xpath(String.format("//*[text()='%s']", x))).click();
     }
     @Test
-    void test10() throws IOException {
+    void test10LongPage() throws IOException {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/long-page.html");
         WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
         assertThat(header.getText()).isEqualTo("This is a long page");
@@ -353,6 +353,45 @@ public class BoniGarciaPageTests {
             throw new RuntimeException(e);
         }
     }
+
+    @Test
+    void test11InfiniteScroll(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/infinite-scroll.html");
+        WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
+        assertThat(header.getText()).isEqualTo("Infinite scroll");
+        int scrollTimes = 5;
+        js = (JavascriptExecutor) driver;
+        wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+
+
+        String getPageHeight = "return document.body.scrollHeight";
+        Long initialHeight = (Long) js.executeScript(getPageHeight);
+        for (int i = 0; i < scrollTimes; i++){
+            int numberOfParagraphs = driver.findElements(By.tagName("p")).size();
+            js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+            wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.tagName("p"), numberOfParagraphs));
+        }
+        Long endinglHeight = (Long) js.executeScript(getPageHeight);
+
+        logger.info("Początkowa wysokość strony to {}, a końcowa wysokość to {}", initialHeight, endinglHeight );
+    }
+
+    @Test
+    void test12ShadowDOM(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/shadow-dom.html");
+        WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
+        assertThat(header.getText()).isEqualTo("Shadow DOM");
+        List<WebElement> elems = driver.findElements(By.xpath("//p[text()='Hello Shadow DOM']"));
+        assertThat(elems).isEmpty();
+        WebElement shadowHost  = driver.findElement(By.id("content"));
+        SearchContext shadowParagraph = shadowHost.getShadowRoot();
+        String shadowParagraphText = shadowParagraph.findElement(By.cssSelector("p")).getText();
+        logger.info("Treść shadowelementu to: {}", shadowParagraphText);
+
+    }
+
+
+
 
 
 }
