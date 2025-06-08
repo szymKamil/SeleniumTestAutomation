@@ -8,14 +8,37 @@ package VanillaSelenium.BoniGarciaPage;
 
 import ch.qos.logback.core.spi.LogbackLock;
 import ch.qos.logback.core.util.FileUtil;
+import com.google.common.collect.ImmutableList;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.hc.core5.util.Asserts;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.DevToolsException;
+import org.openqa.selenium.devtools.idealized.target.model.TargetInfo;
+import org.openqa.selenium.devtools.v135.browser.model.Bucket;
+import org.openqa.selenium.devtools.v135.dom.DOM;
+import org.openqa.selenium.devtools.v137.browser.model.BrowserContextID;
+import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
+import org.openqa.selenium.devtools.v137.domstorage.model.Item;
+import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
+import org.openqa.selenium.devtools.v137.page.Page;
+import org.openqa.selenium.devtools.v137.page.model.Frame;
+import org.openqa.selenium.devtools.v137.page.model.FrameId;
+import org.openqa.selenium.devtools.v137.page.model.FrameTree;
+import org.openqa.selenium.devtools.v137.storage.model.StorageBucket;
+import org.openqa.selenium.devtools.v137.storage.Storage;
+import org.openqa.selenium.devtools.v137.storage.model.*;
+import org.openqa.selenium.devtools.v137.target.Target;
+import org.openqa.selenium.devtools.v137.target.model.TargetID;
+import org.openqa.selenium.html5.LocalStorage;
+import org.openqa.selenium.html5.SessionStorage;
+import org.openqa.selenium.html5.WebStorage;
 import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -26,15 +49,19 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 import ch.qos.logback.core.*;
 import org.slf4j.Logger;
+import org. openqa. selenium. devtools. idealized. target. model. TargetInfo;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.*;
+import org.openqa.selenium.devtools.DevTools;
 
 
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,6 +70,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
@@ -52,13 +80,13 @@ public class BoniGarciaPageTests {
 
 
     WebDriver driver;
-    WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+    WebDriverWait wait;
     Logger logger = LoggerFactory.getLogger(lookup().lookupClass());
     Actions actions;
     Random random = new Random(4);
     JavascriptExecutor js;
     LocalDateTime localDateTime = LocalDateTime.now();
-
+    DevTools devTools;
 
 
 
@@ -73,6 +101,9 @@ public class BoniGarciaPageTests {
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(10));*/
+        wait =  new WebDriverWait(driver, Duration.ofSeconds(30));
+        js = (JavascriptExecutor) driver;
+        devTools = ((ChromeDriver) driver).getDevTools();
     }
 
 
@@ -390,8 +421,274 @@ public class BoniGarciaPageTests {
 
     }
 
+    @Test
+    void test13Cookies(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/cookies.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Cookies']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement cookiesBtn = driver.findElement(By.id("refresh-cookies"));
+        wait.until(ExpectedConditions.visibilityOf(cookiesBtn));
+        cookiesBtn.click();
+        WebElement paragraph = driver.findElement(By.id("cookies-list"));
+        String cookiesInfo = paragraph.getText().trim().replace("\n", " ");
+        logger.info("Dane widoczne w ciasteczkach: {}", cookiesInfo);
+        Set<Cookie> cookies = driver.manage().getCookies();
+        cookies.forEach(System.out::println);
+//        Cookie username = cookies.stream().filter(c -> c.equals("username")).findAny().get();
+//        logger.info("Ciasteczko ma dane = {}", username.getName());
+        Cookie usename = driver.manage().getCookieNamed("username");
+        logger.info(usename.toString());
+        driver.manage().deleteCookie(usename);
+        Cookie newUsernameCookie = new Cookie("username", "Jan Kowalski");
+        driver.manage().addCookie(newUsernameCookie);
+        cookiesBtn.click();
+        cookiesInfo = paragraph.getText().trim().replace("\n", " ");
+        logger.info("Dane widoczne w ciasteczkach: {}", cookiesInfo);
+
+    }
+
+    @Test
+    void test14Frames(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/frames.html");
+        String frameName = "frame-body";
+        wait.until(ExpectedConditions.presenceOfElementLocated(By.name(frameName)));
+        driver.switchTo().frame("frame-header");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Frames']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        driver.switchTo().defaultContent();
+        driver.switchTo().frame("frame-body");
+        By pName = By.tagName("p");
+        wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(pName, 0));
+        List<WebElement> paragraphs = driver.findElements(pName);
+        assertThat(paragraphs).hasSize(20);
+    }
+
+    @Test
+    void test15iFrames(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/iframes.html");
+        WebElement iFrame = driver.findElement(By.id("my-iframe"));
+        driver.switchTo().frame(iFrame);
+        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        WebElement lastP = driver.findElement(By.xpath("//p[last()]"));
+        assertThat(lastP.getText()).contains("Magnis feugiat natoque proin commodo laoreet mauris, " +
+                "odio ligula sagittis montes dapibus fames ultricies, interdum ridiculus volutpat aenean pulvinar.");
+
+    }
+
+    @Test
+    void test16DialogBoxes(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/dialog-boxes.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Dialog boxes']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement alertBtn = driver.findElement(By.id("my-alert"));
+        WebElement confirmBtn = driver.findElement(By.id("my-confirm"));
+        WebElement promptmBtn = driver.findElement(By.id("my-prompt"));
+        WebElement modalBtn = driver.findElement(By.id("my-modal"));
+        List<WebElement> buttons = List.of(alertBtn, confirmBtn, promptmBtn, modalBtn);
+        wait.until(ExpectedConditions.visibilityOfAllElements(buttons));
+        alertBtn.click();
+        wait.until(ExpectedConditions.alertIsPresent());
+        String alertBtnText = driver.switchTo().alert().getText();
+        driver.switchTo().alert().accept();
+        confirmBtn.click();
+        String confirmBtnText = driver.switchTo().alert().getText();
+        driver.switchTo().alert().dismiss();
+        promptmBtn.click();
+        String promptBtnText = driver.switchTo().alert().getText();
+        String promptMessaage =  "My name is John";
+        driver.switchTo().alert().sendKeys(promptMessaage);
+        driver.switchTo().alert().accept();
+        WebElement promptMessageDisp = driver.findElement(By.id("prompt-text"));
+        String promptMsg = promptMessageDisp.getText();
+        modalBtn.click();
+        WebElement modalWindow = driver.findElement(By.id("example-modal"));
+        String modalText = modalWindow.getText();
+        WebElement modalFormBtn = driver.findElement(By.cssSelector("button.btn-primary"));
+        wait.until(ExpectedConditions.elementToBeClickable(modalFormBtn));
+        modalFormBtn.click();
+        logger.info("Po użyciu przycisków mamy następujące informacje: {}, {}, {}, {}, {}, {}", alertBtnText, confirmBtnText, promptBtnText, promptBtnText, promptMsg, modalText);
+    }
+
+    @Test
+    void test17WebStorage() {
+        String page = "https://bonigarcia.dev/selenium-webdriver-java/web-storage.html";
+        driver.get(page);
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Web storage']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        devTools.createSession();
+        devTools.send(Storage.clearDataForOrigin(driver.getCurrentUrl(), "local_storage"));
+        js.executeScript("""
+                let existing = localStorage.getItem('notes') || '';
+                localStorage.setItem('notes', existing + ' | nowy wpis');""");
+
+        FrameTree frameTree = devTools.send(Page.getFrameTree());
+        frameTree.getChildFrames();
+        Frame mainFrame = frameTree.getFrame();
+        FrameId mainFrameId = mainFrame.getId();
+        System.out.println("ID ramki głównej: " + mainFrameId.toString());
+        StorageId localStorageId = new StorageId(
+                Optional.of(page), // Security Origin
+                Optional.empty(), // StorageKey - zazwyczaj null
+                true  // isLocalStorage = true
+        );
 
 
+
+
+
+        try {
+            devTools.send(DOMStorage.enable());
+            devTools.send(DOMStorage.setDOMStorageItem(localStorageId, "Anna", "Gacek"));
+            var elements = devTools.send(DOMStorage.getDOMStorageItems(localStorageId));
+
+
+
+            elements.forEach(System.out::println);
+        } catch (Exception e) {
+            e.getMessage();
+        }
+
+        try {
+            Thread.sleep(Duration.ofSeconds(20));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+
+
+    }
+
+
+
+    @Test
+    public void test0000(){
+        ChromeDriver driver = new ChromeDriver();
+        DevTools devTools = driver.getDevTools();
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+// Krok 1: Utwórz sesję i włącz potrzebne domeny na samym początku.
+        devTools.createSession();
+        devTools.send(DOMStorage.enable());
+
+// Krok 2: Nawiguj na stronę.
+        String initialUrl = "https://bonigarcia.dev/selenium-webdriver-java/web-storage.html";
+        driver.get(initialUrl);
+
+// Krok 3: Użyj jawnego oczekiwania, aby upewnić się, że strona jest interaktywna.
+// To dobry pierwszy krok do synchronizacji.
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Web storage']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+
+// Krok 4 (NAJWAŻNIEJSZY): Zbuduj StorageId DOPIERO TERAZ, używając aktualnego stanu przeglądarki.
+        String currentUrl = driver.getCurrentUrl();
+        System.out.println("Używam aktualnego URL do stworzenia StorageId: " + currentUrl);
+
+        StorageId localStorageId = new StorageId(
+                Optional.of(currentUrl),
+                Optional.empty(),
+                true // Celujemy w LocalStorage
+        );
+
+// Krok 5: Wykonaj operację CDP.
+// Umieszczenie tego w bloku try-catch pomoże w dalszym debugowaniu.
+        try {
+            devTools.send(DOMStorage.setDOMStorageItem(localStorageId, "klucz_cdp", "wartosc_cdp"));
+            System.out.println("Operacja CDP na LocalStorage zakończona sukcesem.");
+        } catch (Exception e) {
+            System.err.println("BŁĄD podczas operacji CDP! Analiza:");
+            System.err.println("Użyty URL: " + currentUrl);
+            System.err.println("Wyjątek: " + e.getMessage());
+            // Jeśli błąd nadal występuje, możesz dodać tu małą pauzę (tylko do debugowania!)
+            // aby sprawdzić, czy to na pewno race condition.
+            // Thread.sleep(500);
+        }
+
+        driver.quit();
+
+    }
+
+
+    @Test
+    public void test213123124() throws InterruptedException{
+        try {
+            // Utwórz sesję DevTools na początku
+            devTools.createSession();
+
+            // --- Krok 1: Otwórz stronę główną i zapamiętaj jej uchwyt ---
+            driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+            String originalTabHandle = driver.getWindowHandle();
+            System.out.println("Otwarto oryginalną zakładkę: " + driver.getTitle());
+
+            // --- Krok 2: Otwórz nową zakładkę i przejdź na inną stronę ---
+            driver.switchTo().newWindow(WindowType.TAB);
+            driver.get("https://www.selenium.dev/documentation/");
+            System.out.println("Otwarto nową zakładkę: " + driver.getTitle());
+
+            // --- Krok 3: Wróć do pierwotnej zakładki, aby pracować w jej kontekście ---
+            driver.switchTo().window(originalTabHandle);
+            System.out.println("Powrócono do zakładki: " + driver.getTitle());
+            Thread.sleep(1000); // Pauza tylko dla demonstracji
+
+            // --- Krok 4: Pobierz listę wszystkich targetów za pomocą CDP ---
+            // Ta komenda zwraca listę obiektów `TargetInfo` z pakietu `idealized`
+            var allTargets = devTools.send(Target.getTargets(Optional.empty()));
+
+
+            System.out.println("\n--- Znaleziono " + allTargets.size() + " aktywnych targetów ---");
+            for (var info : allTargets) {
+                System.out.println("  > Target ID: " + info.getTargetId());
+                System.out.println("    Typ: " + info.getType());
+                System.out.println("    Tytuł: " + info.getTitle());
+                System.out.println("    URL: " + info.getUrl());
+            }
+            System.out.println("-------------------------------------\n");
+
+            // --- Krok 5: Znajdź interesujący nas target (zakładkę z dokumentacją Selenium) ---
+            Optional<org.openqa.selenium.devtools.v137.target.model.TargetInfo> seleniumDocTargetInfo = allTargets.stream()
+                    .filter(info -> info.getTitle().contains("Selenium") && info.getType().equals("page"))
+                    .findFirst();
+
+            // --- Krok 6: Wykonaj operacje na znalezionym targecie ---
+            if (seleniumDocTargetInfo.isPresent()) {
+                org.openqa.selenium.devtools.v137.target.model.TargetInfo targetToActivate = seleniumDocTargetInfo.get();
+                System.out.println("Znaleziono target do aktywacji: " + targetToActivate.getTitle());
+
+                // --- ROZWIĄZANIE PROBLEMU: Konwersja z `idealized` na `vXXX` ---
+                // 1. Pobierz ID z obiektu `idealized.TargetInfo`
+                TargetID idealizedId = targetToActivate.getTargetId();
+
+                // 2. Utwórz nowy obiekt `vXXX.TargetID` używając wartości string z poprzedniego
+                org.openqa.selenium.devtools.v137.target.model.TargetID versionedId =
+                        new org.openqa.selenium.devtools.v137.target.model.TargetID(idealizedId.toString());
+
+                // 3. Użyj WERSJONOWANEGO ID do wykonania komend
+                System.out.println("\nAktywowanie targetu za pomocą ID: " + versionedId);
+                devTools.send(Target.activateTarget(versionedId));
+                Thread.sleep(2000); // Pauza dla demonstracji
+
+                // Weryfikacja
+                System.out.println("Aktywna zakładka po przełączeniu przez CDP: " + driver.getTitle());
+                assert driver.getTitle().contains("Selenium");
+
+                System.out.println("\nZamykanie targetu za pomocą ID: " + versionedId);
+                devTools.send(Target.closeTarget(versionedId));
+                Thread.sleep(2000); // Pauza dla demonstracji
+
+                System.out.println("Target został zamknięty.");
+
+            } else {
+                System.out.println("Nie znaleziono docelowego targetu.");
+            }
+
+        } finally {
+            // Blok finally gwarantuje, że przeglądarka zostanie zamknięta,
+            // nawet jeśli w bloku try wystąpi błąd.
+            if (driver != null) {
+                System.out.println("\nZamykanie przeglądarki w bloku finally...");
+                driver.quit();
+            }
+        }
+
+    }
 
 
 }
