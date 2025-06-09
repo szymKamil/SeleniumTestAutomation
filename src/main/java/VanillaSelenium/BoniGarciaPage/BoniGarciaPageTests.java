@@ -560,7 +560,7 @@ public class BoniGarciaPageTests {
                 Optional.empty()));
         driver.findElement(By.id("get-coordinates")).click();
         String coords = driver.findElement(By.id("coordinates")).getText();
-        logger.info("Loalizacja to: " + coords);
+        logger.info("Lokalizacja to: {}", coords);
 
 
 
