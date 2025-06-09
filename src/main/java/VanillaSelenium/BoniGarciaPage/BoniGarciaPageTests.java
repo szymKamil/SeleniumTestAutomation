@@ -13,17 +13,19 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.apache.commons.io.FileUtils;
 import org.apache.hc.core5.util.Asserts;
 import org.openqa.selenium.*;
+import org.openqa.selenium.bidi.browsingcontext.BrowsingContext;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.openqa.selenium.devtools.DevTools;
-import org.openqa.selenium.devtools.DevToolsException;
+import org.openqa.selenium.devtools.*;
 import org.openqa.selenium.devtools.idealized.target.model.TargetInfo;
 import org.openqa.selenium.devtools.v135.browser.model.Bucket;
 import org.openqa.selenium.devtools.v135.dom.DOM;
 import org.openqa.selenium.devtools.v137.browser.model.BrowserContextID;
 import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
+import org.openqa.selenium.devtools.v137.domstorage.model.DomStorageItemAdded;
 import org.openqa.selenium.devtools.v137.domstorage.model.Item;
 import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
+import org.openqa.selenium.devtools.v137.emulation.Emulation;
 import org.openqa.selenium.devtools.v137.page.Page;
 import org.openqa.selenium.devtools.v137.page.model.Frame;
 import org.openqa.selenium.devtools.v137.page.model.FrameId;
@@ -61,6 +63,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Array;
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -93,17 +96,22 @@ public class BoniGarciaPageTests {
 
     @BeforeClass
     public void webDriverInitialize() {
+        ChromeOptions options = new ChromeOptions();
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("profile.default_content_setting_values.geolocation", 1);
+        options.setExperimentalOption("prefs", prefs);
+        driver = WebDriverManager.chromedriver().capabilities(options).create();
+
         WebDriverManager.chromedriver()
                 .setup();
         options.addArguments("--kiosk");
-        driver = new ChromeDriver(options);
         /* wyłączone ze względu na ExpliciteWait
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(10));*/
         wait =  new WebDriverWait(driver, Duration.ofSeconds(30));
         js = (JavascriptExecutor) driver;
-        devTools = ((ChromeDriver) driver).getDevTools();
+        devTools = ((HasDevTools) driver).getDevTools();
     }
 
 
@@ -521,176 +529,43 @@ public class BoniGarciaPageTests {
                 let existing = localStorage.getItem('notes') || '';
                 localStorage.setItem('notes', existing + ' | nowy wpis');""");
 
-        FrameTree frameTree = devTools.send(Page.getFrameTree());
-        frameTree.getChildFrames();
-        Frame mainFrame = frameTree.getFrame();
-        FrameId mainFrameId = mainFrame.getId();
-        System.out.println("ID ramki głównej: " + mainFrameId.toString());
-        StorageId localStorageId = new StorageId(
-                Optional.of(page), // Security Origin
-                Optional.empty(), // StorageKey - zazwyczaj null
-                true  // isLocalStorage = true
-        );
+        URI uri = URI.create(page);
+        String origin = uri.getScheme() + "://" + uri.getHost();
+        logger.info("Origin to: {}", origin);
+     //   String originDisplayPath = "https://bonigarcia.dev";
 
 
-
-
+        StorageId storageId = new StorageId(Optional.of(origin), Optional.empty(), true);
+        devTools.send(DOMStorage.setDOMStorageItem(storageId, "Klucz", "Wartość"));
 
         try {
-            devTools.send(DOMStorage.enable());
-            devTools.send(DOMStorage.setDOMStorageItem(localStorageId, "Anna", "Gacek"));
-            var elements = devTools.send(DOMStorage.getDOMStorageItems(localStorageId));
-
-
-
-            elements.forEach(System.out::println);
-        } catch (Exception e) {
-            e.getMessage();
-        }
-
-        try {
-            Thread.sleep(Duration.ofSeconds(20));
+            Thread.sleep(10000);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
-
-
     @Test
-    public void test0000(){
-        ChromeDriver driver = new ChromeDriver();
-        DevTools devTools = driver.getDevTools();
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
-// Krok 1: Utwórz sesję i włącz potrzebne domeny na samym początku.
-        devTools.createSession();
-        devTools.send(DOMStorage.enable());
-
-// Krok 2: Nawiguj na stronę.
-        String initialUrl = "https://bonigarcia.dev/selenium-webdriver-java/web-storage.html";
-        driver.get(initialUrl);
-
-// Krok 3: Użyj jawnego oczekiwania, aby upewnić się, że strona jest interaktywna.
-// To dobry pierwszy krok do synchronizacji.
-        WebElement header = driver.findElement(By.xpath("//h1[text()='Web storage']"));
+    void test18GeoLocal() {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/geolocation.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Geolocation']"));
         wait.until(ExpectedConditions.visibilityOf(header));
-
-// Krok 4 (NAJWAŻNIEJSZY): Zbuduj StorageId DOPIERO TERAZ, używając aktualnego stanu przeglądarki.
-        String currentUrl = driver.getCurrentUrl();
-        System.out.println("Używam aktualnego URL do stworzenia StorageId: " + currentUrl);
-
-        StorageId localStorageId = new StorageId(
-                Optional.of(currentUrl),
+        devTools.createSession();
+        //Ustawienie geolokalizacji za pomocą DevTools
+        devTools.send(Emulation.setGeolocationOverride(Optional.of(1.9), Optional.of(1.7),
+                Optional.of(1),
                 Optional.empty(),
-                true // Celujemy w LocalStorage
-        );
+                Optional.empty(),
+                Optional.empty(),
+                Optional.empty()));
+        driver.findElement(By.id("get-coordinates")).click();
+        String coords = driver.findElement(By.id("coordinates")).getText();
+        logger.info("Loalizacja to: " + coords);
 
-// Krok 5: Wykonaj operację CDP.
-// Umieszczenie tego w bloku try-catch pomoże w dalszym debugowaniu.
-        try {
-            devTools.send(DOMStorage.setDOMStorageItem(localStorageId, "klucz_cdp", "wartosc_cdp"));
-            System.out.println("Operacja CDP na LocalStorage zakończona sukcesem.");
-        } catch (Exception e) {
-            System.err.println("BŁĄD podczas operacji CDP! Analiza:");
-            System.err.println("Użyty URL: " + currentUrl);
-            System.err.println("Wyjątek: " + e.getMessage());
-            // Jeśli błąd nadal występuje, możesz dodać tu małą pauzę (tylko do debugowania!)
-            // aby sprawdzić, czy to na pewno race condition.
-            // Thread.sleep(500);
-        }
 
-        driver.quit();
+
 
     }
-
-
-    @Test
-    public void test213123124() throws InterruptedException{
-        try {
-            // Utwórz sesję DevTools na początku
-            devTools.createSession();
-
-            // --- Krok 1: Otwórz stronę główną i zapamiętaj jej uchwyt ---
-            driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
-            String originalTabHandle = driver.getWindowHandle();
-            System.out.println("Otwarto oryginalną zakładkę: " + driver.getTitle());
-
-            // --- Krok 2: Otwórz nową zakładkę i przejdź na inną stronę ---
-            driver.switchTo().newWindow(WindowType.TAB);
-            driver.get("https://www.selenium.dev/documentation/");
-            System.out.println("Otwarto nową zakładkę: " + driver.getTitle());
-
-            // --- Krok 3: Wróć do pierwotnej zakładki, aby pracować w jej kontekście ---
-            driver.switchTo().window(originalTabHandle);
-            System.out.println("Powrócono do zakładki: " + driver.getTitle());
-            Thread.sleep(1000); // Pauza tylko dla demonstracji
-
-            // --- Krok 4: Pobierz listę wszystkich targetów za pomocą CDP ---
-            // Ta komenda zwraca listę obiektów `TargetInfo` z pakietu `idealized`
-            var allTargets = devTools.send(Target.getTargets(Optional.empty()));
-
-
-            System.out.println("\n--- Znaleziono " + allTargets.size() + " aktywnych targetów ---");
-            for (var info : allTargets) {
-                System.out.println("  > Target ID: " + info.getTargetId());
-                System.out.println("    Typ: " + info.getType());
-                System.out.println("    Tytuł: " + info.getTitle());
-                System.out.println("    URL: " + info.getUrl());
-            }
-            System.out.println("-------------------------------------\n");
-
-            // --- Krok 5: Znajdź interesujący nas target (zakładkę z dokumentacją Selenium) ---
-            Optional<org.openqa.selenium.devtools.v137.target.model.TargetInfo> seleniumDocTargetInfo = allTargets.stream()
-                    .filter(info -> info.getTitle().contains("Selenium") && info.getType().equals("page"))
-                    .findFirst();
-
-            // --- Krok 6: Wykonaj operacje na znalezionym targecie ---
-            if (seleniumDocTargetInfo.isPresent()) {
-                org.openqa.selenium.devtools.v137.target.model.TargetInfo targetToActivate = seleniumDocTargetInfo.get();
-                System.out.println("Znaleziono target do aktywacji: " + targetToActivate.getTitle());
-
-                // --- ROZWIĄZANIE PROBLEMU: Konwersja z `idealized` na `vXXX` ---
-                // 1. Pobierz ID z obiektu `idealized.TargetInfo`
-                TargetID idealizedId = targetToActivate.getTargetId();
-
-                // 2. Utwórz nowy obiekt `vXXX.TargetID` używając wartości string z poprzedniego
-                org.openqa.selenium.devtools.v137.target.model.TargetID versionedId =
-                        new org.openqa.selenium.devtools.v137.target.model.TargetID(idealizedId.toString());
-
-                // 3. Użyj WERSJONOWANEGO ID do wykonania komend
-                System.out.println("\nAktywowanie targetu za pomocą ID: " + versionedId);
-                devTools.send(Target.activateTarget(versionedId));
-                Thread.sleep(2000); // Pauza dla demonstracji
-
-                // Weryfikacja
-                System.out.println("Aktywna zakładka po przełączeniu przez CDP: " + driver.getTitle());
-                assert driver.getTitle().contains("Selenium");
-
-                System.out.println("\nZamykanie targetu za pomocą ID: " + versionedId);
-                devTools.send(Target.closeTarget(versionedId));
-                Thread.sleep(2000); // Pauza dla demonstracji
-
-                System.out.println("Target został zamknięty.");
-
-            } else {
-                System.out.println("Nie znaleziono docelowego targetu.");
-            }
-
-        } finally {
-            // Blok finally gwarantuje, że przeglądarka zostanie zamknięta,
-            // nawet jeśli w bloku try wystąpi błąd.
-            if (driver != null) {
-                System.out.println("\nZamykanie przeglądarki w bloku finally...");
-                driver.quit();
-            }
-        }
-
-    }
-
-
 }
 
 
