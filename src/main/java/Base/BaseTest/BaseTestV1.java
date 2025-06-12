@@ -8,6 +8,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.Optional;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.TimeUnit;
 
 public class BaseTestV1 {
@@ -17,9 +20,10 @@ public class BaseTestV1 {
 
 
 
-    public BaseTestV1(@Optional("Chrome")String browser, long time) {
+    public BaseTestV1(@Optional("Chrome")String browser, int time) {
         this.webDriver = WebDriverManager.getInstance(browser).create();
         this.wait = new WebDriverWait(webDriver,Duration.ofSeconds(time));
+
     }
 
     public WebDriver getWebDriver() {
@@ -28,5 +32,11 @@ public class BaseTestV1 {
 
     public WebDriverWait getWait() {
         return wait;
+    }
+
+    public void quit() {
+        if (webDriver != null) {
+            webDriver.quit();
+        }
     }
 }
