@@ -2,32 +2,28 @@ package Base.BaseTest;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.Optional;
 
 import java.time.Duration;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 public class BaseTestV1 {
+    private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
+    private static ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
 
-    WebDriver webDriver;
+    WebDriver driver;
     WebDriverWait wait ;
 
 
-
-    public BaseTestV1(@Optional("Chrome")String browser, int time) {
-        this.webDriver = WebDriverManager.getInstance(browser).create();
-        this.wait = new WebDriverWait(webDriver,Duration.ofSeconds(time));
+    public BaseTestV1(String browser, int time) {
+        this.driver = WebDriverManager.getInstance(browser).create();
+        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
+        driverThread.set(driver);
+        waitThread.set(wait);
 
     }
 
-    public WebDriver getWebDriver() {
-        return webDriver;
+    public WebDriver getDriver() {
+        return driver;
     }
 
     public WebDriverWait getWait() {
@@ -35,8 +31,10 @@ public class BaseTestV1 {
     }
 
     public void quit() {
-        if (webDriver != null) {
-            webDriver.quit();
+        if (driverThread.get() != null) {
+            driver.quit();
+            driverThread.remove();
+            waitThread.remove();
         }
     }
 }

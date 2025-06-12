@@ -1,62 +1,49 @@
 package POM.WebTest.BoniGarcia.Tests;
 
 import Base.BaseTest.BaseTestV1;
-import Base.BaseTest.DriverManager;
-import POM.WebTest.BoniGarcia.Pages.GarciaMainPage;
 import POM.WebTest.BoniGarcia.Pages.MainPage;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
+import static org.assertj.core.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+
+
 
 public class MainTest {
 
     MainPage mainPage;
+    BaseTestV1 base;
 
+    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
     public void config(@Optional("Chrome") String browser, @Optional("10") int timeout){
-        DriverManager.initDriver(browser, timeout);
-        mainPage = new MainPage(DriverManager.getDriver());
+        base = new BaseTestV1(browser, timeout);
+        mainPage = new MainPage(base.getDriver(), base.getWait());
     }
 
 
     @AfterMethod
     void shutDown(){
-        DriverManager.quitDriver();
+        base.quit();
     }
 
 
-
-    @Test
-    public void mainPageTest(){
-        /***
-         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony, weryfikację adresu URL oraz tekstu nagłówka.         *
-         */
-        WebDriver driver = DriverManager.getDriver();
-        WebDriverWait wait = DriverManager.getWait();
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
-
-
-
-    }
 
     @Test
     public void mainPageTest1(){
         /***
-         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony, weryfikację adresu URL oraz tekstu nagłówka.         *
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony, weryfikację adresu URL oraz tekstu nagłówka.
          */
-        WebDriver driver = DriverManager.getDriver();
-        WebDriverWait wait = DriverManager.getWait();
+        WebDriver driver = base.getDriver();
+        WebDriverWait wait = base.getWait();
 
         driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
+        mainPage.getBtn("Web form");
+        assertThat(driver.findElements(mainPage.img)).isNotEmpty().hasSize(1);
         wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
 
 
