@@ -16,7 +16,7 @@ public class MainTest {
     MainPage mainPage;
     BaseTestV1 base;
 
-    @Listeners(TestListener.class)
+//    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
     public void config(@Optional("Chrome") String browser, @Optional("10") int timeout){

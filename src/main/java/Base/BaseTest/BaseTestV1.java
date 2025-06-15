@@ -7,8 +7,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import java.time.Duration;
 
 public class BaseTestV1 {
-    private static ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
-    private static ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
+    // Tworzenie wielowątkowości na potrzeby izolacji testów przy parallelnym uruchomieniu.
+    private static final ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
 
     WebDriver driver;
     WebDriverWait wait ;
@@ -23,16 +24,17 @@ public class BaseTestV1 {
     }
 
     public WebDriver getDriver() {
-        return driver;
+        return driverThread.get();
+
     }
 
     public WebDriverWait getWait() {
-        return wait;
+        return waitThread.get();
     }
 
     public void quit() {
         if (driverThread.get() != null) {
-            driver.quit();
+            driverThread.get().quit();
             driverThread.remove();
             waitThread.remove();
         }

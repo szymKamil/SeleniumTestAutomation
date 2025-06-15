@@ -6,41 +6,18 @@
 
 package VanillaSelenium.BoniGarciaPage;
 
-import ch.qos.logback.core.spi.LogbackLock;
-import ch.qos.logback.core.util.FileUtil;
-import com.google.common.collect.ImmutableList;
+
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.apache.commons.io.FileUtils;
-import org.apache.hc.core5.util.Asserts;
+import net.bytebuddy.asm.Advice;
 import org.openqa.selenium.*;
-import org.openqa.selenium.bidi.browsingcontext.BrowsingContext;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.*;
-import org.openqa.selenium.devtools.idealized.target.model.TargetInfo;
-import org.openqa.selenium.devtools.v135.browser.model.Bucket;
-import org.openqa.selenium.devtools.v135.dom.DOM;
-import org.openqa.selenium.devtools.v137.browser.model.BrowserContextID;
+import org.openqa.selenium.devtools.events.ConsoleEvent;
 import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
-import org.openqa.selenium.devtools.v137.domstorage.model.DomStorageItemAdded;
-import org.openqa.selenium.devtools.v137.domstorage.model.Item;
 import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
 import org.openqa.selenium.devtools.v137.emulation.Emulation;
-import org.openqa.selenium.devtools.v137.page.Page;
-import org.openqa.selenium.devtools.v137.page.model.Frame;
-import org.openqa.selenium.devtools.v137.page.model.FrameId;
-import org.openqa.selenium.devtools.v137.page.model.FrameTree;
-import org.openqa.selenium.devtools.v137.storage.model.StorageBucket;
 import org.openqa.selenium.devtools.v137.storage.Storage;
-import org.openqa.selenium.devtools.v137.storage.model.*;
-import org.openqa.selenium.devtools.v137.target.Target;
-import org.openqa.selenium.devtools.v137.target.model.TargetID;
-import org.openqa.selenium.html5.LocalStorage;
-import org.openqa.selenium.html5.SessionStorage;
-import org.openqa.selenium.html5.WebStorage;
-import org.openqa.selenium.interactions.Action;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -49,9 +26,7 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
-import ch.qos.logback.core.*;
 import org.slf4j.Logger;
-import org. openqa. selenium. devtools. idealized. target. model. TargetInfo;
 
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
@@ -61,10 +36,7 @@ import org.openqa.selenium.devtools.DevTools;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Array;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -73,13 +45,15 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.NoSuchElementException;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.logging.Level;
+import java.util.concurrent.TimeoutException;
+import java.util.function.Function;
 
 public class BoniGarciaPageTests {
-
-    ChromeOptions options = new ChromeOptions();
 
 
     WebDriver driver;
@@ -90,26 +64,34 @@ public class BoniGarciaPageTests {
     JavascriptExecutor js;
     LocalDateTime localDateTime = LocalDateTime.now();
     DevTools devTools;
-
-
+    FluentWait<WebDriver> fluentWait;
 
 
     @BeforeClass
     public void webDriverInitialize() {
+//        String language = Locale.US.toString();
+        String language = "es_ES";
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.default_content_setting_values.geolocation", 1);
+        prefs.put("profile.default_content_setting_values.notifications", 1);
+        options.addArguments("--use-fake-ui-for-media-stream");
+        options.addArguments("--use-fake-device-for-media-stream");
+        options.addArguments("--lang=" + language);
+        prefs.put("intl.accept_languages", language);
         options.setExperimentalOption("prefs", prefs);
+
         driver = WebDriverManager.chromedriver().capabilities(options).create();
 
         WebDriverManager.chromedriver()
                 .setup();
         options.addArguments("--kiosk");
-        /* wyłączone ze względu na ExpliciteWait
+        /* wyłączone ze względu na wykorzystanie ExpliciteWait w testach
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(10));*/
         wait =  new WebDriverWait(driver, Duration.ofSeconds(30));
+        fluentWait = new FluentWait<>(driver);
         js = (JavascriptExecutor) driver;
         devTools = ((HasDevTools) driver).getDevTools();
     }
@@ -124,7 +106,8 @@ public class BoniGarciaPageTests {
     @Test
     public void test1MainPage(){
     driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
-    assertThat(driver.getTitle()).isEqualTo("Hands-On Selenium WebDriver with Java");
+    String pageTiltle = driver.getTitle();
+    assertThat(pageTiltle).isEqualTo("Hands-On Selenium WebDriver with Java");
     logger.info("Otwieram stronę: {}", driver.getCurrentUrl());
     WebElement webFormPrzycisk = driver.findElement(By.xpath("//a[@href='web-form.html']"));
     assertThat(webFormPrzycisk).isNotNull();
@@ -561,10 +544,111 @@ public class BoniGarciaPageTests {
         driver.findElement(By.id("get-coordinates")).click();
         String coords = driver.findElement(By.id("coordinates")).getText();
         logger.info("Lokalizacja to: {}", coords);
+    }
 
 
+    @Test
+    void test19Notification() {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/notifications.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Notifications']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement notifyBtn = driver.findElement(By.id("notify-me"));
+        wait.until(ExpectedConditions.visibilityOf(notifyBtn));
+        assertThat(notifyBtn).isNotNull();
+        notifyBtn.click();
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void test20UserMedia(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/get-user-media.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Get user media']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement notifyBtn = driver.findElement(By.id("start"));
+        wait.until(ExpectedConditions.visibilityOf(notifyBtn));
+        assertThat(notifyBtn).isNotNull();
+        notifyBtn.click();
+        try {
+            TimeUnit.SECONDS.sleep(3);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Test
+    void test21LocaleTest(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/multilanguage.html");
+
+        ResourceBundle strings = ResourceBundle.getBundle("spainLocalization",
+                Locale.forLanguageTag("es_ES"));
+        String home = strings.getString("home");
+        String content = strings.getString("content");
+        String about = strings.getString("about");
+        String contact = strings.getString("contact");
+        String bodyText = driver.findElement(By.tagName("body")).getText();
+        assertThat(bodyText).contains(home).contains(content).contains(about)
+                .contains(contact);
+    }
 
 
+    @Test
+    void test22ConsoleLog() throws Exception{
+        devTools.createSession();
+        CompletableFuture<ConsoleEvent> consoleEventCompletableFuture = new CompletableFuture<>();
+        devTools.getDomains().events().addConsoleListener(consoleEventCompletableFuture::complete);
+        CompletableFuture<JavascriptException> completableFuture = new CompletableFuture<>();
+        devTools.getDomains().events().addJavascriptExceptionListener(completableFuture::complete);
+
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/console-logs.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Console logs']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+
+        ConsoleEvent consoleEvent = consoleEventCompletableFuture.get(5, TimeUnit.SECONDS);
+        logger.debug("Console event: {}, {}, {}", consoleEvent.getTimestamp(), consoleEvent.getArgs(), consoleEvent.getMessages());
+
+        JavascriptException jsExecutor = completableFuture.get(5, TimeUnit.SECONDS);
+        logger.debug("Console event: {}, {}", jsExecutor.getMessage(), jsExecutor.getSystemInformation());
+
+    }
+
+    @Test
+    void test24SlowLogin() throws Exception {
+        fluentWait.withTimeout(Duration.ofSeconds(45))
+                .pollingEvery(Duration.ofSeconds(1))
+                .withMessage("Oczekuję na element...")
+                .ignoring(NoSuchElementException.class, StaleElementReferenceException.class);
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/login-slow.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Slow login form']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement form = driver.findElement(By.id("form"));
+        assertThat(form.isDisplayed()).isTrue();
+        WebElement loginLabel = driver.findElement(By.xpath("//form/label[contains(text(), 'Login')]"));
+        WebElement passwordLabel = driver.findElement(By.xpath("//form/label[contains(text(), 'Password')]"));
+        assertThat(loginLabel.isDisplayed()).isTrue();
+        assertThat(passwordLabel.isDisplayed()).isTrue();
+        loginLabel.sendKeys("user");
+        passwordLabel.sendKeys("user");
+        WebElement btnSubmit = driver.findElement(By.cssSelector("button[type=submit]"));
+        btnSubmit.click();
+        // fluentWait.until(ExpectedConditions.presenceOfElementLocated(By.id("sucess")));
+        fluentWait.until(driver -> driver.getCurrentUrl()
+                .equals("https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html"));
+        fluentWait.until(new Function<WebDriver, WebElement>() {
+            @Override
+            public WebElement apply(WebDriver driver) {
+                try {
+                    WebElement successInfo = driver.findElement(By.id("success"));
+                    return successInfo.isDisplayed() ? successInfo : null;
+                } catch (NoSuchElementException e) {
+                    e.getMessage();
+                    return null;
+                }
+            }
+        });
     }
 }
 
