@@ -31,8 +31,9 @@ import org.slf4j.Logger;
 import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.*;
-import org.openqa.selenium.devtools.DevTools;
 
+import org.openqa.selenium.devtools.DevTools;
+import net.datafaker.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,7 +66,7 @@ public class BoniGarciaPageTests {
     LocalDateTime localDateTime = LocalDateTime.now();
     DevTools devTools;
     FluentWait<WebDriver> fluentWait;
-
+    File downloadTarget;
 
     @BeforeClass
     public void webDriverInitialize() {
@@ -75,13 +76,19 @@ public class BoniGarciaPageTests {
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.default_content_setting_values.geolocation", 1);
         prefs.put("profile.default_content_setting_values.notifications", 1);
+        downloadTarget = new File("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\DownloadFolder");
+        prefs.put("download.default_directory", downloadTarget.toString());
         options.addArguments("--use-fake-ui-for-media-stream");
         options.addArguments("--use-fake-device-for-media-stream");
         options.addArguments("--lang=" + language);
         prefs.put("intl.accept_languages", language);
         options.setExperimentalOption("prefs", prefs);
 
-        driver = WebDriverManager.chromedriver().capabilities(options).create();
+
+
+        driver = WebDriverManager.chromedriver()
+                .capabilities(options)
+                .create();
 
         WebDriverManager.chromedriver()
                 .setup();
@@ -90,7 +97,7 @@ public class BoniGarciaPageTests {
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(10));*/
-        wait =  new WebDriverWait(driver, Duration.ofSeconds(30));
+        wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         fluentWait = new FluentWait<>(driver);
         js = (JavascriptExecutor) driver;
         devTools = ((HasDevTools) driver).getDevTools();
@@ -98,47 +105,52 @@ public class BoniGarciaPageTests {
 
 
     @AfterClass
-    public void end(){
+    public void end() {
         driver.quit();
     }
 
 
-    @Test
-    public void test1MainPage(){
-    driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
-    String pageTiltle = driver.getTitle();
-    assertThat(pageTiltle).isEqualTo("Hands-On Selenium WebDriver with Java");
-    logger.info("Otwieram stronę: {}", driver.getCurrentUrl());
-    WebElement webFormPrzycisk = driver.findElement(By.xpath("//a[@href='web-form.html']"));
-    assertThat(webFormPrzycisk).isNotNull();
-    webFormPrzycisk.click();
-    WebElement praticeSiteEtykieta = driver.findElement(By.xpath("//h5[text()='Practice site']"));
-    wait.until(ExpectedConditions.visibilityOf(praticeSiteEtykieta));
-    assertThat(praticeSiteEtykieta.isDisplayed()).isTrue();
-    WebElement textInputPole = driver.findElement(By.id("my-text-id"));
-    String testText = "Test";
-    textInputPole.sendKeys(testText);
-    logger.info("Wpisuję tekst: {}", testText);
-    String inputString = textInputPole.getAttribute("value");
-    assertThat(inputString).isEqualTo(testText);
-    logger.info("Test ukończony");
+    @Test(priority = 1)
+    public void test1MainPage() {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/");
+        String pageTiltle = driver.getTitle();
+        assertThat(pageTiltle).isEqualTo("Hands-On Selenium WebDriver with Java");
+        logger.info("Otwieram stronę: {}", driver.getCurrentUrl());
+        WebElement webFormPrzycisk = driver.findElement(By.xpath("//a[@href='web-form.html']"));
+        assertThat(webFormPrzycisk).isNotNull();
+        webFormPrzycisk.click();
+        WebElement praticeSiteEtykieta = driver.findElement(By.xpath("//h5[text()='Practice site']"));
+        wait.until(ExpectedConditions.visibilityOf(praticeSiteEtykieta));
+        assertThat(praticeSiteEtykieta.isDisplayed()).isTrue();
+        WebElement textInputPole = driver.findElement(By.id("my-text-id"));
+        String testText = "Test";
+        textInputPole.sendKeys(testText);
+        logger.info("Wpisuję tekst: {}", testText);
+        String inputString = textInputPole.getAttribute("value");
+        assertThat(inputString).isEqualTo(testText);
+        logger.info("Test ukończony");
     }
 
-    @Test
+    @Test(priority = 2)
     public void test2WebForm() throws InterruptedException {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/web-form.html");
         assertThat(driver.getTitle()).isEqualTo("Hands-On Selenium WebDriver with Java");
         logger.info("Page title matched expected value using getTitle(): {}", driver.getTitle());
-        assertThat(driver.findElement(By.cssSelector("h1.display-6")).isDisplayed()).isTrue();
-        driver.findElement(By.cssSelector("input.form-control[name='my-text']")).sendKeys("Test formularza");
-        logger.info("W formularzu wpisano: {}",  driver.findElement(By.cssSelector("input.form-control[name='my-text']")).getAttribute("value"));
-        driver.findElement(By.cssSelector("input[type='password']")).sendKeys("hasło");
-        logger.info("W formularzu wpisano: {}",  driver.findElement(By.cssSelector("input[type='password']")).getAttribute("value"));
+        assertThat(driver.findElement(By.cssSelector("h1.display-6"))
+                .isDisplayed()).isTrue();
+        driver.findElement(By.cssSelector("input.form-control[name='my-text']"))
+                .sendKeys("Test formularza");
+        logger.info("W formularzu wpisano: {}", driver.findElement(By.cssSelector("input.form-control[name='my-text']"))
+                .getAttribute("value"));
+        driver.findElement(By.cssSelector("input[type='password']"))
+                .sendKeys("hasło");
+        logger.info("W formularzu wpisano: {}", driver.findElement(By.cssSelector("input[type='password']"))
+                .getAttribute("value"));
         ArrayList<Character> tablicaLiter = new ArrayList<>();
-        for (char ch = 'a'; ch <= 'z'; ch++){
+        for (char ch = 'a'; ch <= 'z'; ch++) {
             tablicaLiter.add(ch);
         }
-        for (char ch = 'A'; ch <= 'Z'; ch++){
+        for (char ch = 'A'; ch <= 'Z'; ch++) {
             tablicaLiter.add(ch);
         }
         tablicaLiter.add(' ');
@@ -148,15 +160,19 @@ public class BoniGarciaPageTests {
         for (int i = 0; i < 40; i++) {
             testTekst.append(tablicaLiter.get(random.nextInt(tablicaLiter.size())));
         }
-        driver.findElement(By.name("my-textarea")).sendKeys(testTekst);
-        String randomValue = driver.findElement(By.name("my-textarea")).getAttribute("value");
+        driver.findElement(By.name("my-textarea"))
+                .sendKeys(testTekst);
+        String randomValue = driver.findElement(By.name("my-textarea"))
+                .getAttribute("value");
         assertThat(randomValue.length()).isEqualTo(40);
         logger.info("Wygenerowano następujący ciąg znaków: {}", randomValue);
-        assertThat(driver.findElement(By.cssSelector("input[readonly]")).isDisplayed()).isTrue();
+        assertThat(driver.findElement(By.cssSelector("input[readonly]"))
+                .isDisplayed()).isTrue();
         WebElement select1WebElem = driver.findElement(By.name("my-select"));
         Select select = new Select(select1WebElem);
         for (WebElement option : select.getOptions()) {
-            if (option.getText().contains("Two")) {
+            if (option.getText()
+                    .contains("Two")) {
                 select.selectByVisibleText(option.getText());
                 break;
             }
@@ -164,7 +180,8 @@ public class BoniGarciaPageTests {
         logger.info("W pierwszej liście wybrano {}", select1WebElem.getDomAttribute("value"));
         WebElement dataList = driver.findElement(By.name("my-datalist"));
         dataList.click();
-        String dataListOptionvalue = driver.findElement(By.xpath("//datalist/option[4]")).getDomAttribute("value");
+        String dataListOptionvalue = driver.findElement(By.xpath("//datalist/option[4]"))
+                .getDomAttribute("value");
         assertThat(dataListOptionvalue).isNotNull();
         dataList.sendKeys(dataListOptionvalue);
         logger.info("Value attribute: {}", dataList.getAttribute("value"));
@@ -187,10 +204,13 @@ public class BoniGarciaPageTests {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String sformatowanaData = dataTestowa.format(formatter);
         logger.info("Wpisana została data: {}", dataTestowa);
-        driver.findElement(By.name("my-date")).sendKeys(sformatowanaData);
-        String dataKalendarz = driver.findElement(By.cssSelector("th[colspan='5'].datepicker-switch")).getText();
+        driver.findElement(By.name("my-date"))
+                .sendKeys(sformatowanaData);
+        String dataKalendarz = driver.findElement(By.cssSelector("th[colspan='5'].datepicker-switch"))
+                .getText();
         assertThat(dataKalendarz).isEqualTo("December 2025");
-        assertThat(driver.findElement(By.cssSelector("td.active")).getText()).isEqualTo("12");
+        assertThat(driver.findElement(By.cssSelector("td.active"))
+                .getText()).isEqualTo("12");
         WebElement slider = driver.findElement(By.name("my-range"));
         int initialValue = Integer.parseInt(Objects.requireNonNull(slider.getAttribute("value")));
         for (int i = 0; i <= 3; i++) {
@@ -204,63 +224,83 @@ public class BoniGarciaPageTests {
         submitBtn.click();
         WebElement formSubmitted = driver.findElement(By.xpath("//h1[text()='Form submitted']"));
         assertThat(formSubmitted.isDisplayed()).isTrue();
-        WebElement receivedInfo = driver.findElement(RelativeLocator.with(By.xpath("//p[@class='lead']")).below(formSubmitted));
+        WebElement receivedInfo = driver.findElement(RelativeLocator.with(By.xpath("//p[@class='lead']"))
+                .below(formSubmitted));
         assertThat(receivedInfo.getText()).isEqualTo("Received!");
     }
 
-    @Test
-    void test3(){
+    @Test(priority = 3)
+    void test3() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/navigation3.html");
-        List<WebElement> aButtons= driver.findElements(By.cssSelector("a.page-link"));
+        List<WebElement> aButtons = driver.findElements(By.cssSelector("a.page-link"));
         assertThat(aButtons.size()).isEqualTo(5);
         WebElement prevButton = driver.findElement(By.xpath("//a[text()='Previous']"));
         WebElement liPrevButton = driver.findElement(By.xpath("//a[text()='Previous']/.."));
-        while (!liPrevButton.getAttribute("class").contains("disabled")) {
+        while (!liPrevButton.getAttribute("class")
+                .contains("disabled")) {
             prevButton.click();
             liPrevButton = driver.findElement(By.xpath("//a[text()='Previous']/.."));
             prevButton = driver.findElement(By.xpath("//a[text()='Previous']"));
         }
-        assertThat(driver.findElement(By.cssSelector("p.lead")).getText()).isEqualTo("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
+        assertThat(driver.findElement(By.cssSelector("p.lead"))
+                .getText()).isEqualTo("Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.");
 
     }
 
-    @Test
-    void test4(){
+    @Test(priority = 4)
+    void test4() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/dropdown-menu.html");
-        assertThat(driver.findElement(By.cssSelector("h1.display-6")).getText()).isEqualTo("Dropdown menu");
+        assertThat(driver.findElement(By.cssSelector("h1.display-6"))
+                .getText()).isEqualTo("Dropdown menu");
         actions = new Actions(driver);
         WebElement dropdownBtn1 = driver.findElement(By.id("my-dropdown-1"));
-        actions.click(dropdownBtn1).build().perform();
-        assertThat(driver.findElement(By.xpath("//ul[@class='dropdown-menu show']")).isDisplayed()).isTrue();
+        actions.click(dropdownBtn1)
+                .build()
+                .perform();
+        assertThat(driver.findElement(By.xpath("//ul[@class='dropdown-menu show']"))
+                .isDisplayed()).isTrue();
         WebElement dropdownBtn2 = driver.findElement(By.id("my-dropdown-2"));
-        actions.contextClick(dropdownBtn2).build().perform();
-        assertThat(driver.findElement(By.id("context-menu-2")).isDisplayed()).isTrue();
+        actions.contextClick(dropdownBtn2)
+                .build()
+                .perform();
+        assertThat(driver.findElement(By.id("context-menu-2"))
+                .isDisplayed()).isTrue();
         WebElement dropdownBtn3 = driver.findElement(By.id("my-dropdown-3"));
-        actions.doubleClick(dropdownBtn3).build().perform();
-        assertThat(driver.findElement(By.id("context-menu-3")).isDisplayed()).isTrue();
+        actions.doubleClick(dropdownBtn3)
+                .build()
+                .perform();
+        assertThat(driver.findElement(By.id("context-menu-3"))
+                .isDisplayed()).isTrue();
     }
 
     @Test
-    void test5(){
+    void test5() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/mouse-over.html");
         List<WebElement> imgList = driver.findElements(By.cssSelector("div > img.img-fluid"));
         String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
         actions = new Actions(driver);
-        for (int i = 0; i < imgList.size(); i++){
-            actions.moveToElement(imgList.get(i)).build().perform();
-            assertThat(driver.findElement(By.xpath(String.format("//*[text()='%s']", imgCaptions[i]))).isDisplayed()).isTrue();
+        for (int i = 0; i < imgList.size(); i++) {
+            actions.moveToElement(imgList.get(i))
+                    .build()
+                    .perform();
+            assertThat(driver.findElement(By.xpath(String.format("//*[text()='%s']", imgCaptions[i])))
+                    .isDisplayed()).isTrue();
         }
     }
 
     @Test
-    void test6(){
+    void test6() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/drag-and-drop.html");
-        assertThat(driver.findElement(By.xpath("//h1[text()='Drag and drop']")).isDisplayed()).isTrue();
+        assertThat(driver.findElement(By.xpath("//h1[text()='Drag and drop']"))
+                .isDisplayed()).isTrue();
         WebElement draggablePanel = driver.findElement(By.id("draggable"));
         WebElement target = driver.findElement(By.id("target"));
         Point elementLocal = draggablePanel.getLocation();
         actions = new Actions(driver);
-        actions.clickAndHold(draggablePanel).moveToElement(target).build().perform();
+        actions.clickAndHold(draggablePanel)
+                .moveToElement(target)
+                .build()
+                .perform();
         Point movedLocal = draggablePanel.getLocation();
         assertThat(movedLocal).isNotEqualTo(elementLocal);
         logger.info("Pierwonta lokalizacja elementu to: {}, po przeniesieniu znajduje się w miejscu: {}", elementLocal, movedLocal);
@@ -268,15 +308,17 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test7(){
+    void test7() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/draw-in-canvas.html");
         WebElement canvas = driver.findElement(By.id("my-canvas"));
         js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].setAttribute('height', 700)", canvas);
         assertThat(canvas.getDomAttribute("height")).isEqualTo("700");
         actions = new Actions(driver);
-        int canvasWidth = canvas.getSize().getWidth();
-        int canvasHeight = canvas.getSize().getHeight();
+        int canvasWidth = canvas.getSize()
+                .getWidth();
+        int canvasHeight = canvas.getSize()
+                .getHeight();
 
         int centerX = canvasWidth - 100;
         int centerY = canvasHeight - 500;
@@ -289,7 +331,8 @@ public class BoniGarciaPageTests {
         int startY = prev.y - canvasLocation.getY();
 
         Actions actions = new Actions(driver);
-        actions.moveToElement(canvas, startX, startY).clickAndHold();
+        actions.moveToElement(canvas, startX, startY)
+                .clickAndHold();
 
         for (int i = 1; i < heartCoords.size(); i++) {
             Point current = heartCoords.get(i);
@@ -298,7 +341,9 @@ public class BoniGarciaPageTests {
             actions.moveByOffset(dx, dy);
             prev = current;
         }
-        actions.release().build().perform();
+        actions.release()
+                .build()
+                .perform();
     }
 
 
@@ -309,8 +354,8 @@ public class BoniGarciaPageTests {
                 double t = 2 * Math.PI * i / numPoints;
                 double x = 16 * Math.pow(Math.sin(t), 3);
                 double y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
-                int px = centerX + (int)(x * scale);
-                int py = centerY - (int)(y * scale);
+                int px = centerX + (int) (x * scale);
+                int py = centerY - (int) (y * scale);
                 points.add(new Point(px, py));
             }
             return points;
@@ -318,7 +363,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test8(){
+    void test8() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html");
         FluentWait<WebDriver> fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(3))
                 .withMessage("Czekam na element")
@@ -330,7 +375,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test9SlowCalculator(){
+    void test9SlowCalculator() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html");
         WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
         assertThat(header.getText()).isEqualTo("Slow calculator");
@@ -346,12 +391,15 @@ public class BoniGarciaPageTests {
         logger.info("Kalkulator będzie czekać na wynik {} sekund", delayInput.getAttribute("value"));
         wait.until(ExpectedConditions.visibilityOf(spinner));
         wait.until(ExpectedConditions.invisibilityOf(spinner));
-        logger.info("Wynik działania to: {}", driver.findElement(By.cssSelector("div.screen")).getText());
+        logger.info("Wynik działania to: {}", driver.findElement(By.cssSelector("div.screen"))
+                .getText());
     }
 
     public static void useBtn(String x, WebElement e) {
-        e.findElement(By.xpath(String.format("//*[text()='%s']", x))).click();
+        e.findElement(By.xpath(String.format("//*[text()='%s']", x)))
+                .click();
     }
+
     @Test
     void test10LongPage() throws IOException {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/long-page.html");
@@ -362,13 +410,15 @@ public class BoniGarciaPageTests {
         actions.scrollToElement(lastParagraph);
 //        File screenshot = wait.until(ExpectedConditions.visibilityOf(lastParagraph)).getScreenshotAs(OutputType.FILE);
         assertThat(lastParagraph.isDisplayed()).isTrue();
-         TakesScreenshot ts = (TakesScreenshot) driver;
+        TakesScreenshot ts = (TakesScreenshot) driver;
 //      File screenshot = ts.getScreenshotAs(OutputType.FILE);
         File screenshot = lastParagraph.getScreenshotAs(OutputType.FILE);
         DateTimeFormatter dt = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm");
         String formattedDate = dt.format(localDateTime);
 
-        Path destination = Paths.get(formattedDate.concat("--").concat(String.valueOf(random.nextInt())).concat(".png"));
+        Path destination = Paths.get(formattedDate.concat("--")
+                .concat(String.valueOf(random.nextInt()))
+                .concat(".png"));
         try {
             Files.move(screenshot.toPath(), destination, REPLACE_EXISTING);
         } catch (IOException e) {
@@ -377,7 +427,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test11InfiniteScroll(){
+    void test11InfiniteScroll() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/infinite-scroll.html");
         WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
         assertThat(header.getText()).isEqualTo("Infinite scroll");
@@ -388,32 +438,34 @@ public class BoniGarciaPageTests {
 
         String getPageHeight = "return document.body.scrollHeight";
         Long initialHeight = (Long) js.executeScript(getPageHeight);
-        for (int i = 0; i < scrollTimes; i++){
-            int numberOfParagraphs = driver.findElements(By.tagName("p")).size();
+        for (int i = 0; i < scrollTimes; i++) {
+            int numberOfParagraphs = driver.findElements(By.tagName("p"))
+                    .size();
             js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
             wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(By.tagName("p"), numberOfParagraphs));
         }
         Long endinglHeight = (Long) js.executeScript(getPageHeight);
 
-        logger.info("Początkowa wysokość strony to {}, a końcowa wysokość to {}", initialHeight, endinglHeight );
+        logger.info("Początkowa wysokość strony to {}, a końcowa wysokość to {}", initialHeight, endinglHeight);
     }
 
     @Test
-    void test12ShadowDOM(){
+    void test12ShadowDOM() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/shadow-dom.html");
         WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
         assertThat(header.getText()).isEqualTo("Shadow DOM");
         List<WebElement> elems = driver.findElements(By.xpath("//p[text()='Hello Shadow DOM']"));
         assertThat(elems).isEmpty();
-        WebElement shadowHost  = driver.findElement(By.id("content"));
+        WebElement shadowHost = driver.findElement(By.id("content"));
         SearchContext shadowParagraph = shadowHost.getShadowRoot();
-        String shadowParagraphText = shadowParagraph.findElement(By.cssSelector("p")).getText();
+        String shadowParagraphText = shadowParagraph.findElement(By.cssSelector("p"))
+                .getText();
         logger.info("Treść shadowelementu to: {}", shadowParagraphText);
 
     }
 
     @Test
-    void test13Cookies(){
+    void test13Cookies() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/cookies.html");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Cookies']"));
         wait.until(ExpectedConditions.visibilityOf(header));
@@ -421,9 +473,12 @@ public class BoniGarciaPageTests {
         wait.until(ExpectedConditions.visibilityOf(cookiesBtn));
         cookiesBtn.click();
         WebElement paragraph = driver.findElement(By.id("cookies-list"));
-        String cookiesInfo = paragraph.getText().trim().replace("\n", " ");
+        String cookiesInfo = paragraph.getText()
+                .trim()
+                .replace("\n", " ");
         logger.info("Dane widoczne w ciasteczkach: {}", cookiesInfo);
-        Set<Cookie> cookies = driver.manage().getCookies();
+        Set<Cookie> cookies = driver.manage()
+                .getCookies();
         cookies.forEach(System.out::println);
 //        Cookie username = cookies.stream().filter(c -> c.equals("username")).findAny().get();
 //        logger.info("Ciasteczko ma dane = {}", username.getName());
@@ -431,19 +486,22 @@ public class BoniGarciaPageTests {
         logger.info(usename.toString());
         driver.manage().deleteCookie(usename);
         Cookie newUsernameCookie = new Cookie("username", "Jan Kowalski");
-        driver.manage().addCookie(newUsernameCookie);
+        driver.manage()
+                .addCookie(newUsernameCookie);
         cookiesBtn.click();
-        cookiesInfo = paragraph.getText().trim().replace("\n", " ");
+        cookiesInfo = paragraph.getText()
+                .trim().replace("\n", " ");
         logger.info("Dane widoczne w ciasteczkach: {}", cookiesInfo);
 
     }
 
     @Test
-    void test14Frames(){
+    void test14Frames() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/frames.html");
         String frameName = "frame-body";
         wait.until(ExpectedConditions.presenceOfElementLocated(By.name(frameName)));
-        driver.switchTo().frame("frame-header");
+        driver.switchTo()
+                .frame("frame-header");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Frames']"));
         wait.until(ExpectedConditions.visibilityOf(header));
         driver.switchTo().defaultContent();
@@ -455,10 +513,11 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test15iFrames(){
+    void test15iFrames() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/iframes.html");
         WebElement iFrame = driver.findElement(By.id("my-iframe"));
-        driver.switchTo().frame(iFrame);
+        driver.switchTo()
+                .frame(iFrame);
         js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
         WebElement lastP = driver.findElement(By.xpath("//p[last()]"));
         assertThat(lastP.getText()).contains("Magnis feugiat natoque proin commodo laoreet mauris, " +
@@ -467,7 +526,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test16DialogBoxes(){
+    void test16DialogBoxes() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/dialog-boxes.html");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Dialog boxes']"));
         wait.until(ExpectedConditions.visibilityOf(header));
@@ -479,16 +538,30 @@ public class BoniGarciaPageTests {
         wait.until(ExpectedConditions.visibilityOfAllElements(buttons));
         alertBtn.click();
         wait.until(ExpectedConditions.alertIsPresent());
-        String alertBtnText = driver.switchTo().alert().getText();
-        driver.switchTo().alert().accept();
+        String alertBtnText = driver.switchTo()
+                .alert()
+                .getText();
+        driver.switchTo()
+                .alert()
+                .accept();
         confirmBtn.click();
-        String confirmBtnText = driver.switchTo().alert().getText();
-        driver.switchTo().alert().dismiss();
+        String confirmBtnText = driver.switchTo()
+                .alert()
+                .getText();
+        driver.switchTo()
+                .alert()
+                .dismiss();
         promptmBtn.click();
-        String promptBtnText = driver.switchTo().alert().getText();
-        String promptMessaage =  "My name is John";
-        driver.switchTo().alert().sendKeys(promptMessaage);
-        driver.switchTo().alert().accept();
+        String promptBtnText = driver.switchTo()
+                .alert()
+                .getText();
+        String promptMessaage = "My name is John";
+        driver.switchTo()
+                .alert()
+                .sendKeys(promptMessaage);
+        driver.switchTo()
+                .alert()
+                .accept();
         WebElement promptMessageDisp = driver.findElement(By.id("prompt-text"));
         String promptMsg = promptMessageDisp.getText();
         modalBtn.click();
@@ -515,7 +588,7 @@ public class BoniGarciaPageTests {
         URI uri = URI.create(page);
         String origin = uri.getScheme() + "://" + uri.getHost();
         logger.info("Origin to: {}", origin);
-     //   String originDisplayPath = "https://bonigarcia.dev";
+        //   String originDisplayPath = "https://bonigarcia.dev";
 
 
         StorageId storageId = new StorageId(Optional.of(origin), Optional.empty(), true);
@@ -541,8 +614,10 @@ public class BoniGarciaPageTests {
                 Optional.empty(),
                 Optional.empty(),
                 Optional.empty()));
-        driver.findElement(By.id("get-coordinates")).click();
-        String coords = driver.findElement(By.id("coordinates")).getText();
+        driver.findElement(By.id("get-coordinates"))
+                .click();
+        String coords = driver.findElement(By.id("coordinates"))
+                .getText();
         logger.info("Lokalizacja to: {}", coords);
     }
 
@@ -564,7 +639,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test20UserMedia(){
+    void test20UserMedia() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/get-user-media.html");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Get user media']"));
         wait.until(ExpectedConditions.visibilityOf(header));
@@ -580,7 +655,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test21LocaleTest(){
+    void test21LocaleTest() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/multilanguage.html");
 
         ResourceBundle strings = ResourceBundle.getBundle("spainLocalization",
@@ -589,19 +664,26 @@ public class BoniGarciaPageTests {
         String content = strings.getString("content");
         String about = strings.getString("about");
         String contact = strings.getString("contact");
-        String bodyText = driver.findElement(By.tagName("body")).getText();
-        assertThat(bodyText).contains(home).contains(content).contains(about)
+        String bodyText = driver.findElement(By.tagName("body"))
+                .getText();
+        assertThat(bodyText).contains(home)
+                .contains(content)
+                .contains(about)
                 .contains(contact);
     }
 
 
     @Test
-    void test22ConsoleLog() throws Exception{
+    void test22ConsoleLog() throws Exception {
         devTools.createSession();
         CompletableFuture<ConsoleEvent> consoleEventCompletableFuture = new CompletableFuture<>();
-        devTools.getDomains().events().addConsoleListener(consoleEventCompletableFuture::complete);
+        devTools.getDomains()
+                .events()
+                .addConsoleListener(consoleEventCompletableFuture::complete);
         CompletableFuture<JavascriptException> completableFuture = new CompletableFuture<>();
-        devTools.getDomains().events().addJavascriptExceptionListener(completableFuture::complete);
+        devTools.getDomains()
+                .events()
+                .addJavascriptExceptionListener(completableFuture::complete);
 
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/console-logs.html");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Console logs']"));
@@ -612,8 +694,27 @@ public class BoniGarciaPageTests {
 
         JavascriptException jsExecutor = completableFuture.get(5, TimeUnit.SECONDS);
         logger.debug("Console event: {}, {}", jsExecutor.getMessage(), jsExecutor.getSystemInformation());
-
     }
+
+    @Test
+    void test23LoginForm() {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/login-form.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Login form']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement loginField = driver.findElement(By.id("username"));
+        WebElement passwordField = driver.findElement(By.id("password"));
+        assertThat(loginField.isDisplayed()).isTrue();
+        assertThat(passwordField.isDisplayed()).isTrue();
+        loginField.sendKeys("user");
+        passwordField.sendKeys("user");
+        WebElement submitBtn = driver.findElement(By.cssSelector("button.btn"));
+        submitBtn.click();
+        WebElement successInfo = driver.findElement(By.id("success"));
+        wait.until(ExpectedConditions.visibilityOf(successInfo));
+        String pageURL = driver.getCurrentUrl();
+        logger.info("Aktualny adres http: {}", pageURL);
+    }
+
 
     @Test
     void test24SlowLogin() throws Exception {
@@ -650,6 +751,123 @@ public class BoniGarciaPageTests {
             }
         });
     }
+
+    @Test
+    public void test25Calculator() {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/random-calculator.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Random calculator']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        String percentageOfSucess = driver.findElement(By.id("percent")).getAttribute("value");
+        String numOfTries = driver.findElement(By.id("correct")).getAttribute("value");
+        logger.info("Kalkulator myli się w {}%, zaczyna działać poprawnie po {} użyciach.", percentageOfSucess, numOfTries);
+        Function<String, WebElement> abstractCalcBtn = (s) -> driver.findElement(By.xpath("//span[contains(@class, 'btn') and text()='%s']".formatted(s)));
+        WebElement calcScreen = driver.findElement(By.cssSelector("div.screen"));
+        WebElement btn2 = abstractCalcBtn.apply("2");
+        WebElement btn5 = abstractCalcBtn.apply("5");
+        WebElement equals = abstractCalcBtn.apply("=");
+        WebElement division = abstractCalcBtn.apply("÷");
+        WebElement clearBtn = abstractCalcBtn.apply("C");
+
+        int tries = 0;
+        String result = "";
+        while(!result.equals("5")) {
+            if(!calcScreen.getText().equals("")) {
+                clearBtn.click();
+            }
+            tries++;
+            btn2.click();
+            btn5.click();
+            division.click();
+            btn5.click();
+            equals.click();
+            result = calcScreen.getText();
+
+        }
+        logger.info("Kalkulator zadziałał po {} " + (tries > 1 ? "próbach" : "próbie"), tries);
+    }
+
+    @Test(priority = 26)
+    public void test26FileDownload() {
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/download.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Download files']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        List<WebElement> btnDownloads = driver.findElements(By.xpath("//div[@class='col-12 py-2']//a[contains(@href, '')]"));
+        for (WebElement e : btnDownloads) {
+            e.click();
+        }
+        File file1 = new File(downloadTarget, "selenium-jupiter.png");
+        File file2 = new File(downloadTarget, "webdrivermanager.png");
+        int timeout = 0;
+        while (!file1.exists() && timeout < 5){
+            try {
+                TimeUnit.SECONDS.sleep(5);
+                timeout++;
+            } catch (InterruptedException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        logger.info("Pliki {} oraz {} są dostępne w folderze Downloads", file1.getName(), file2.getName());
+        file1.delete();
+        file2.delete();
+
+    }
+
+    @Test(priority = 27)
+    public void test27ABTesting(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/ab-testing.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='A/B Testing']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+        WebElement abContainer = driver.findElement(By.id("content"));
+        wait.until(ExpectedConditions.visibilityOf(abContainer));
+        if (abContainer.getText().contains("This is variation A")) {
+            logger.info("Widoczny jest wariant A");
+        } else if (abContainer.getText().contains("This is variation B")){
+            logger.info("Widoczny jest wariant B");
+        } else {
+            logger.error("Coś nie zadziałało");
+        }
+    }
+
+    @Test(priority = 28)
+    public void test28DataTypes(){
+        driver.get("https://bonigarcia.dev/selenium-webdriver-java/data-types.html");
+        WebElement header = driver.findElement(By.xpath("//h1[text()='Data types']"));
+        wait.until(ExpectedConditions.visibilityOf(header));
+
+        Faker faker = new Faker();
+
+
+        driver.findElement(By.name("first-name"))
+                .sendKeys(faker.name().firstName());
+        driver.findElement(By.name("last-name"))
+                .sendKeys(faker.name().lastName());
+        driver.findElement(By.name("address"))
+                .sendKeys(faker.address().fullAddress());
+        driver.findElement(By.name("zip-code"))
+                .sendKeys(faker.address().zipCode());
+        driver.findElement(By.name("city")).sendKeys(faker.address().city());
+        driver.findElement(By.name("country"))
+                .sendKeys(faker.address().country());
+        driver.findElement(By.name("e-mail"))
+                .sendKeys(faker.internet().emailAddress());
+        driver.findElement(By.name("phone"))
+                .sendKeys(faker.phoneNumber().phoneNumber());
+        driver.findElement(By.name("job-position"))
+                .sendKeys(faker.job().position());
+        driver.findElement(By.name("company")).sendKeys(faker.company().name());
+        driver.findElement(By.tagName("form")).submit();
+        List<WebElement> successElement = driver
+                .findElements(By.className("alert-success"));
+        assertThat(successElement).hasSize(10);
+        List<WebElement> errorElement = driver
+                .findElements(By.className("alert-danger"));
+        assertThat(errorElement).isEmpty();
+
+    }
+
+
+
+
 }
 
 
