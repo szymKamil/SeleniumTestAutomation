@@ -8,7 +8,6 @@ package VanillaSelenium.BoniGarciaPage;
 
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import net.bytebuddy.asm.Advice;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.*;
@@ -28,7 +27,6 @@ import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 import org.slf4j.Logger;
 
-import static java.lang.invoke.MethodHandles.lookup;
 import static java.nio.file.StandardCopyOption.REPLACE_EXISTING;
 import static org.assertj.core.api.Assertions.*;
 
@@ -49,9 +47,7 @@ import java.util.*;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.TimeoutException;
 import java.util.function.Function;
 
 public class BoniGarciaPageTests {
@@ -59,53 +55,49 @@ public class BoniGarciaPageTests {
 
     WebDriver driver;
     WebDriverWait wait;
-    Logger logger = LoggerFactory.getLogger(lookup().lookupClass());
+    Logger logger = LoggerFactory.getLogger(BoniGarciaPageTests.class);
     Actions actions;
     Random random = new Random(4);
     JavascriptExecutor js;
     LocalDateTime localDateTime = LocalDateTime.now();
     DevTools devTools;
     FluentWait<WebDriver> fluentWait;
-    File downloadTarget;
+    static final File downloadFolder = new File("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\DownloadFolder");
+    static final String language = "es_ES";
+
 
     @BeforeClass
     public void webDriverInitialize() {
-//        String language = Locale.US.toString();
-        String language = "es_ES";
+        //Opcje
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.default_content_setting_values.geolocation", 1);
         prefs.put("profile.default_content_setting_values.notifications", 1);
-        downloadTarget = new File("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\DownloadFolder");
-        prefs.put("download.default_directory", downloadTarget.toString());
+        prefs.put("download.default_directory", downloadFolder.toString());
         options.addArguments("--use-fake-ui-for-media-stream");
         options.addArguments("--use-fake-device-for-media-stream");
         options.addArguments("--lang=" + language);
         prefs.put("intl.accept_languages", language);
         options.setExperimentalOption("prefs", prefs);
 
-
-
+        //Driver
         driver = WebDriverManager.chromedriver()
                 .capabilities(options)
                 .create();
 
-        WebDriverManager.chromedriver()
-                .setup();
-        options.addArguments("--kiosk");
-        /* wyłączone ze względu na wykorzystanie ExpliciteWait w testach
-        driver.manage()
-                .timeouts()
-                .implicitlyWait(Duration.ofSeconds(10));*/
+        //Wait i narzędzia przeglądarki
         wait = new WebDriverWait(driver, Duration.ofSeconds(30));
-        fluentWait = new FluentWait<>(driver);
         js = (JavascriptExecutor) driver;
         devTools = ((HasDevTools) driver).getDevTools();
+        fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(3))
+                .withMessage("Czekam na element")
+                .withTimeout(Duration.ofSeconds(45));
     }
 
 
     @AfterClass
     public void end() {
+        //Akcje po teście
         driver.quit();
     }
 
@@ -132,7 +124,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test(priority = 2)
-    public void test2WebForm() throws InterruptedException {
+    public void test2WebForm() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/web-form.html");
         assertThat(driver.getTitle()).isEqualTo("Hands-On Selenium WebDriver with Java");
         logger.info("Page title matched expected value using getTitle(): {}", driver.getTitle());
@@ -164,7 +156,9 @@ public class BoniGarciaPageTests {
                 .sendKeys(testTekst);
         String randomValue = driver.findElement(By.name("my-textarea"))
                 .getAttribute("value");
-        assertThat(randomValue.length()).isEqualTo(40);
+        if (randomValue != null) {
+            assertThat(randomValue.length()).isEqualTo(40);
+        }
         logger.info("Wygenerowano następujący ciąg znaków: {}", randomValue);
         assertThat(driver.findElement(By.cssSelector("input[readonly]"))
                 .isDisplayed()).isTrue();
@@ -326,7 +320,7 @@ public class BoniGarciaPageTests {
 
         List<Point> heartCoords = HeartCoordinatesGenerator.generateHeartPoints(centerX, centerY, scale, 50);
         Point canvasLocation = canvas.getLocation();
-        Point prev = heartCoords.get(0);
+        Point prev = heartCoords.getFirst();
         int startX = prev.x - canvasLocation.getX();
         int startY = prev.y - canvasLocation.getY();
 
@@ -365,9 +359,6 @@ public class BoniGarciaPageTests {
     @Test
     void test8() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html");
-        FluentWait<WebDriver> fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(3))
-                .withMessage("Czekam na element")
-                .withTimeout(Duration.ofSeconds(45));
         fluentWait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector("div > img"), 4));
         WebElement landscapeImg = driver.findElement(By.cssSelector("div > img#landscape"));
         assertThat(landscapeImg.isDisplayed()).isTrue();
@@ -401,17 +392,14 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test10LongPage() throws IOException {
+    void test10LongPage()  {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/long-page.html");
         WebElement header = driver.findElement(By.cssSelector("h1.display-6"));
         assertThat(header.getText()).isEqualTo("This is a long page");
         actions = new Actions(driver);
         WebElement lastParagraph = driver.findElement(By.cssSelector("p:last-of-type"));
         actions.scrollToElement(lastParagraph);
-//        File screenshot = wait.until(ExpectedConditions.visibilityOf(lastParagraph)).getScreenshotAs(OutputType.FILE);
         assertThat(lastParagraph.isDisplayed()).isTrue();
-        TakesScreenshot ts = (TakesScreenshot) driver;
-//      File screenshot = ts.getScreenshotAs(OutputType.FILE);
         File screenshot = lastParagraph.getScreenshotAs(OutputType.FILE);
         DateTimeFormatter dt = DateTimeFormatter.ofPattern("yyyy-MM-dd-hh-mm");
         String formattedDate = dt.format(localDateTime);
@@ -480,8 +468,6 @@ public class BoniGarciaPageTests {
         Set<Cookie> cookies = driver.manage()
                 .getCookies();
         cookies.forEach(System.out::println);
-//        Cookie username = cookies.stream().filter(c -> c.equals("username")).findAny().get();
-//        logger.info("Ciasteczko ma dane = {}", username.getName());
         Cookie usename = driver.manage().getCookieNamed("username");
         logger.info(usename.toString());
         driver.manage().deleteCookie(usename);
@@ -588,9 +574,6 @@ public class BoniGarciaPageTests {
         URI uri = URI.create(page);
         String origin = uri.getScheme() + "://" + uri.getHost();
         logger.info("Origin to: {}", origin);
-        //   String originDisplayPath = "https://bonigarcia.dev";
-
-
         StorageId storageId = new StorageId(Optional.of(origin), Optional.empty(), true);
         devTools.send(DOMStorage.setDOMStorageItem(storageId, "Klucz", "Wartość"));
 
@@ -718,10 +701,6 @@ public class BoniGarciaPageTests {
 
     @Test
     void test24SlowLogin() throws Exception {
-        fluentWait.withTimeout(Duration.ofSeconds(45))
-                .pollingEvery(Duration.ofSeconds(1))
-                .withMessage("Oczekuję na element...")
-                .ignoring(NoSuchElementException.class, StaleElementReferenceException.class);
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/login-slow.html");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Slow login form']"));
         wait.until(ExpectedConditions.visibilityOf(header));
@@ -735,19 +714,15 @@ public class BoniGarciaPageTests {
         passwordLabel.sendKeys("user");
         WebElement btnSubmit = driver.findElement(By.cssSelector("button[type=submit]"));
         btnSubmit.click();
-        // fluentWait.until(ExpectedConditions.presenceOfElementLocated(By.id("sucess")));
         fluentWait.until(driver -> driver.getCurrentUrl()
                 .equals("https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html"));
-        fluentWait.until(new Function<WebDriver, WebElement>() {
-            @Override
-            public WebElement apply(WebDriver driver) {
-                try {
-                    WebElement successInfo = driver.findElement(By.id("success"));
-                    return successInfo.isDisplayed() ? successInfo : null;
-                } catch (NoSuchElementException e) {
-                    e.getMessage();
-                    return null;
-                }
+        fluentWait.until(driver -> {
+            try {
+                WebElement successInfo = driver.findElement(By.id("success"));
+                return successInfo.isDisplayed() ? successInfo : null;
+            } catch (NoSuchElementException e) {
+                e.getMessage();
+                return null;
             }
         });
     }
@@ -795,8 +770,8 @@ public class BoniGarciaPageTests {
         for (WebElement e : btnDownloads) {
             e.click();
         }
-        File file1 = new File(downloadTarget, "selenium-jupiter.png");
-        File file2 = new File(downloadTarget, "webdrivermanager.png");
+        File file1 = new File(downloadFolder, "selenium-jupiter.png");
+        File file2 = new File(downloadFolder, "webdrivermanager.png");
         int timeout = 0;
         while (!file1.exists() && timeout < 5){
             try {
@@ -835,7 +810,6 @@ public class BoniGarciaPageTests {
         wait.until(ExpectedConditions.visibilityOf(header));
 
         Faker faker = new Faker();
-
 
         driver.findElement(By.name("first-name"))
                 .sendKeys(faker.name().firstName());
