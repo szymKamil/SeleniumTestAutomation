@@ -113,9 +113,10 @@ public class WebForm {
                 log.error("Tekst niepoprawny: oczekiwano '{}', ale znaleziono '{}'", inputText, value);
             }
         }
-        assertThat(passwordInput.isDisplayed()).isTrue();
-        passwordInput.sendKeys(password);
-
+        if (password.isPresent()) {
+            assertThat(passwordInput.isDisplayed()).isTrue();
+            passwordInput.sendKeys(password.toString());
+        }
         assertThat(textArea.isDisplayed()).isTrue();
         textArea.sendKeys(textAreaInput);
         log.info("Wpisano w pole tekstowe {}", textAreaInput);
