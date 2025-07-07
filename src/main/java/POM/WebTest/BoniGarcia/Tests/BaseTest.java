@@ -3,29 +3,62 @@ package POM.WebTest.BoniGarcia.Tests;
 import Base.BaseActions.BaseActionsV1;
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.MainPage;
+import POM.WebTest.BoniGarcia.Pages.WebForm;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+import org. slf4j. Logger;
 
-public class BaseTest {
+import java.util.ArrayList;
+import java.util.Random;
+import java.util.function.Supplier;
+
+public class BaseTest  {
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected BaseActionsV1 actions;
     private DriverFactoryV1 factory;
     MainPage mainPage;
+    WebForm webForm;
+    Logger log;
+    Random random;
+
+    Supplier<String> randomGeneratedText = () -> {
+        random = new Random(2);
+        ArrayList<Character> randomTextInput = new ArrayList<>();
+        for (char ch = 'a'; ch <= 'z'; ch++) {
+            randomTextInput.add(ch);
+        }
+        for (char ch = 'A'; ch <= 'Z'; ch++) {
+            randomTextInput.add(ch);
+        }
+        randomTextInput.add('.');
+        randomTextInput.add(',');
+        randomTextInput.add(' ');
+        StringBuilder stringBuilder = new StringBuilder();
+
+        for (int i = 0; i < 60; i++){
+            stringBuilder.append(randomTextInput.get(random.nextInt(randomTextInput.size())));
+        }
+        return stringBuilder.toString();
+    };
 
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("10") int timeout){
+    public void config(@Optional("Chrome") String browser, @Optional("25") int timeout) throws Exception {
         factory = new DriverFactoryV1(browser, timeout);
         this.driver = factory.getDriver();
         this.wait = factory.getWait();
         this.actions = new BaseActionsV1(driver, wait);
-        mainPage = new MainPage(driver, wait);
+        this.log = factory.getLogger();
+        mainPage = new MainPage(driver, wait, log);
+        webForm = new WebForm(driver, wait, log);
+
+
     }
 
     @AfterMethod

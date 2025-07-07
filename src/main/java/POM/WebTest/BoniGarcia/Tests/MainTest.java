@@ -1,35 +1,40 @@
 package POM.WebTest.BoniGarcia.Tests;
 
-import Base.BaseActions.BaseActionsV1;
-import Base.BaseTest.DriverFactoryV1;
-import POM.WebTest.BoniGarcia.Pages.MainPage;
-import org.openqa.selenium.WebDriver;
+
+
+import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
 
-import static org.assertj.core.api.Assertions.*;
+import java.time.LocalDate;
+import java.util.Optional;
 
 
 public class MainTest extends BaseTest {
 
-
     @Test
-    public void mainPageTest1(){
+    public void mainPageTestElementsVerification(){
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony, weryfikację adresu URL oraz tekstu nagłówka.
          */
-        actions = new BaseActionsV1(driver, wait);
         driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
-        mainPage.getBtn("Web form");
-        assertThat(driver.findElements(mainPage.img)).isNotEmpty().hasSize(1);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
-        actions.click(mainPage.getBtn("Web form"));
-
-
-
+        mainPage.verifyMainPage();
     }
 
+    @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
+    public void webFormTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony, weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
+        mainPage.goToSubPage("Web form");
+        webForm.verifyFormPage();
+        webForm.fillForm(Optional.of("Tekst przykładowy"), Optional.of("Haslo123_456"), randomGeneratedText.get(), "Two",
+                POM.WebTest.BoniGarcia.Utils.DropdownOptions.OPTION_B,
+                new Color(65, 45, 34, 2).asHex(),
+                LocalDate.of(2025, 12, 12));
+
+    }
 
 }
