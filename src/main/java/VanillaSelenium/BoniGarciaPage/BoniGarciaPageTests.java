@@ -132,12 +132,14 @@ public class BoniGarciaPageTests {
                 .isDisplayed()).isTrue();
         driver.findElement(By.cssSelector("input.form-control[name='my-text']"))
                 .sendKeys("Test formularza");
-        logger.info("W formularzu wpisano: {}", driver.findElement(By.cssSelector("input.form-control[name='my-text']"))
-                .getAttribute("value"));
+        logger.info("W formularzu wpisano: {}",
+            driver.findElement(By.cssSelector("input.form-control[name='my-text']"))
+                    .getAttribute("value"));
         driver.findElement(By.cssSelector("input[type='password']"))
                 .sendKeys("hasło");
-        logger.info("W formularzu wpisano: {}", driver.findElement(By.cssSelector("input[type='password']"))
-                .getAttribute("value"));
+        logger.info("W formularzu wpisano: {}",
+            driver.findElement(By.cssSelector("input[type='password']"))
+                    .getAttribute("value"));
         ArrayList<Character> tablicaLiter = new ArrayList<>();
         for (char ch = 'a'; ch <= 'z'; ch++) {
             tablicaLiter.add(ch);
@@ -171,7 +173,7 @@ public class BoniGarciaPageTests {
                 break;
             }
         }
-        logger.info("W pierwszej liście wybrano {}", select1WebElem.getDomAttribute("value"));
+        logger.info("W pierwszej liście wybrano {}", select1WebElem.getText());
         WebElement dataList = driver.findElement(By.name("my-datalist"));
         dataList.click();
         String dataListOptionvalue = driver.findElement(By.xpath("//datalist/option[4]"))
