@@ -2,6 +2,7 @@ package POM.WebTest.BoniGarcia.Tests;
 
 
 
+import POM.WebTest.BoniGarcia.Pages.Navigation;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
@@ -36,5 +37,21 @@ public class MainTest extends BaseTest {
                 LocalDate.of(2025, 12, 12));
 
     }
+
+    @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
+    public void navigationPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony, weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
+        mainPage.goToSubPage("Navigation");
+        navigationPage.verifyNavigationPage();
+        navigationPage.navigationExampleTest();
+
+
+
+    }
+
 
 }

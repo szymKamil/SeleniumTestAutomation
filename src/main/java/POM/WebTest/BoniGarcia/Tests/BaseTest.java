@@ -3,6 +3,7 @@ package POM.WebTest.BoniGarcia.Tests;
 import Base.BaseActions.BaseActionsV1;
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.MainPage;
+import POM.WebTest.BoniGarcia.Pages.Navigation;
 import POM.WebTest.BoniGarcia.Pages.WebForm;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -21,10 +22,14 @@ public class BaseTest  {
     protected WebDriverWait wait;
     protected BaseActionsV1 actions;
     private DriverFactoryV1 factory;
-    MainPage mainPage;
-    WebForm webForm;
     Logger log;
     Random random;
+
+
+    MainPage mainPage;
+    WebForm webForm;
+    Navigation navigationPage;
+
 
     Supplier<String> randomGeneratedText = () -> {
         random = new Random(2);
@@ -57,7 +62,7 @@ public class BaseTest  {
         this.log = factory.getLogger();
         mainPage = new MainPage(driver, wait, log);
         webForm = new WebForm(driver, wait, log);
-
+        navigationPage = new Navigation(driver, wait, log);
 
     }
 
