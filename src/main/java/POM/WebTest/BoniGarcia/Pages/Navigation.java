@@ -19,13 +19,14 @@ public class Navigation {
     private WebDriverWait wait;
     private Logger log;
     private MainPage mainPage;
-
+    private AbstractPage ap;
 
     public Navigation(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
         mainPage = new MainPage(driver, wait, log);
+        ap = new AbstractPage(driver, wait, log);
         PageFactory.initElements(driver, this);
     }
 
@@ -53,11 +54,11 @@ public class Navigation {
         } else {
             log.error("Niepoprawny adres URL: " + currentUrl);
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
-        assertThat(driver.findElement(mainPage.img)
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
                 .isDisplayed()).isTrue();
         assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(mainPage.copyrights);
+                .getText()).contains(ap.copyrights);
     }
 
     public void navigationExampleTest(){

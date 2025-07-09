@@ -2,6 +2,7 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import Base.BaseActions.BaseActionsV1;
 import Base.BaseTest.DriverFactoryV1;
+import POM.WebTest.BoniGarcia.Pages.AbstractPage;
 import POM.WebTest.BoniGarcia.Pages.MainPage;
 import POM.WebTest.BoniGarcia.Pages.Navigation;
 import POM.WebTest.BoniGarcia.Pages.WebForm;
@@ -29,7 +30,7 @@ public class BaseTest  {
     MainPage mainPage;
     WebForm webForm;
     Navigation navigationPage;
-
+    AbstractPage ap;
 
     Supplier<String> randomGeneratedText = () -> {
         random = new Random(2);
@@ -63,6 +64,7 @@ public class BaseTest  {
         mainPage = new MainPage(driver, wait, log);
         webForm = new WebForm(driver, wait, log);
         navigationPage = new Navigation(driver, wait, log);
+        ap = new AbstractPage(driver, wait, log);
 
     }
 

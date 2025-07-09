@@ -24,16 +24,18 @@ public class WebForm {
     private WebDriver driver;
     private WebDriverWait wait;
     private Logger log;
-    private MainPage mainPage;
-    Select select;
+    public Select select;
     JavascriptExecutor js;
 
+    private MainPage mainPage;
+    private AbstractPage ap;
 
     public WebForm(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
         mainPage = new MainPage(driver, wait, log);
+        ap = new AbstractPage(driver, wait, log);
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }
@@ -44,7 +46,7 @@ public class WebForm {
     @FindBy(xpath = "//label[contains(., 'Text input')]/input")
     public WebElement textInput;
 
-    @FindBy(xpath = "//label[contains(., 'Password')]")
+    @FindBy(xpath = "//label[contains(., 'Password')]/input")
     public WebElement passwordInput;
 
     @FindBy(xpath = "//label[contains(., 'Textarea')]/textarea")
@@ -80,54 +82,39 @@ public class WebForm {
     @FindBy(xpath = "//button[@type='submit']")
     public WebElement submitButton;
 
-    @FindBy(xpath = "//h1[@class='display-6' and text()='Form submitted']\n")
+    @FindBy(xpath = "//h1[@class='display-6' and text()='Form submitted']")
     public WebElement h1SubmitFormConfirmation;
 
 
-
-    public void verifyFormPage() {
-        wait.until(ExpectedConditions.visibilityOf(mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/web-form.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(mainPage.mainHeader));
-        assertThat(driver.findElement(mainPage.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(mainPage.copyrights);
-        assertThat(driver.findElement(By.linkText("Return to index"))
-                .isDisplayed()).isTrue();
+    public void fillTextInput(String inputText){
+        wait.until(ExpectedConditions.visibilityOf(textInput)).sendKeys(inputText.toString());
     }
 
-    public void fillForm(Optional<String> inputText, Optional<String> password, String textAreaInput, String selectDropdownText, DropdownOptions dropdownOption, String hexColor, LocalDate dataTestowa) {
-        assertThat(textInput.isDisplayed()).isTrue();
-        if (inputText.isPresent()) {
-            textInput.sendKeys(inputText.toString());
-            String value = textInput.getAttribute("value");
-            if (inputText.equals(value)) {
-                log.info("Tekst poprawnie wpisany w input");
-            } else {
-                log.error("Tekst niepoprawny: oczekiwano '{}', ale znaleziono '{}'", inputText, value);
-            }
-        }
-        if (password.isPresent()) {
-            assertThat(passwordInput.isDisplayed()).isTrue();
-            passwordInput.sendKeys(password.toString());
-        }
-        assertThat(textArea.isDisplayed()).isTrue();
-        textArea.sendKeys(textAreaInput);
-        log.info("Wpisano w pole tekstowe {}", textAreaInput);
+    public void fillPasswordInput(String inputText){
+        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(inputText.toString());
+    }
 
-        assertThat(selectElementList.isDisplayed()).isTrue();
+    public void fillTextAreaInput(String inputText){
+        wait.until(ExpectedConditions.visibilityOf(textArea)).sendKeys(inputText.toString());
+    }
+
+    public void selectElementOnDropdownList(String selectDropdownText){
         select = new Select(selectElementList);
-        selectElementList.click();
+        wait.until(ExpectedConditions.visibilityOf(selectElementList)).click();
         select.selectByVisibleText(selectDropdownText);
-        log.info("W pierwszej liście wybrano {}", select.getFirstSelectedOption().getText());
+    }
 
-        assertThat(dataList.isDisplayed()).isTrue();
+    public void selectElementOnDataList(DropdownOptions dropdownOption){
+        String dropdownElementText = getDatalistOption(dropdownOption);
+        dataList.sendKeys(dropdownElementText);
+    }
+
+
+
+    public void fillForm(String selectDropdownText, DropdownOptions dropdownOption, String hexColor, LocalDate dataTestowa) {
+
+
+
         String dropdownElementText = getDatalistOption(dropdownOption);
         dataList.sendKeys(dropdownElementText);
         log.info("Na liście dropdown wybrano: {}", dataList.getAttribute("value"));
