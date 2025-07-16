@@ -277,7 +277,6 @@ public class BoniGarciaPageTests {
         actions = new Actions(driver);
         for (int i = 0; i < imgList.size(); i++) {
             actions.moveToElement(imgList.get(i))
-                    .build()
                     .perform();
             assertThat(driver.findElement(By.xpath(String.format("//*[text()='%s']", imgCaptions[i])))
                     .isDisplayed()).isTrue();

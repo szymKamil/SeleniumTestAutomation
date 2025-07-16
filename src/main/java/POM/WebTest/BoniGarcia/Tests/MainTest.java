@@ -148,7 +148,7 @@ public class MainTest extends BaseTest {
     public void dropdownMenuTest(){
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, a użycie wybranych dropdownów i kliknięcie w odpowiednie linki.
+         * weryfikację adresu URL oraz tekstu nagłówka, i użycie wybranych dropdownów i kliknięcie w odpowiednie linki.
          */
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -173,7 +173,40 @@ public class MainTest extends BaseTest {
         dropdownMenu.pickDropdownElement( 3);
     }
 
+    @Test()
+    public void mouseOverTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Mouse over");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/mouse-over.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
 
+        String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
+
+        for (int i = 0; i < imgCaptions.length; i++){
+            mouseOver.hoverOverImg(i);
+            String imgCaption = mouseOver.getCaptionElementByIndex(i).getText();
+            log.info("Element numer {} ma podpis: {}", (i + 1), imgCaption);
+        }
+
+
+
+
+    }
 
 
 }

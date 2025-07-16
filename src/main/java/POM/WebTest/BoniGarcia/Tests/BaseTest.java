@@ -2,7 +2,8 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import Base.BaseActions.BaseActionsV1;
 import Base.BaseTest.DriverFactoryV1;
-import POM.WebTest.BoniGarcia.Pages.*;
+import POM.WebTest.BoniGarcia.Pages.MainPage;
+import POM.WebTest.BoniGarcia.Pages.WebForm;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
@@ -20,6 +21,8 @@ public class BaseTest  {
     protected WebDriverWait wait;
     protected BaseActionsV1 actions;
     private DriverFactoryV1 factory;
+    MainPage mainPage;
+    WebForm webForm;
     Logger log;
     Random random;
 
@@ -29,6 +32,8 @@ public class BaseTest  {
     Navigation navigationPage;
     AbstractPage ap;
     DropdownMenu dropdownMenu;
+    MouseOver mouseOver;
+
 
     Supplier<String> randomGeneratedText = () -> {
         random = new Random(2);
@@ -64,6 +69,8 @@ public class BaseTest  {
         navigationPage = new Navigation(driver, wait, log);
         ap = new AbstractPage(driver, wait, log);
         dropdownMenu = new DropdownMenu(driver, wait, log);
+        mouseOver = new MouseOver(driver, wait, log);
+
     }
 
     @AfterMethod
