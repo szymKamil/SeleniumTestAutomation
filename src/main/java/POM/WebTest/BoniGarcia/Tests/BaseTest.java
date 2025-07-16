@@ -2,8 +2,7 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import Base.BaseActions.BaseActionsV1;
 import Base.BaseTest.DriverFactoryV1;
-import POM.WebTest.BoniGarcia.Pages.MainPage;
-import POM.WebTest.BoniGarcia.Pages.WebForm;
+import POM.WebTest.BoniGarcia.Pages.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.AfterMethod;
@@ -21,8 +20,7 @@ public class BaseTest  {
     protected WebDriverWait wait;
     protected BaseActionsV1 actions;
     private DriverFactoryV1 factory;
-    MainPage mainPage;
-    WebForm webForm;
+
     Logger log;
     Random random;
 
