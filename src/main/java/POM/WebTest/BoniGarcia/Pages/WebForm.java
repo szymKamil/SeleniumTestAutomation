@@ -1,6 +1,7 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
+import net.datafaker.providers.base.TimeAndDate;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -13,9 +14,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import java.nio.file.Path;
+import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Optional;
+import java.util.Date;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -109,59 +111,48 @@ public class WebForm {
         dataList.sendKeys(dropdownElementText);
     }
 
-
-
-    public void fillForm(String selectDropdownText, DropdownOptions dropdownOption, String hexColor, LocalDate dataTestowa) {
-
-
-
-        String dropdownElementText = getDatalistOption(dropdownOption);
-        dataList.sendKeys(dropdownElementText);
-        log.info("Na liście dropdown wybrano: {}", dataList.getAttribute("value"));
-
-        assertThat(fileField.isDisplayed()).isTrue();
-        Path fvPath = Path.of("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf");
-        fileField.sendKeys(fvPath.toString());
-        log.info("Na dodano plik testowy: {}", fileField.getAttribute("value"));
-
-        assertThat(checkbox1.isDisplayed()).isTrue();
-        if (!checkbox1.isSelected()){
-            checkbox1.click();
-        }
-        assertThat(checkbox1.isSelected()).isTrue();
-        assertThat(checkbox2.isDisplayed()).isTrue();
-        if (checkbox2.isSelected()){
-            checkbox2.click();
-        }
-        assertThat(checkbox2.isSelected()).isFalse();
-
-        assertThat(radio1.isDisplayed()).isTrue();
-        if (!radio1.isSelected()){
-            radio1.click();
-        }
-        assertThat(radio1.isSelected()).isTrue();
-        assertThat(radio2.isSelected()).isFalse();
-
-        assertThat(colorElement.isDisplayed()).isTrue();
-        String initialColor = colorElement.getDomProperty("value");
-        js.executeScript("arguments[0].setAttribute('value', '%s')".formatted(hexColor), colorElement);
-        String modifyColor = colorElement.getDomProperty("value");
-        log.info("Początkową wartością koloru było {}, po zmianie było to {}", initialColor, modifyColor);
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-        String formatedDate = dataTestowa.format(formatter);
-        dateField.sendKeys(formatedDate);
-        log.info("Wpisana została data: {}", dataTestowa);
-
-        assertThat(submitButton.isDisplayed()).isTrue();
-        submitButton.click();
-        wait.until(ExpectedConditions.visibilityOf(h1SubmitFormConfirmation));
-        assertThat(driver.findElement(By.className("lead")).getText()).isEqualTo("Received!");
-    }
-
-
     public String getDatalistOption(DropdownOptions option) {
         String xpath = "//datalist/option[contains(@value, '" + option.getValue() + "')]";
         return driver.findElement(By.xpath(xpath)).getAttribute("value");
     }
+
+    public void uploadFile(String path){
+        Path filePath = Path.of(path);
+        fileField.sendKeys(filePath.toString());
+    }
+
+
+    public void checkboxSelector(int checkboxNumToSelect){
+        WebElement checkbox = switch (checkboxNumToSelect) {
+            case 1 -> checkbox1;
+            case 2 -> checkbox2;
+            default -> throw new IllegalArgumentException("Checkbox number invalid");
+        };
+        if (!checkbox.isSelected()) {
+            checkbox.click();
+        }
+    }
+
+    public void radioSelector(int radioNumToSelect){
+        WebElement radioBtn = switch (radioNumToSelect) {
+            case 1 -> radio1;
+            case 2 -> radio2;
+            default -> throw new IllegalArgumentException("Checkbox number invalid");
+        };
+        if (!radioBtn.isSelected()) {
+            radioBtn.click();
+        }
+    }
+
+    public void colorPicker(String hexColor){
+        js.executeScript("arguments[0].setAttribute('value', '%s')".formatted(hexColor), colorElement);
+    }
+
+    public void dateSetter(LocalDate dataTestowa){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+        String formatedDate = dataTestowa.format(formatter);
+        dateField.sendKeys(formatedDate);
+    }
+
 
 }

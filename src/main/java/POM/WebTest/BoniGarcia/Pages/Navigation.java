@@ -18,15 +18,12 @@ public class Navigation {
     private WebDriver driver;
     private WebDriverWait wait;
     private Logger log;
-    private MainPage mainPage;
-    private AbstractPage ap;
+
 
     public Navigation(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
-        mainPage = new MainPage(driver, wait, log);
-        ap = new AbstractPage(driver, wait, log);
         PageFactory.initElements(driver, this);
     }
 
@@ -46,32 +43,17 @@ public class Navigation {
     public WebElement btnActive;
 
 
-    public void verifyNavigationPage() {
-        wait.until(ExpectedConditions.visibilityOf(mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/navigation1.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
+    public void btnNext(){
+        wait.until(ExpectedConditions.visibilityOf(nextBtn)).click();
     }
 
-    public void navigationExampleTest(){
-        wait.until(ExpectedConditions.visibilityOf(mainHeader));
-        assertThat(mainHeader.getText()).isEqualTo("Navigation example");
-        for (int i = 1; i < 4; i++){
-            log.info("Lead na stronie {} brzmi: {}", i, leadParagraph.getText());
-            log.info("Na stronie {} przycisk ma numer {}", i, btnActive.getText());
-            if (i != 3) {
-                nextBtn.click();
-            }
-        }
+    public void btnPrev(){
+        wait.until(ExpectedConditions.visibilityOf(prevBtn)).click();
     }
 
+    public void activeBtnInfo(){
+        String btnNumber = wait.until(ExpectedConditions.visibilityOf(btnActive)).getText();
+        log.info("Aktywnym przyciskiem jest aktualnie {}", btnNumber);
+    }
 
 }
