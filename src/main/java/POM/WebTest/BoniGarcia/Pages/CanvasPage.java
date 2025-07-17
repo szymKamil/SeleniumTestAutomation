@@ -1,5 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import POM.WebTest.BoniGarcia.Utils.PointForCanvas;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -28,15 +29,21 @@ public class CanvasPage {
     @FindBy(id = "my-canvas")
     public WebElement canvas;
 
-    public void paintInCanvas(){
-        wait.until(ExpectedConditions.visibilityOf(canvas));
-        canvas.getLocation().getX();
-        canvas.getLocation().getY();
-        actions.moveToElement(canvas).clickAndHold().moveByOffset(20, 20).moveByOffset(0, 20).moveByOffset(-20, -60)
-                .moveByOffset(10, -70).moveByOffset(-100, 40).release().build().perform();
 
+    public void paintInCanvas(PointForCanvas... points){
+        wait.until(ExpectedConditions.visibilityOf(canvas));
+        actions.moveToElement(canvas).clickAndHold();
+        for(PointForCanvas point : points) {
+            actions.moveByOffset(point.x(), point.y());
+        }
+        actions.release().build().perform();
     }
 
 
+    public void paintInCanvas(){
+        paintInCanvas(new PointForCanvas(20, 20), new PointForCanvas(0, 20), new PointForCanvas(20, -60),
+                new PointForCanvas(10, -70), new PointForCanvas(-100, 40),new PointForCanvas(-100, 40),new PointForCanvas(0, 20));
+
+    }
 
 }
