@@ -174,7 +174,7 @@ public class MainTest extends BaseTest {
     }
 
     @Test()
-    public void mouseOverTest(){
+    public void mouseOverTest() {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .
@@ -197,16 +197,69 @@ public class MainTest extends BaseTest {
 
         String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
 
-        for (int i = 0; i < imgCaptions.length; i++){
+        for (int i = 0; i < imgCaptions.length; i++) {
             mouseOver.hoverOverImg(i);
-            String imgCaption = mouseOver.getCaptionElementByIndex(i).getText();
+            String imgCaption = mouseOver.getCaptionElementByIndex(i)
+                    .getText();
             log.info("Element numer {} ma podpis: {}", (i + 1), imgCaption);
         }
-
-
-
-
     }
 
+        @Test()
+        public void dragAndDropTest(){
+            /***
+             * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+             * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+             */
+            driver.get(mainPage.boniGarciaMainURL);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+            mainPage.goToSubPage("Drag and drop");
+            wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+            String currentUrl = driver.getCurrentUrl();
+            if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/drag-and-drop.html")) {
+                log.info("Adres URL jest poprawny.");
+            } else {
+                log.error("Niepoprawny adres URL: " + currentUrl);
+            }
+            wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+            assertThat(driver.findElement(ap.img)
+                    .isDisplayed()).isTrue();
+            assertThat(driver.findElement(mainPage.copySpan)
+                    .getText()).contains(ap.copyrights);
+            log.info("Koordynaty panelu to: {} i {} ", dragAndDrop.draggablePanel.getLocation().x, dragAndDrop.draggablePanel.getLocation().y);
+            log.info("Koordynaty miejsca docelowego to: {} i {} ", dragAndDrop.target.getLocation().x, dragAndDrop.target.getLocation().y);
+            dragAndDrop.dragPanelTo(dragAndDrop.target);
+            log.info("Koordynaty panelu po przeniesieniu to: {} i {} ", dragAndDrop.draggablePanel.getLocation().x, dragAndDrop.draggablePanel.getLocation().y);
+            dragAndDrop.dragPanelTo();
+            log.info("Koordynaty panelu po kolejnym przeniesieniu to: {} i {} ", dragAndDrop.draggablePanel.getLocation().x, dragAndDrop.draggablePanel.getLocation().y);
+
+        }
+
+    @Test()
+    public void canvas(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Draw in canvas");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/draw-in-canvas.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        canvasPage.paintInCanvas();
+    }
 
 }
+
+
+

@@ -31,7 +31,8 @@ public class BaseTest  {
     AbstractPage ap;
     DropdownMenu dropdownMenu;
     MouseOver mouseOver;
-
+    DragAndDrop dragAndDrop;
+    CanvasPage canvasPage;
 
     Supplier<String> randomGeneratedText = () -> {
         random = new Random(2);
@@ -68,7 +69,8 @@ public class BaseTest  {
         ap = new AbstractPage(driver, wait, log);
         dropdownMenu = new DropdownMenu(driver, wait, log);
         mouseOver = new MouseOver(driver, wait, log);
-
+        dragAndDrop = new DragAndDrop(driver, wait, log);
+        canvasPage = new CanvasPage(driver, wait, log);
     }
 
     @AfterMethod
