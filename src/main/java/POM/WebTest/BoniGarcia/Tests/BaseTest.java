@@ -33,6 +33,7 @@ public class BaseTest  {
     MouseOver mouseOver;
     DragAndDrop dragAndDrop;
     CanvasPage canvasPage;
+    LoadingImagesPage loadingImagesPage;
 
     Supplier<String> randomGeneratedText = () -> {
         random = new Random(2);
@@ -71,6 +72,7 @@ public class BaseTest  {
         mouseOver = new MouseOver(driver, wait, log);
         dragAndDrop = new DragAndDrop(driver, wait, log);
         canvasPage = new CanvasPage(driver, wait, log);
+        loadingImagesPage = new LoadingImagesPage(driver, wait, log);
     }
 
     @AfterMethod

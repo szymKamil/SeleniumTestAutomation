@@ -358,7 +358,7 @@ public class BoniGarciaPageTests {
     }
 
     @Test
-    void test8() {
+    void test8LoadingImages() {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html");
         fluentWait.until(ExpectedConditions.numberOfElementsToBe(By.cssSelector("div > img"), 4));
         WebElement landscapeImg = driver.findElement(By.cssSelector("div > img#landscape"));
