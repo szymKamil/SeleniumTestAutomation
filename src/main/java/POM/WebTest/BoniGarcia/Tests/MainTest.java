@@ -289,6 +289,38 @@ public class MainTest extends BaseTest {
     }
 
 
+    @Test()
+    public void slowCalculatorTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Slow calculator");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        assertThat(slowCalculator.delayInput.isDisplayed()).isTrue();
+        slowCalculator.setCalcDelay(3);
+        String delayModified = slowCalculator.delayInput.getAttribute("value");
+        log.info("Kalkulator ma delay ustawiony na {}", delayModified);
+        slowCalculator.useCalculator("2+3=");
+        String result = slowCalculator.getResultOfCalc();
+        log.info("Wynik działania to: {}", result);
+
+    }
+
+
 }
 
 
