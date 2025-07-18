@@ -40,6 +40,8 @@ public class BaseTest  {
     CanvasPage canvasPage;
     LoadingImagesPage loadingImagesPage;
     SlowCalculator slowCalculator;
+    LongPage longPage;
+
     /*-----------------*/
 
     Supplier<String> randomGeneratedText = () -> {
@@ -82,7 +84,7 @@ public class BaseTest  {
         canvasPage = new CanvasPage(driver, wait, log);
         loadingImagesPage = new LoadingImagesPage(driver, wait, log);
         slowCalculator = new SlowCalculator(driver, wait, log);
-
+        longPage = new LongPage(driver, wait, log);
     }
 
     @AfterMethod
