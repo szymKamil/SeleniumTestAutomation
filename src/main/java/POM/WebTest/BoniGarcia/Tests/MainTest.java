@@ -9,6 +9,7 @@ import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 
+import java.time.Duration;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -174,7 +175,7 @@ public class MainTest extends BaseTest {
     }
 
     @Test()
-    public void mouseOverTest(){
+    public void mouseOverTest() {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .
@@ -197,16 +198,219 @@ public class MainTest extends BaseTest {
 
         String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
 
-        for (int i = 0; i < imgCaptions.length; i++){
+        for (int i = 0; i < imgCaptions.length; i++) {
             mouseOver.hoverOverImg(i);
-            String imgCaption = mouseOver.getCaptionElementByIndex(i).getText();
+            String imgCaption = mouseOver.getCaptionElementByIndex(i)
+                    .getText();
             log.info("Element numer {} ma podpis: {}", (i + 1), imgCaption);
         }
+    }
+
+        @Test()
+        public void dragAndDropTest(){
+            /***
+             * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+             * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+             */
+            driver.get(mainPage.boniGarciaMainURL);
+            wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+            mainPage.goToSubPage("Drag and drop");
+            wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+            String currentUrl = driver.getCurrentUrl();
+            if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/drag-and-drop.html")) {
+                log.info("Adres URL jest poprawny.");
+            } else {
+                log.error("Niepoprawny adres URL: " + currentUrl);
+            }
+            wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+            assertThat(driver.findElement(ap.img)
+                    .isDisplayed()).isTrue();
+            assertThat(driver.findElement(mainPage.copySpan)
+                    .getText()).contains(ap.copyrights);
+            log.info("Koordynaty panelu to: {} i {} ", dragAndDrop.draggablePanel.getLocation().x, dragAndDrop.draggablePanel.getLocation().y);
+            log.info("Koordynaty miejsca docelowego to: {} i {} ", dragAndDrop.target.getLocation().x, dragAndDrop.target.getLocation().y);
+            dragAndDrop.dragPanelTo(dragAndDrop.target);
+            log.info("Koordynaty panelu po przeniesieniu to: {} i {} ", dragAndDrop.draggablePanel.getLocation().x, dragAndDrop.draggablePanel.getLocation().y);
+            dragAndDrop.dragPanelTo();
+            log.info("Koordynaty panelu po kolejnym przeniesieniu to: {} i {} ", dragAndDrop.draggablePanel.getLocation().x, dragAndDrop.draggablePanel.getLocation().y);
+
+        }
+
+    @Test()
+    public void canvas(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Draw in canvas");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/draw-in-canvas.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        canvasPage.paintInCanvas();
+    }
 
 
+    @Test()
+    public void loadingImages(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Loading images");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/loading-images.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        loadingImagesPage.waitForImagesToLoad();
+        wait.until(ExpectedConditions.textToBePresentInElement(loadingImagesPage.paragraphText, "Done!"));
+        log.info("Wszystkie elementy są widoczne i poprawnie zostały załadowane.");
+
+
+    }
+
+
+    @Test()
+    public void slowCalculatorTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Slow calculator");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/slow-calculator.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        assertThat(slowCalculator.delayInput.isDisplayed()).isTrue();
+        slowCalculator.setCalcDelay(3);
+        String delayModified = slowCalculator.delayInput.getAttribute("value");
+        log.info("Kalkulator ma delay ustawiony na {}", delayModified);
+        slowCalculator.useCalculator("2+3=");
+        String result = slowCalculator.getResultOfCalc();
+        log.info("Wynik działania to: {}", result);
+
+    }
+
+
+    @Test()
+    public void longPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Long page");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/long-page.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        String paragraph = longPage.getTextFromParagraph(3);
+        log.info("Paragraf {} ma tekst {}", 4, paragraph);
+        longPage.scrollToLastParagraph();
+        try {
+            Thread.sleep(Duration.ofSeconds(4));
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        longPage.printAllParagraphs();
+
+    }
+
+    @Test()
+    public void infiniteScroll(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Infinite scroll");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/infinite-scroll.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+        log.info("Poczatkowa wysokosc strony to: {}", infiniteScroll.returnPageHeight());
+        infiniteScroll.scrollXTimes();
+        log.info("Końcowa wysokość strony to: {}", infiniteScroll.returnPageHeight());
+    }
+
+    @Test()
+    public void shadowRootTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Shadow DOM");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/shadow-dom.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        String shadowDOMtext = shadowDomPage.getShadowRootContent();
+        log.info("ShadowDOM posiada tekst: {}", shadowDOMtext);
 
 
     }
 
 
 }
+
+
+

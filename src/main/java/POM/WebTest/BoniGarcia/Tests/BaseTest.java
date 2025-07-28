@@ -11,11 +11,13 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org. slf4j. Logger;
 
+import java.text.Format;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Supplier;
 
 public class BaseTest  {
+    /*------Bazowe-----------*/
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected BaseActionsV1 actions;
@@ -23,15 +25,26 @@ public class BaseTest  {
 
     Logger log;
     Random random;
+    /*-----------------*/
 
 
+
+    /*------Klasy stron-----------*/
     MainPage mainPage;
     WebForm webForm;
     Navigation navigationPage;
     AbstractPage ap;
     DropdownMenu dropdownMenu;
     MouseOver mouseOver;
+    DragAndDrop dragAndDrop;
+    CanvasPage canvasPage;
+    LoadingImagesPage loadingImagesPage;
+    SlowCalculator slowCalculator;
+    LongPage longPage;
+    InfiniteScrollPage infiniteScroll;
+    ShadowDomPage shadowDomPage;
 
+    /*-----------------*/
 
     Supplier<String> randomGeneratedText = () -> {
         random = new Random(2);
@@ -53,6 +66,7 @@ public class BaseTest  {
         return stringBuilder.toString();
     };
 
+
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
@@ -68,7 +82,13 @@ public class BaseTest  {
         ap = new AbstractPage(driver, wait, log);
         dropdownMenu = new DropdownMenu(driver, wait, log);
         mouseOver = new MouseOver(driver, wait, log);
-
+        dragAndDrop = new DragAndDrop(driver, wait, log);
+        canvasPage = new CanvasPage(driver, wait, log);
+        loadingImagesPage = new LoadingImagesPage(driver, wait, log);
+        slowCalculator = new SlowCalculator(driver, wait, log);
+        longPage = new LongPage(driver, wait, log);
+        infiniteScroll = new InfiniteScrollPage(driver, wait);
+        shadowDomPage = new ShadowDomPage(driver, wait, log);
     }
 
     @AfterMethod

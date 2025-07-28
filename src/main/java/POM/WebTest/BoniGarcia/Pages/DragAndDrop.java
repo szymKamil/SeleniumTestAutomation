@@ -32,11 +32,16 @@ public class DragAndDrop {
     public WebElement target;
 
     public void dragPanelTo(){
-        dragPanelTo(target.getLocation().x, target.getLocation().y);
-    }
-    public void dragPanelTo(int xCoordinate, int yCoordinate){
-        wait.until(ExpectedConditions.visibilityOf(draggablePanel));
-        actions.moveToElement(draggablePanel).clickAndHold(draggablePanel).moveToLocation(xCoordinate, yCoordinate).build().perform();
+        dragPanelTo(target.getLocation().getX(), target.getLocation().getY());
     }
 
+    public void dragPanelTo(int xCoordinate, int yCoordinate){
+        wait.until(ExpectedConditions.visibilityOf(draggablePanel));
+        actions.clickAndHold(draggablePanel).moveToLocation(xCoordinate, yCoordinate).release().build().perform();
+    }
+
+    public void dragPanelTo(WebElement element){
+        wait.until(ExpectedConditions.visibilityOf(draggablePanel));
+        actions.clickAndHold(draggablePanel).moveToElement(element).release().build().perform();
+    }
 }
