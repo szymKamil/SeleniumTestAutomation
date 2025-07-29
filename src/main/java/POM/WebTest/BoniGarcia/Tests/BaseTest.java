@@ -45,6 +45,7 @@ public class BaseTest  {
     ShadowDomPage shadowDomPage;
     CookiesPage cookiesPage;
     FramesPage framesPage;
+    IFramePage iFramePage;
 
     /*-----------------*/
 
@@ -93,6 +94,8 @@ public class BaseTest  {
         shadowDomPage = new ShadowDomPage(driver, wait, log);
         cookiesPage = new CookiesPage(driver, wait, log);
         framesPage = new FramesPage(driver, wait, log);
+        iFramePage = new IFramePage(driver, wait, log);
+
     }
 
     @AfterMethod

@@ -5,6 +5,7 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
@@ -474,6 +475,35 @@ public class MainTest extends BaseTest {
         int paragraphsSize = driver.findElements(By.cssSelector("p")).size();
         log.info("W teście po przełączeniu się na ramkę widocznych jest {} paragrafów", paragraphsSize);
 
+    }
+
+    @Test()
+    public void iFramesPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("IFrames");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/iframes.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        iFramePage.switchToiFrame();
+        iFramePage.scrollPage();
+        WebElement lastP = driver.findElement(By.xpath("//p[last()]"));
+        assertThat(lastP.getText()).contains("Magnis feugiat natoque proin commodo laoreet mauris, " +
+                "odio ligula sagittis montes dapibus fames ultricies, interdum ridiculus volutpat aenean pulvinar.");
     }
 
 }
