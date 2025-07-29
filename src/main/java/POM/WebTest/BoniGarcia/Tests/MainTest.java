@@ -445,6 +445,37 @@ public class MainTest extends BaseTest {
     }
 
 
+    @Test()
+    public void framesPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Frames");
+        framesPage.switchToFrame(framesPage.frameHeader);
+
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/frames.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        framesPage.switchToFrame(framesPage.frameFooter);
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        framesPage.switchToFrame(framesPage.frameBody);
+        int paragraphsSize = driver.findElements(By.cssSelector("p")).size();
+        log.info("W teście po przełączeniu się na ramkę widocznych jest {} paragrafów", paragraphsSize);
+
+    }
+
 }
 
 
