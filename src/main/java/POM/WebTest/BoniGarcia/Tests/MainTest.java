@@ -11,6 +11,8 @@ import org.testng.annotations.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -405,7 +407,40 @@ public class MainTest extends BaseTest {
 
         String shadowDOMtext = shadowDomPage.getShadowRootContent();
         log.info("ShadowDOM posiada tekst: {}", shadowDOMtext);
+    }
 
+    @Test()
+    public void cookiesPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Cookies");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/cookies.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        wait.until(ExpectedConditions.elementToBeClickable(cookiesPage.refreshCookiesBtn));
+        cookiesPage.refreshCookiesBtn.click();
+        String cookies = cookiesPage.cookiesParagraph.getText();
+        log.info("Ciasteczka są następujące: {}", cookies);
+        cookiesPage.deleteAllCookies();
+        cookiesPage.addCookie("Username", "RobertZamojski");
+        cookiesPage.addCookie("data", LocalDateTime.now().format(DateTimeFormatter.ISO_DATE).toString());
+        cookiesPage.refreshCookiesBtn.click();
+        String cookiesModified = cookiesPage.cookiesParagraph.getText();
+        log.info("Ciasteczka są następujące: {}", cookiesModified);
 
     }
 

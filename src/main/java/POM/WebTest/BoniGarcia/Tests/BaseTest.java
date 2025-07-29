@@ -43,6 +43,7 @@ public class BaseTest  {
     LongPage longPage;
     InfiniteScrollPage infiniteScroll;
     ShadowDomPage shadowDomPage;
+    CookiesPage cookiesPage;
 
     /*-----------------*/
 
@@ -89,6 +90,7 @@ public class BaseTest  {
         longPage = new LongPage(driver, wait, log);
         infiniteScroll = new InfiniteScrollPage(driver, wait);
         shadowDomPage = new ShadowDomPage(driver, wait, log);
+        cookiesPage = new CookiesPage(driver, wait, log);
     }
 
     @AfterMethod
