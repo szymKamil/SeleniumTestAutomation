@@ -11,13 +11,11 @@ public class DialogBoxesPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private Logger log;
-    private JavascriptExecutor js;
+
 
     public DialogBoxesPage(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
-        this.log = log;
         PageFactory.initElements(driver, this);
     }
 
