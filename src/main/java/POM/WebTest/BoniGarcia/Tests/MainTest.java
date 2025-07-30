@@ -506,6 +506,45 @@ public class MainTest extends BaseTest {
                 "odio ligula sagittis montes dapibus fames ultricies, interdum ridiculus volutpat aenean pulvinar.");
     }
 
+
+    @Test()
+    public void alertPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Dialog boxes");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/dialog-boxes.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        dialogBoxesPage.launchAlert();
+        String alertString = dialogBoxesPage.getTextFromAlert();
+        log.info("Alert posiada tekst: {}", alertString);
+        dialogBoxesPage.launchConfirm();
+        dialogBoxesPage.getTextFromConfirm("ok");
+        assertThat(dialogBoxesPage.confirmTextParagraph.getText()).isEqualTo("You chose: true");
+        String promptText = "To jest prompt :)";
+        dialogBoxesPage.launchPrompt();
+        dialogBoxesPage.setTextToPromptAlert(promptText);
+        assertThat(dialogBoxesPage.promptTextParagraph.getText()).isEqualTo("You typed: " + promptText);
+        dialogBoxesPage.handleModalWindow("save");
+        assertThat(dialogBoxesPage.modalTextParagraph.getText()).isEqualTo("You chose: Save changes");
+
+
+    }
+
 }
 
 

@@ -46,6 +46,7 @@ public class BaseTest  {
     CookiesPage cookiesPage;
     FramesPage framesPage;
     IFramePage iFramePage;
+    DialogBoxesPage dialogBoxesPage;
 
     /*-----------------*/
 
@@ -95,7 +96,7 @@ public class BaseTest  {
         cookiesPage = new CookiesPage(driver, wait, log);
         framesPage = new FramesPage(driver, wait, log);
         iFramePage = new IFramePage(driver, wait, log);
-
+        dialogBoxesPage = new DialogBoxesPage(driver, wait, log);
     }
 
     @AfterMethod

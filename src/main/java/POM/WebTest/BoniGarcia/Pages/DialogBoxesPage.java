@@ -1,9 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.TimeoutException;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -27,17 +24,32 @@ public class DialogBoxesPage {
     @FindBy(id = "my-alert")
     public WebElement launchAlertBtn;
 
-
     @FindBy(id = "my-confirm")
     public WebElement confirmAlertBtn;
-
 
     @FindBy(id = "my-prompt")
     public WebElement promptAlertBtn;
 
-
     @FindBy(id = "my-modal")
     public WebElement modalAlertBtn;
+
+    @FindBy(id = "confirm-text")
+    public WebElement confirmTextParagraph;
+
+    @FindBy(id = "prompt-text")
+    public WebElement promptTextParagraph;
+
+    @FindBy(id = "modal-text")
+    public WebElement modalTextParagraph;
+
+    @FindBy(id = "example-modal")
+    public WebElement modalAlertBody;
+
+    @FindBy(css = "button.btn-primary")
+    public WebElement modalAlertSaveBtn;
+
+    @FindBy(css = "button.btn-secondary")
+    public WebElement modalAlertCloseBtn;
 
     public void launchAlertAndChoseBtn(WebElement btn){
         wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
@@ -94,17 +106,36 @@ public class DialogBoxesPage {
     }
 
     public void setTextToPromptAlert(String promptAlertInput){
-        boolean alertPresent;
         try {
             wait.until(ExpectedConditions.alertIsPresent());
-            alertPresent = true;
         } catch (TimeoutException e) {
-            alertPresent = false;
-        }
-        if (!alertPresent){
             launchPrompt();
+            wait.until(ExpectedConditions.alertIsPresent());
         }
-        driver.switchTo().alert().sendKeys(promptAlertInput);
+        Alert alert = driver.switchTo().alert();
+        alert.sendKeys(promptAlertInput);
+        alert.accept();
+
+    }
+
+
+    public String handleModalWindow(String saveOrClose){
+        String modalBodyText;
+        if(modalAlertBody.isDisplayed()){
+            modalBodyText = modalAlertBody.findElement(By.cssSelector("div.modal-body")).getText();
+        } else {
+            launchModal();
+            wait.until(ExpectedConditions.visibilityOf(modalAlertBody));
+            modalBodyText = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.modal-body"))).getText();
+        }
+        if (saveOrClose.equalsIgnoreCase("save")){
+            modalAlertSaveBtn.click();
+        } else if (saveOrClose.equalsIgnoreCase("close")){
+            modalAlertCloseBtn.click();
+        } else {
+            throw  new RuntimeException("Błędna komenda do wykonania w oknie modalnym");
+        }
+        return modalBodyText;
     }
 
 
