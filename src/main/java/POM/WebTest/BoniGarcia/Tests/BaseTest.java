@@ -47,6 +47,7 @@ public class BaseTest  {
     FramesPage framesPage;
     IFramePage iFramePage;
     DialogBoxesPage dialogBoxesPage;
+    WebStoragePage webStoragePage;
 
     /*-----------------*/
 
@@ -97,6 +98,8 @@ public class BaseTest  {
         framesPage = new FramesPage(driver, wait, log);
         iFramePage = new IFramePage(driver, wait, log);
         dialogBoxesPage = new DialogBoxesPage(driver, wait, log);
+        webStoragePage = new WebStoragePage(driver, wait, log);
+
     }
 
     @AfterMethod

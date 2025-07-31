@@ -5,11 +5,15 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
+import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 
+import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -541,8 +545,38 @@ public class MainTest extends BaseTest {
         assertThat(dialogBoxesPage.promptTextParagraph.getText()).isEqualTo("You typed: " + promptText);
         dialogBoxesPage.handleModalWindow("save");
         assertThat(dialogBoxesPage.modalTextParagraph.getText()).isEqualTo("You chose: Save changes");
+    }
+
+    @Test()
+    public void webStoragePageTests(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Web storage");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/web-storage.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
 
 
+
+
+        webStoragePage.clearSessionStorage();
+        webStoragePage.clickLocalStorageBtn();
+        webStoragePage.clickLocalSessionBtn();
+        log.info("Local storage posiada wartości: {}", webStoragePage.localStorageParagraph);
+        log.info("Session storage posiada wartości: {}", webStoragePage.localSessionParagraph);
     }
 
 }
