@@ -8,6 +8,7 @@ import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
 import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
 import org.openqa.selenium.devtools.v137.storage.Storage;
+import org.openqa.selenium.devtools.v138.network.Network;
 import org.openqa.selenium.html5.LocalStorage;
 import org.openqa.selenium.html5.WebStorage;
 import org.openqa.selenium.support.FindBy;
@@ -32,6 +33,7 @@ public class WebStoragePage {
         this.log = log;
         devTools = ((HasDevTools) driver).getDevTools();
         PageFactory.initElements(driver, this);
+        js = (JavascriptExecutor) driver;
     }
 
     @FindBy(id = "display-local")
@@ -43,7 +45,7 @@ public class WebStoragePage {
     @FindBy(id = "local-storage")
     public WebElement localStorageParagraph;
 
-    @FindBy(id = "local-storage")
+    @FindBy(id = "session-storage")
     public WebElement localSessionParagraph;
 
 
@@ -58,27 +60,18 @@ public class WebStoragePage {
     public void clearLocalStorage(){
         devTools.createSession();
         devTools.send(Storage.clearDataForOrigin(driver.getCurrentUrl(), "local_storage"));
-
     }
 
     public void clearSessionStorage(){
-        devTools.createSession();
-        devTools.send(Storage.clearDataForOrigin(driver.getCurrentUrl(), "shared_storage"));
-
-
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("""
-                let existing = sessionStorage.getItem('notes') || '';
-                localStorage.setItem('notes', existing + ' | nowy wpis');""");
-
-        URI uri = URI.create(driver.getCurrentUrl());
-        String origin = uri.getScheme() + "://" + uri.getHost();
-        log.info("Origin to: {}", origin);
-
-        StorageId storageId = new StorageId(java.util.Optional.of(origin), java.util.Optional.empty(), false);
-        devTools.send(DOMStorage.setDOMStorageItem(storageId, "Klucz", "Wartość"));
-
+        js.executeScript("sessionStorage.clear()");
     }
 
+    public void inputValueToLocalStorage(String key, String value) {
+        js.executeScript("localStorage.setItem(arguments[0], arguments[1]);", key, value);
+    }
+
+    public void inputValueToSessionStorage(String key, String value) {
+        js.executeScript("sessionStorage.setItem(arguments[0], arguments[1]);", key, value);
+    }
 
 }

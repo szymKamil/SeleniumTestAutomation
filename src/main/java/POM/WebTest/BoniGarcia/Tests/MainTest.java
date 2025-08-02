@@ -570,13 +570,16 @@ public class MainTest extends BaseTest {
                 .getText()).contains(ap.copyrights);
 
 
-
-
+        webStoragePage.clearLocalStorage();
         webStoragePage.clearSessionStorage();
+        webStoragePage.inputValueToLocalStorage("Klucz testowy sesji lokalnej 1", "Wartość testowa");
+        webStoragePage.inputValueToLocalStorage("Klucz testowy sesji lokalnej 2", "Wartość testowa");
+        webStoragePage.inputValueToSessionStorage("Klucz testowy pamięci sesji 1", "Wartość testowa sesji");
+        webStoragePage.inputValueToSessionStorage("Klucz testowy pamięci sesji 2", "Wartość testowa sesji");
         webStoragePage.clickLocalStorageBtn();
         webStoragePage.clickLocalSessionBtn();
-        log.info("Local storage posiada wartości: {}", webStoragePage.localStorageParagraph);
-        log.info("Session storage posiada wartości: {}", webStoragePage.localSessionParagraph);
+        log.info("Local storage posiada wartości: {}", webStoragePage.localStorageParagraph.getText());
+        log.info("Session storage posiada wartości: {}", webStoragePage.localSessionParagraph.getText());
     }
 
 }
