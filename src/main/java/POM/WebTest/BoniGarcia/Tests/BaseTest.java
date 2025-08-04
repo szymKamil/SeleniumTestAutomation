@@ -49,6 +49,7 @@ public class BaseTest  {
     DialogBoxesPage dialogBoxesPage;
     WebStoragePage webStoragePage;
     GeolocationPage geolocationPage;
+    NotificationPage notificationPage;
 
     /*-----------------*/
 
@@ -101,6 +102,7 @@ public class BaseTest  {
         dialogBoxesPage = new DialogBoxesPage(driver, wait, log);
         webStoragePage = new WebStoragePage(driver, wait, log);
         geolocationPage = new GeolocationPage(driver, wait, log);
+        notificationPage = new NotificationPage(driver, wait, log);
     }
 
     @AfterMethod

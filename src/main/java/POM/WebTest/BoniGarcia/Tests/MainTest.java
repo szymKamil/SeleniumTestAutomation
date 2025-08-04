@@ -612,6 +612,35 @@ public class MainTest extends BaseTest {
         assertThat(geolocationPage.returnCoordinates().contains("4.323"));
     }
 
+    @Test()
+    public void notificationPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Notifications");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/notifications.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        notificationPage.sendMeNotification();
+        notificationPage.createAndSendNotification();
+
+    }
+
+
+
 }
 
 

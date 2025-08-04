@@ -29,8 +29,6 @@ public class GeolocationPage {
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
         devTools = ((HasDevTools) driver).getDevTools();
-
-
     }
 
     @FindBy(id = "get-coordinates")
