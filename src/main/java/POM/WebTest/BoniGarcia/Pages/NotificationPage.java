@@ -41,27 +41,14 @@ public class NotificationPage {
     }
 
 
-    public void createAndSendNotification(){
-        String script = """
+    public void createAndSendNotification(String title, String notificationBody){
+        Object result = js.executeAsyncScript("""
                 const callback = arguments[arguments.length - 1];
-                const OldNotify = window.Notification;
-                function newNotification(title, options) {
-                callback(title);
-                return new OldNotify(title, options);
-                }
-                newNotification.requestPermission =
-                OldNotify.requestPermission.bind(OldNotify);
-                Object.defineProperty(newNotification, 'permission', {
-                get: function() {
-                return OldNotify.permission;
-                }
-                });
-                window.Notification = newNotification;
-                document.getElementById('notify-me').click();
-                """;
-        log.debug("Executing the following script asynchronously:\n{}", script);
-        Object notificationTitle = js.executeAsyncScript(script);
-        assertThat(notificationTitle).isEqualTo("This is a notification");
+                new Notification("%s", { body: "%s" });
+                setTimeout(() => callback("Notification sent!"), 4000);
+                """.formatted(title, notificationBody));
+        assertThat(result).isEqualTo("Notification sent!");
+
     }
 
 

@@ -635,7 +635,7 @@ public class MainTest extends BaseTest {
                 .getText()).contains(ap.copyrights);
 
         notificationPage.sendMeNotification();
-        notificationPage.createAndSendNotification();
+        notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
 
     }
 
