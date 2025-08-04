@@ -8,6 +8,8 @@ import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
 import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
 import org.openqa.selenium.devtools.v137.storage.Storage;
+import org.openqa.selenium.devtools.v138.accessibility.Accessibility;
+import org.openqa.selenium.devtools.v138.css.CSS;
 import org.openqa.selenium.devtools.v138.network.Network;
 import org.openqa.selenium.html5.LocalStorage;
 import org.openqa.selenium.html5.WebStorage;
@@ -60,6 +62,7 @@ public class WebStoragePage {
     public void clearLocalStorage(){
         devTools.createSession();
         devTools.send(Storage.clearDataForOrigin(driver.getCurrentUrl(), "local_storage"));
+        devTools.close();
     }
 
     public void clearSessionStorage(){

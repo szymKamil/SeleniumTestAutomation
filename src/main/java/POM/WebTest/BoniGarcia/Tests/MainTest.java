@@ -582,6 +582,36 @@ public class MainTest extends BaseTest {
         log.info("Session storage posiada wartości: {}", webStoragePage.localSessionParagraph.getText());
     }
 
+
+    @Test()
+    public void geolocationTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Geolocation");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/geolocation.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+
+        geolocationPage.setCoordinates(4.323, 4.53);
+        geolocationPage.clickGeolocationBtn();
+        log.info("Koordynaty to: {}", geolocationPage.returnCoordinates());
+        assertThat(geolocationPage.returnCoordinates().contains("4.323"));
+    }
+
 }
 
 

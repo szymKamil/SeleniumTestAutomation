@@ -2,7 +2,6 @@ package Base.BaseTest;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Capabilities;
-import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -13,10 +12,13 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.BufferedReader;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DriverFactoryV1 {
     // Tworzenie wielowątkowości na potrzeby izolacji testów przy parallelnym uruchomieniu.
@@ -50,16 +52,17 @@ public class DriverFactoryV1 {
             String optionsLine;
             while((optionsLine = bufferedReader.readLine()) != null){
             String[] optionSplit = optionsLine.split("=");
-            if (optionSplit.length == 2){
-                String key = optionSplit[0].trim();
-                String value = optionSplit[1].trim();
-                addOptionsToDriver(options, key, value);
-            }
+                if (optionSplit.length == 2){
+                    String key = optionSplit[0].trim();
+                    String value = optionSplit[1].trim();
+                    addOptionsToDriver(options, key, value);
+                }
             }
         } catch (IOException e){
             System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
         }
         System.out.println("Opcje zostały poprawnie dodane do drivera");
+
         return options;
     }
 
@@ -69,6 +72,11 @@ public class DriverFactoryV1 {
                 chromeOptions.addArguments("--" + key);
             } else if (value.contains(",")){
                 chromeOptions.addArguments("--" + key + "=" +value);
+            }
+            Map<String, Object> prefs = addExperimentalOptions();
+            if (!prefs.isEmpty()) {
+                chromeOptions.setExperimentalOption("prefs", prefs);
+                System.out.println("Dodałem opcje eksperymentalne");
             }
         }
         if (options instanceof FirefoxOptions firefoxOptions){
@@ -86,6 +94,28 @@ public class DriverFactoryV1 {
             }
         }
     }
+
+    public static Map<String, Object> addExperimentalOptions(){
+        Map<String, Object> prefs = new HashMap<>();
+        Path path = Path.of("src/main/resources/experimentalOptions.properties");
+        try {
+            BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
+            String optionLine;
+            while ((optionLine = bufferedReader.readLine()) != null){
+               String[] optionSplit = optionLine.split("=");
+               if(optionSplit[1] != null){
+                   prefs.put(optionSplit[0].trim(), Integer.valueOf(optionSplit[1].trim()));
+               }
+            }
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        return prefs;
+    }
+
 
     public Logger getLogger() {
         return log;

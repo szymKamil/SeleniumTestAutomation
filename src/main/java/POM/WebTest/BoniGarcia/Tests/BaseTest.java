@@ -48,6 +48,7 @@ public class BaseTest  {
     IFramePage iFramePage;
     DialogBoxesPage dialogBoxesPage;
     WebStoragePage webStoragePage;
+    GeolocationPage geolocationPage;
 
     /*-----------------*/
 
@@ -99,7 +100,7 @@ public class BaseTest  {
         iFramePage = new IFramePage(driver, wait, log);
         dialogBoxesPage = new DialogBoxesPage(driver, wait, log);
         webStoragePage = new WebStoragePage(driver, wait, log);
-
+        geolocationPage = new GeolocationPage(driver, wait, log);
     }
 
     @AfterMethod
