@@ -50,6 +50,8 @@ public class BaseTest  {
     WebStoragePage webStoragePage;
     GeolocationPage geolocationPage;
     NotificationPage notificationPage;
+    UserMediaPage userMediaPage;
+    MultilanguagePage multilanguagePage;
 
     /*-----------------*/
 
@@ -103,6 +105,8 @@ public class BaseTest  {
         webStoragePage = new WebStoragePage(driver, wait, log);
         geolocationPage = new GeolocationPage(driver, wait, log);
         notificationPage = new NotificationPage(driver, wait, log);
+        userMediaPage = new UserMediaPage(driver, wait, log);
+        multilanguagePage = new MultilanguagePage(driver, wait, log);
     }
 
     @AfterMethod

@@ -104,7 +104,11 @@ public class DriverFactoryV1 {
             while ((optionLine = bufferedReader.readLine()) != null){
                String[] optionSplit = optionLine.split("=");
                if(optionSplit[1] != null){
-                   prefs.put(optionSplit[0].trim(), Integer.valueOf(optionSplit[1].trim()));
+                   try {
+                       prefs.put(optionSplit[0].trim(), Integer.valueOf(optionSplit[1].trim()));
+                   } catch (NumberFormatException e){
+                       prefs.put(optionSplit[0].trim(), optionSplit[1].trim());
+                   }
                }
             }
         } catch (FileNotFoundException e) {

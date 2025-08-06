@@ -13,6 +13,7 @@ import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 
+import java.io.IOException;
 import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -636,10 +637,66 @@ public class MainTest extends BaseTest {
 
         notificationPage.sendMeNotification();
         notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
+    }
+
+    @Test()
+    public void userMediaPageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Get user media");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/get-user-media.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        userMediaPage.runUserMedia();
+        String videoInfo = userMediaPage.getVideoDeviceInfo();
+        log.info("W teście po uruchomieniu mediów przeglądarka używa : {}", videoInfo);
+        try {
+            userMediaPage.takeScreenshot("userMediaPageTest");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
 
     }
 
+    @Test()
+    public void multiLanguageTest(){
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Multilanguage");
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/multilanguage.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
 
+        String paragraphsEs = multilanguagePage.getParagraphsInfo();
+        log.info("Paragrafy posiadają następujące wartości: {}", paragraphsEs);
+
+    }
 
 }
 

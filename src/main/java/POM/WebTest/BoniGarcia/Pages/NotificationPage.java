@@ -15,7 +15,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class NotificationPage {
 
-
     private WebDriver driver;
     private WebDriverWait wait;
     private Logger log;
