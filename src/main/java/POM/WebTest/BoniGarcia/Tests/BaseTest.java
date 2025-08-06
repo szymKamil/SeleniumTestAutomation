@@ -52,7 +52,7 @@ public class BaseTest  {
     NotificationPage notificationPage;
     UserMediaPage userMediaPage;
     MultilanguagePage multilanguagePage;
-
+    ConsoleLogsPage consoleLogsPage;
     /*-----------------*/
 
     Supplier<String> randomGeneratedText = () -> {
@@ -107,6 +107,8 @@ public class BaseTest  {
         notificationPage = new NotificationPage(driver, wait, log);
         userMediaPage = new UserMediaPage(driver, wait, log);
         multilanguagePage = new MultilanguagePage(driver, wait, log);
+        consoleLogsPage = new ConsoleLogsPage(driver, wait, log);
+
     }
 
     @AfterMethod

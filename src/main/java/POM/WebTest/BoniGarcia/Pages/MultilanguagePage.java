@@ -21,16 +21,13 @@ public class MultilanguagePage {
     private WebDriver driver;
     private WebDriverWait wait;
     private Logger log;
-    Actions actions;
-    DevTools devTools;
-    JavascriptExecutor js;
+
 
     public MultilanguagePage(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
         PageFactory.initElements(driver, this);
-
     }
 
     @FindBy(id = "content")
@@ -40,6 +37,5 @@ public class MultilanguagePage {
     public String getParagraphsInfo(){
         return wait.until(ExpectedConditions.visibilityOf(contentParagraphs)).getText().replace("\n", ", ");
     }
-
 
 }
