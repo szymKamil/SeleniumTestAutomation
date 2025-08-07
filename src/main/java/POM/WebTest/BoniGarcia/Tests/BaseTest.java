@@ -53,6 +53,7 @@ public class BaseTest  {
     UserMediaPage userMediaPage;
     MultilanguagePage multilanguagePage;
     ConsoleLogsPage consoleLogsPage;
+    LoginFormPage loginFormPage;
     /*-----------------*/
 
     Supplier<String> randomGeneratedText = () -> {
@@ -108,6 +109,7 @@ public class BaseTest  {
         userMediaPage = new UserMediaPage(driver, wait, log);
         multilanguagePage = new MultilanguagePage(driver, wait, log);
         consoleLogsPage = new ConsoleLogsPage(driver, wait, log);
+        loginFormPage = new LoginFormPage(driver, wait, log);
 
     }
 
