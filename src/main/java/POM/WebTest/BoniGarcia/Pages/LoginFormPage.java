@@ -8,8 +8,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+
+import java.time.Duration;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -21,7 +25,8 @@ public class LoginFormPage {
     private JavascriptExecutor js;
     private final static String login = "user";
     private final static String password = "user";
-    private final static String loggedURL = "https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html?username=user&password=user";
+    private final static String loggedURL = "https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html";
+    FluentWait<WebDriver> fluentWait;
 
 
     public LoginFormPage(WebDriver driver, WebDriverWait wait, Logger log) {
@@ -30,6 +35,7 @@ public class LoginFormPage {
         this.log = log;
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
+        fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(1)).withTimeout(Duration.ofSeconds(3));
     }
 
     @FindBy(id = "username")
@@ -44,6 +50,9 @@ public class LoginFormPage {
     @FindBy(id = "success")
     WebElement loginSuccessDiv;
 
+    @FindBy(id = "spinner")
+    WebElement spinnerIcon;
+
 
     public void logIn(){
         wait.until(ExpectedConditions.elementToBeClickable(inputUsername)).sendKeys(login);
@@ -54,14 +63,14 @@ public class LoginFormPage {
 
     public void clickSubmitBtn(){
         wait.until(ExpectedConditions.elementToBeClickable(submitBtn)).click();
+        fluentWait.until(ExpectedConditions.visibilityOf(spinnerIcon));
+        fluentWait.until(ExpectedConditions.invisibilityOf(spinnerIcon));
     }
 
     public void verifySuccessLogin(){
         wait.until(PageLoadedVerification.pageIsLoaded());
-        assertThat(driver.getCurrentUrl()).isEqualTo(loggedURL);
+        assertThat(driver.getCurrentUrl()).contains(loggedURL);
         assertThat(loginSuccessDiv.getText()).isEqualTo("Login successful");
-
     }
-
 
 }
