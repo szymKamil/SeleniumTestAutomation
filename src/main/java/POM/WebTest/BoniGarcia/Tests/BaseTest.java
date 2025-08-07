@@ -54,6 +54,7 @@ public class BaseTest  {
     MultilanguagePage multilanguagePage;
     ConsoleLogsPage consoleLogsPage;
     LoginFormPage loginFormPage;
+    RandomCalculatorPage randomCalculatorPage;
     /*-----------------*/
 
     Supplier<String> randomGeneratedText = () -> {
@@ -110,7 +111,7 @@ public class BaseTest  {
         multilanguagePage = new MultilanguagePage(driver, wait, log);
         consoleLogsPage = new ConsoleLogsPage(driver, wait, log);
         loginFormPage = new LoginFormPage(driver, wait, log);
-
+        randomCalculatorPage = new RandomCalculatorPage(driver, wait, log);
     }
 
     @AfterMethod
