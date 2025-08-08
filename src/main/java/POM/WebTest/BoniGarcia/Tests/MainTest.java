@@ -843,7 +843,7 @@ public class MainTest extends BaseTest {
             assertThat(driver.findElement(mainPage.copySpan)
                     .getText()).contains(ap.copyrights);
 
-            fileDownloadPage.downloadFile(0);
+            fileDownloadPage.downloadFile(1);
 
 
 

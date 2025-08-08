@@ -67,8 +67,8 @@ public class FileDownloadPage {
         }
 
         log.info("Znaleziono pobrany plik: {}", downloadedFile.getName());
-        boolean fileDeleted =  downloadedFile.delete();
-        log.info("Plik został usunięty: {}", fileDeleted);
+//        boolean fileDeleted =  downloadedFile.delete();
+//        log.info("Plik został usunięty: {}", fileDeleted);
     }
 
     public void downloadFile(){
@@ -76,6 +76,9 @@ public class FileDownloadPage {
     }
 
     public File waitForDownloadedFile(File downloadFolder, int timeoutSeconds) throws InterruptedException {
+        int numberOfFiles = downloadFolder.listFiles().length;
+
+
         int waited = 0;
         while (waited < timeoutSeconds) {
             File[] files = downloadFolder.listFiles((dir, name) ->
@@ -84,7 +87,7 @@ public class FileDownloadPage {
                     !name.endsWith(".part")
             );
 
-            if (files != null && files.length > 0) {
+            if (files != null && files.length > numberOfFiles) {
                 File lastFile = Arrays.stream(files)
                         .max(Comparator.comparingLong(File::lastModified))
                         .orElse(null);
