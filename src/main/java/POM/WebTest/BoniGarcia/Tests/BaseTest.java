@@ -55,6 +55,7 @@ public class BaseTest  {
     ConsoleLogsPage consoleLogsPage;
     LoginFormPage loginFormPage;
     RandomCalculatorPage randomCalculatorPage;
+    FileDownloadPage fileDownloadPage;
     /*-----------------*/
 
     Supplier<String> randomGeneratedText = () -> {
@@ -112,6 +113,7 @@ public class BaseTest  {
         consoleLogsPage = new ConsoleLogsPage(driver, wait, log);
         loginFormPage = new LoginFormPage(driver, wait, log);
         randomCalculatorPage = new RandomCalculatorPage(driver, wait, log);
+        fileDownloadPage = new FileDownloadPage(driver, wait, log);
     }
 
     @AfterMethod

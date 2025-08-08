@@ -21,8 +21,6 @@ public class LoginFormPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
-    private Logger log;
-    private JavascriptExecutor js;
     private final static String login = "user";
     private final static String password = "user";
     private final static String loggedURL = "https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html";
@@ -32,9 +30,7 @@ public class LoginFormPage {
     public LoginFormPage(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
-        this.log = log;
         PageFactory.initElements(driver, this);
-        js = (JavascriptExecutor) driver;
         fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(1)).withTimeout(Duration.ofSeconds(3));
     }
 
