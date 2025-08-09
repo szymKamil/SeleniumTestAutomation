@@ -86,7 +86,8 @@ public class MainTest extends BaseTest {
         String testPassword = "Haslo123_456";
         webForm.fillPasswordInput(testPassword);
         String passwordValue = webForm.passwordInput.getAttribute("value");
-        if (passwordValue.equals(testPassword)) {
+        assert passwordValue != null;
+        if (!passwordValue.equals(testPassword)) {
             log.info("Hasło poprawnie wpisane w pole.");
         } else {
             log.error("Hasło niepoprawne, wpisano: '{}'", passwordValue);
@@ -845,10 +846,65 @@ public class MainTest extends BaseTest {
 
             fileDownloadPage.downloadFile(1);
 
+    }
 
 
+    @Test()
+    public void ABtesting() {
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        consoleLogsPage.startListening();
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("A/B Testing");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/ab-testing.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        abTestingPage.verifyTypeOfText();
 
     }
+
+
+    @Test()
+    public void dataTypesTest() {
+        /***
+         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         */
+        consoleLogsPage.startListening();
+        driver.get(mainPage.boniGarciaMainURL);
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        mainPage.goToSubPage("Data types");
+        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
+        String currentUrl = driver.getCurrentUrl();
+        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/data-types.html")) {
+            log.info("Adres URL jest poprawny.");
+        } else {
+            log.error("Niepoprawny adres URL: " + currentUrl);
+        }
+        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        assertThat(driver.findElement(ap.img)
+                .isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.copySpan)
+                .getText()).contains(ap.copyrights);
+
+        dataTypesPage.insertDataToForm();
+        dataTypesPage.submitForm();
+        dataTypesPage.verifySuccessForm();
+    }
+
 }
 
 
