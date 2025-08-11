@@ -25,18 +25,20 @@ public class IFramePage {
         js = (JavascriptExecutor) driver;
     }
 
+    //Elementy na stronie
     @FindBy(id = "my-iframe")
     public WebElement iFrame;
 
+    //Metody testowe
     public void switchToiFrame(){
         wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iFrame));
     }
 
     public void scrollPage(){
-        js.executeScript("window.scrollTo(0, document.body.scrollHeight);");
+        scrollPage("document.body.scrollHeight");
     }
 
-    public void scrollPage(int heightToScroll){
+    public void scrollPage(String heightToScroll){
         js.executeScript("window.scrollTo(0, %d);".formatted(heightToScroll));
     }
 

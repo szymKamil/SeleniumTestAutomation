@@ -38,13 +38,14 @@ public class UserMediaPage {
         js = (JavascriptExecutor) driver;
     }
 
-
+    //Elementy na stronie
     @FindBy(id = "start")
     WebElement startBtn;
 
     @FindBy(id = "video-device")
     WebElement videoDeviceInfo;
 
+    //Metody testowe
     public void runUserMedia(){
         wait.until(ExpectedConditions.elementToBeClickable(startBtn)).click();
     }
@@ -53,10 +54,7 @@ public class UserMediaPage {
         return wait.until(ExpectedConditions.visibilityOf(videoDeviceInfo)).getText();
     }
 
-    public void takeScreenshot() throws IOException {
-        takeScreenshot("");
-    }
-
+    //TODO: do przeniesienia do uniwersalnych metod
     public void takeScreenshot(String testName) throws IOException {
         File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
         Path pathForScreens = Path.of("src/main/java/POM/WebTest/BoniGarcia/Screenshots").toAbsolutePath();

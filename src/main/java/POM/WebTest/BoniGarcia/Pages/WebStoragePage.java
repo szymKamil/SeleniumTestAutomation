@@ -20,6 +20,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import java.net.URI;
+import java.util.Objects;
 
 public class WebStoragePage {
 
@@ -38,6 +39,7 @@ public class WebStoragePage {
         js = (JavascriptExecutor) driver;
     }
 
+    //Elementy na stronie
     @FindBy(id = "display-local")
     public WebElement localStorageBtn;
 
@@ -50,18 +52,18 @@ public class WebStoragePage {
     @FindBy(id = "session-storage")
     public WebElement localSessionParagraph;
 
-
+    //Metody testowe
     public void clickLocalStorageBtn(){
-        wait.until(ExpectedConditions.visibilityOf(localStorageBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(localStorageBtn)).click();
     }
 
     public void clickLocalSessionBtn(){
-        wait.until(ExpectedConditions.visibilityOf(localSessionBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(localSessionBtn)).click();
     }
 
     public void clearLocalStorage(){
         devTools.createSession();
-        devTools.send(Storage.clearDataForOrigin(driver.getCurrentUrl(), "local_storage"));
+        devTools.send(Storage.clearDataForOrigin(Objects.requireNonNull(driver.getCurrentUrl()), "local_storage"));
         devTools.close();
     }
 

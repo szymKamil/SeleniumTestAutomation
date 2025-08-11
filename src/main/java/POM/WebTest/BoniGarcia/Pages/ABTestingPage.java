@@ -1,6 +1,5 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -14,7 +13,7 @@ public class ABTestingPage {
     private WebDriver driver;
     private WebDriverWait wait;
     private Logger log;
-    private JavascriptExecutor js;
+
 
     public ABTestingPage(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
@@ -23,16 +22,15 @@ public class ABTestingPage {
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy strony
     @FindBy(id = "content")
     WebElement variationTypeDiv;
-
 
     @FindBy(css = "div h6")
     WebElement variationType;
 
-
-
-    public void verifyTypeOfText(){
+    //Metody testowe
+    public void verifyTypeOfVariation(){
         wait.until(ExpectedConditions.visibilityOf(variationType));
         String type = variationType.getText();
         if (type.endsWith("A")){
@@ -40,9 +38,8 @@ public class ABTestingPage {
         } else if (type.endsWith("B")) {
             log.info("Strona uruchomiła się w wariancie B");
         } else {
-            log.info("Wystąpił błąd, nieznany typ");
+            log.error("Wystąpił błąd, nieznany typ");
         }
-
     }
 
 

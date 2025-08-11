@@ -25,23 +25,26 @@ public class DragAndDrop {
         actions = new Actions(driver);
     }
 
+    //Elementy na stronie
     @FindBy(id = "draggable")
     public WebElement draggablePanel;
 
     @FindBy(id = "target")
     public WebElement target;
 
+    //Metody testowe
     public void dragPanelTo(){
         dragPanelTo(target.getLocation().getX(), target.getLocation().getY());
     }
 
     public void dragPanelTo(int xCoordinate, int yCoordinate){
-        wait.until(ExpectedConditions.visibilityOf(draggablePanel));
+        wait.until(ExpectedConditions.elementToBeClickable(draggablePanel));
         actions.clickAndHold(draggablePanel).moveToLocation(xCoordinate, yCoordinate).release().build().perform();
     }
 
     public void dragPanelTo(WebElement element){
         wait.until(ExpectedConditions.visibilityOf(draggablePanel));
+        wait.until(ExpectedConditions.elementToBeClickable(element));
         actions.clickAndHold(draggablePanel).moveToElement(element).release().build().perform();
     }
 }

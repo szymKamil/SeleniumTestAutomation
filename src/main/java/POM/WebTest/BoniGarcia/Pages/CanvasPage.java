@@ -26,20 +26,22 @@ public class CanvasPage {
         actions = new Actions(driver);
     }
 
+    //Elementy strony
     @FindBy(id = "my-canvas")
     public WebElement canvas;
 
 
+    //Metody testowe
     public void paintInCanvas(PointForCanvas... points){
         wait.until(ExpectedConditions.visibilityOf(canvas));
-        actions.moveToElement(canvas).clickAndHold();
+        actions.moveToElement(canvas).clickAndHold().perform();
         for(PointForCanvas point : points) {
-            actions.moveByOffset(point.x(), point.y());
+            actions.moveByOffset(point.x(), point.y()).perform();
         }
-        actions.release().build().perform();
+        actions.release().perform();
     }
 
-
+    //Metoda domyślna, rysująca abstrakcyjny kształt na płótnie
     public void paintInCanvas(){
         paintInCanvas(new PointForCanvas(20, 20), new PointForCanvas(0, 20), new PointForCanvas(20, -60),
                 new PointForCanvas(10, -70), new PointForCanvas(-100, 40),new PointForCanvas(-100, 40),new PointForCanvas(0, 20));

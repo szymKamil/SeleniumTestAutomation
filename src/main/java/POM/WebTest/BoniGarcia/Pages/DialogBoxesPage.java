@@ -11,14 +11,17 @@ public class DialogBoxesPage {
 
     private WebDriver driver;
     private WebDriverWait wait;
+    private Logger log;
 
 
     public DialogBoxesPage(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
+        this.log = log;
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy na stronie
     @FindBy(id = "my-alert")
     public WebElement launchAlertBtn;
 
@@ -49,6 +52,7 @@ public class DialogBoxesPage {
     @FindBy(css = "button.btn-secondary")
     public WebElement modalAlertCloseBtn;
 
+    //Metody testowe
     public void launchAlertAndChoseBtn(WebElement btn){
         wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
     }
@@ -76,6 +80,7 @@ public class DialogBoxesPage {
         }
         if (!alertPresent){
             launchAlert();
+            wait.until(ExpectedConditions.alertIsPresent());
         }
         String alertText =  driver.switchTo().alert().getText();
         driver.switchTo().alert().accept();
@@ -93,6 +98,7 @@ public class DialogBoxesPage {
         }
         if (!alertPresent){
             launchConfirm();
+            wait.until(ExpectedConditions.alertIsPresent());
         }
         String alertText =  driver.switchTo().alert().getText();
         if (btnToClickInAlert.equalsIgnoreCase("accept") || btnToClickInAlert.equalsIgnoreCase("OK")){
@@ -113,7 +119,6 @@ public class DialogBoxesPage {
         Alert alert = driver.switchTo().alert();
         alert.sendKeys(promptAlertInput);
         alert.accept();
-
     }
 
 

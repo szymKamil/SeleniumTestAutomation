@@ -25,6 +25,7 @@ public class DropdownMenu {
         actions = new Actions(driver);
     }
 
+    //Elementy na stronie
     @FindBy(id = "my-dropdown-1")
     public WebElement dropdownOneLeftClick;
 
@@ -37,25 +38,24 @@ public class DropdownMenu {
     @FindBy(css = "ul.dropdown-menu:not([style*='none'])")
     public WebElement dropdownMenuVisible;
 
-    WebElement dropdownElement;
 
+    //Metody testowe
     public void openDropdownOne(){
-        wait.until(ExpectedConditions.visibilityOf(dropdownOneLeftClick)).click();
-
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownOneLeftClick)).click();
     }
 
     public void openDropdownTwo(){
-        wait.until(ExpectedConditions.visibilityOf(dropdownTwoRightClick));
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownTwoRightClick));
         actions.contextClick(dropdownTwoRightClick).perform();
     }
 
     public void openDropdownThree(){
-        wait.until(ExpectedConditions.visibilityOf(dropdownOneLeftClick));
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownOneLeftClick));
         actions.doubleClick(dropdownThreeDoubleClick).perform();
     }
 
     public void pickDropdownElement(int index){
-        wait.until(ExpectedConditions.visibilityOf(dropdownMenuVisible));
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownMenuVisible));
         dropdownMenuVisible.findElement(By.xpath(".//li[ " + index + " ]/a[@class='dropdown-item']")).click();
         wait.until(ExpectedConditions.invisibilityOf(dropdownMenuVisible));
     }

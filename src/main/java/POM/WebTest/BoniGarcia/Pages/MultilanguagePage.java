@@ -30,10 +30,12 @@ public class MultilanguagePage {
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy na stronie
     @FindBy(id = "content")
     WebElement contentParagraphs;
 
 
+    //Metody testowe
     public String getParagraphsInfo(){
         return wait.until(ExpectedConditions.visibilityOf(contentParagraphs)).getText().replace("\n", ", ");
     }

@@ -32,9 +32,11 @@ public class NotificationPage {
         js = (JavascriptExecutor) driver;
     }
 
+    //Elementy na stronie
     @FindBy(id = "notify-me")
     WebElement notifyMeBtn;
 
+    //Metody testowe
     public void sendMeNotification(){
         notifyMeBtn.click();
     }

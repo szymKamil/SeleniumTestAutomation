@@ -26,18 +26,19 @@ public class CookiesPage {
         actions = new Actions(driver);
     }
 
+    //Główne elementy strony
     @FindBy(id = "refresh-cookies")
     public WebElement refreshCookiesBtn;
 
     @FindBy(id = "cookies-list")
     public WebElement cookiesParagraph;
 
-
+    //Metody testowe
     public void deleteAllCookies(){
         driver.manage().deleteAllCookies();
     }
 
-    public void deleteAllCookies(String cookieName){
+    public void deleteCookie(String cookieName){
         driver.manage().deleteCookieNamed(cookieName);
     }
 
@@ -45,8 +46,8 @@ public class CookiesPage {
         driver.manage().addCookie(new Cookie(cookieName, cookieValue));
     }
 
-    public void addCookies(CookieEntry... cookies){
-        for(CookieEntry cookie : cookies){
+    public void addCookies(CookieEntry... cookiesList){
+        for(CookieEntry cookie : cookiesList){
             if (cookie != null) {
                 addCookie(cookie.name(), cookie.value());
             }

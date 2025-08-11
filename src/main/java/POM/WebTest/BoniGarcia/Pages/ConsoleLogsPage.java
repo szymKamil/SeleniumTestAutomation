@@ -46,7 +46,9 @@ public class ConsoleLogsPage {
         devTools = ((HasDevTools) driver).getDevTools();
     }
 
+    //Metody testowe
     public void startListening(){
+        //Uruchamiamy nasłuchiwanie konsoli, zanim zostanie załadowana strona
         devTools.createSession();
         devTools.send(Log.enable());
         devTools.send(Runtime.enable());
@@ -54,14 +56,13 @@ public class ConsoleLogsPage {
         devTools.getDomains().events().addConsoleListener(consoleEvent::complete);
         jsEvent = new CompletableFuture<>();
         devTools.getDomains().events().addJavascriptExceptionListener(jsEvent::complete);
-
     }
-
 
 
     public void getConsoleLogs() throws ExecutionException, InterruptedException, TimeoutException {
         ConsoleEvent consoleMessage = consoleEvent.get(15, TimeUnit.SECONDS);
         JavascriptException jsEventMsg = jsEvent.get(15, TimeUnit.SECONDS);
+        //Informacje o zdarzeniach w konsoli
         log.debug("Console event: {}, {}, {}", consoleMessage.getTimestamp(), consoleMessage.getArgs(), consoleMessage.getMessages());
         log.debug("Console event: {}, {}", jsEventMsg.getMessage(), jsEventMsg.getSystemInformation());
     }

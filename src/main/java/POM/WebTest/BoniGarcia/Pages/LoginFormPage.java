@@ -34,6 +34,7 @@ public class LoginFormPage {
         fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(1)).withTimeout(Duration.ofSeconds(3));
     }
 
+    //Elementy na stronie
     @FindBy(id = "username")
     WebElement inputUsername;
 
@@ -50,6 +51,7 @@ public class LoginFormPage {
     WebElement spinnerIcon;
 
 
+    //Metody testowe
     public void logIn(){
         wait.until(ExpectedConditions.elementToBeClickable(inputUsername)).sendKeys(login);
         wait.until(ExpectedConditions.elementToBeClickable(inputPassword)).sendKeys(password);

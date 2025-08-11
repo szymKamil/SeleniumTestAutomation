@@ -35,10 +35,9 @@ public class LoadingImagesPage {
                 .withTimeout(Duration.ofSeconds(30))
                 .ignoring(NoSuchElementException.class)
                 .withMessage("Obrazy nie zostały załadowane poprawnie.");
-
     }
 
-
+        //Elementy na stronie
         @FindBy(id = "compass")
         public WebElement compassImage;
 
@@ -55,11 +54,12 @@ public class LoadingImagesPage {
         public WebElement paragraphText;
 
 
-
+        //Metody testowe
         public void waitForImagesToLoad(){
             List<WebElement> imagesList = new ArrayList<>(List.of(compassImage, calendarImage, awardImage, landscapeImage));
             log.info("Czekam na załadowanie obrazów...");
             fluentWait.until(ExpectedConditions.visibilityOfAllElements(imagesList));
+            log.info("Obrazy zostały załadowane!");
         }
 
 

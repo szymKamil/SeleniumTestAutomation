@@ -5,16 +5,13 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
-import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URI;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -386,9 +383,9 @@ public class MainTest extends BaseTest {
                 .isDisplayed()).isTrue();
         assertThat(driver.findElement(mainPage.copySpan)
                 .getText()).contains(ap.copyrights);
-        log.info("Poczatkowa wysokosc strony to: {}", infiniteScroll.returnPageHeight());
+        log.info("Poczatkowa wysokosc strony to: {}", infiniteScroll.getPageHeight());
         infiniteScroll.scrollXTimes();
-        log.info("Końcowa wysokość strony to: {}", infiniteScroll.returnPageHeight());
+        log.info("Końcowa wysokość strony to: {}", infiniteScroll.getPageHeight());
     }
 
     @Test()
@@ -822,7 +819,7 @@ public class MainTest extends BaseTest {
     }
 
         @Test()
-        public void downloadFileTest() {
+        public void downloadFileTest() throws FileNotFoundException {
             /***
              * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
              * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
@@ -844,9 +841,13 @@ public class MainTest extends BaseTest {
             assertThat(driver.findElement(mainPage.copySpan)
                     .getText()).contains(ap.copyrights);
 
-            fileDownloadPage.downloadFile(1);
+            try {
+                fileDownloadPage.downloadFile(1);
+            } catch (FileNotFoundException e) {
+                throw new FileNotFoundException(e.getMessage());
+            }
 
-    }
+        }
 
 
     @Test()
@@ -872,7 +873,7 @@ public class MainTest extends BaseTest {
         assertThat(driver.findElement(mainPage.copySpan)
                 .getText()).contains(ap.copyrights);
 
-        abTestingPage.verifyTypeOfText();
+        abTestingPage.verifyTypeOfVariation();
 
     }
 

@@ -29,19 +29,16 @@ public class WebForm {
     public Select select;
     JavascriptExecutor js;
 
-    private MainPage mainPage;
-    private AbstractPage ap;
 
     public WebForm(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
-        mainPage = new MainPage(driver, wait, log);
-        ap = new AbstractPage(driver, wait, log);
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }
 
+    //Elementy na stronie
     @FindBy(xpath = "//h1[@class='display-6']")
     public WebElement mainHeader;
 
@@ -87,17 +84,17 @@ public class WebForm {
     @FindBy(xpath = "//h1[@class='display-6' and text()='Form submitted']")
     public WebElement h1SubmitFormConfirmation;
 
-
+    //Metody testowe
     public void fillTextInput(String inputText){
-        wait.until(ExpectedConditions.visibilityOf(textInput)).sendKeys(inputText.toString());
+        wait.until(ExpectedConditions.visibilityOf(textInput)).sendKeys(inputText);
     }
 
     public void fillPasswordInput(String inputText){
-        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(inputText.toString());
+        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(inputText);
     }
 
     public void fillTextAreaInput(String inputText){
-        wait.until(ExpectedConditions.visibilityOf(textArea)).sendKeys(inputText.toString());
+        wait.until(ExpectedConditions.visibilityOf(textArea)).sendKeys(inputText);
     }
 
     public void selectElementOnDropdownList(String selectDropdownText){
@@ -107,11 +104,11 @@ public class WebForm {
     }
 
     public void selectElementOnDataList(DropdownOptions dropdownOption){
-        String dropdownElementText = getDatalistOption(dropdownOption);
+        String dropdownElementText = getDataListOption(dropdownOption);
         dataList.sendKeys(dropdownElementText);
     }
 
-    public String getDatalistOption(DropdownOptions option) {
+    public String getDataListOption(DropdownOptions option) {
         String xpath = "//datalist/option[contains(@value, '" + option.getValue() + "')]";
         return driver.findElement(By.xpath(xpath)).getAttribute("value");
     }
@@ -126,7 +123,7 @@ public class WebForm {
         WebElement checkbox = switch (checkboxNumToSelect) {
             case 1 -> checkbox1;
             case 2 -> checkbox2;
-            default -> throw new IllegalArgumentException("Checkbox number invalid");
+            default -> throw new IllegalArgumentException("Błędny numer checkboxa");
         };
         if (!checkbox.isSelected()) {
             checkbox.click();
@@ -137,7 +134,7 @@ public class WebForm {
         WebElement radioBtn = switch (radioNumToSelect) {
             case 1 -> radio1;
             case 2 -> radio2;
-            default -> throw new IllegalArgumentException("Checkbox number invalid");
+            default -> throw new IllegalArgumentException("Błędny numer radiobutton");
         };
         if (!radioBtn.isSelected()) {
             radioBtn.click();

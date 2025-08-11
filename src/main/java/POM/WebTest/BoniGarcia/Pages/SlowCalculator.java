@@ -24,6 +24,7 @@ public class SlowCalculator {
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy na stronie
     @FindBy(id = "delay")
     public WebElement delayInput;
 
@@ -37,12 +38,10 @@ public class SlowCalculator {
     public WebElement spinner;
 
 
-
-
+    //Metody testowe
     public void setCalcDelay(int calcDelay){
         wait.until(ExpectedConditions.visibilityOf(delayInput)).sendKeys(Keys.BACK_SPACE, Integer.toString(calcDelay));
     }
-
 
     public void useCalculator(String inputs){
         wait.until(ExpectedConditions.visibilityOf(calculator));
@@ -50,7 +49,6 @@ public class SlowCalculator {
                 useCalcBtn(String.valueOf(c));
             }
     }
-
 
     public void useCalcBtn(String x) {
         calculator.findElement(By.xpath(String.format("//*[text()='%s']", x)))

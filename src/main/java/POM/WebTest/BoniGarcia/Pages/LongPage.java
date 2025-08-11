@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
@@ -27,25 +28,27 @@ public class LongPage {
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy na stronie
+    @FindBy(css = "p.lead")
+    List<WebElement> leads;
+
     private By lead = By.cssSelector("p.lead");
 
-
+    //Metody testowe
     public String getTextFromParagraph(int i){
-        return driver.findElements(lead).get(i).getText();
+        return wait.until(ExpectedConditions.visibilityOf(leads.get(i))).getText();
 
     }
 
     public void printAllParagraphs(){
-        List<WebElement> paragraphs = driver.findElements(lead);
-        for (int i = 0; i < paragraphs.size(); i++){
+        for (int i = 0; i < leads.size(); i++){
             String paragraphText = getTextFromParagraph(i);
             log.info("Paragraf numer {} posiada tekst: {}", (i+1), paragraphText);
         }
     }
 
     public void scrollToParagraph(int number){
-        List<WebElement> paragraphs = driver.findElements(lead);
-        actions.scrollToElement(paragraphs.get(number)).perform();
+       actions.scrollToElement(leads.get(number)).perform();
 
     }
 

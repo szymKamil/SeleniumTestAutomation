@@ -5,6 +5,11 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
+
+/***
+ * Klasa zawierająca abstrakcyjne elementy, występujące na każdej ze stron testowych Boni Garciego.
+ */
+
 public class AbstractPage {
 
     WebDriver driver;
@@ -18,6 +23,7 @@ public class AbstractPage {
         this.log = log;
     }
 
+    //Elementy
     public static final String pageTitle = "Hands-On Selenium WebDriver with Java";
     public static final String leadText = "This site contains a collection of sample web pages to be tested with Selenium WebDriver. " +
             "Check out the O'Reilly book and the source code on GitHub.";

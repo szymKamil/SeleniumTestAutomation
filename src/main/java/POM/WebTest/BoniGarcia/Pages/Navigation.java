@@ -27,6 +27,7 @@ public class Navigation {
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy na stronie
     @FindBy(xpath = "//h1[@class='display-6']")
     public WebElement mainHeader;
 
@@ -42,13 +43,13 @@ public class Navigation {
     @FindBy(xpath = "(//li[contains(@class, 'active')])[1]")
     public WebElement btnActive;
 
-
+    //Metody testowe
     public void btnNext(){
-        wait.until(ExpectedConditions.visibilityOf(nextBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(nextBtn)).click();
     }
 
     public void btnPrev(){
-        wait.until(ExpectedConditions.visibilityOf(prevBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(prevBtn)).click();
     }
 
     public void activeBtnInfo(){

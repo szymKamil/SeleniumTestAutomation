@@ -9,6 +9,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
@@ -31,6 +32,7 @@ public class GeolocationPage {
         devTools = ((HasDevTools) driver).getDevTools();
     }
 
+    //Elementy strony
     @FindBy(id = "get-coordinates")
     WebElement geolocationBtn;
 
@@ -38,14 +40,13 @@ public class GeolocationPage {
     WebElement coordinatesParagraph;
 
 
+    //Metody testowe
     public void clickGeolocationBtn(){
-        geolocationBtn.click();
+        wait.until(ExpectedConditions.elementToBeClickable(geolocationBtn)).click();
     }
 
     public void setCoordinates(double latitude, double longitude){
-        devTools.createSession();
         setCoordinates(latitude, longitude, 1, 0, 0, 0, 0);
-        devTools.close();
     }
 
     public void setCoordinates(double latitude, double longitude, int accuracy, int altitude, int altitudeAccuracy, int heading, int speed){

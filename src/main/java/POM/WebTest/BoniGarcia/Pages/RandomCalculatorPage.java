@@ -31,6 +31,7 @@ public class RandomCalculatorPage {
         PageFactory.initElements(driver, this);
     }
 
+    //Elementy na stronie
     @FindBy(id = "percent")
     WebElement percentInput;
 
@@ -44,7 +45,7 @@ public class RandomCalculatorPage {
     WebElement calcScreen;
 
 
-
+    //Metody testowe
     public void setPercentOfCorrectResults(String setPercent){
         wait.until(ExpectedConditions.elementToBeClickable(percentInput)).clear();
         percentInput.sendKeys(setPercent);
@@ -58,18 +59,18 @@ public class RandomCalculatorPage {
 
         char[] charArray = calculation.toCharArray();
         abstractBtns.stream().filter(e -> e.getText().contains("C")).findAny().ifPresent(WebElement::click);
-        for (char cha : charArray){
-            Optional<WebElement> btn = Optional.of(abstractBtns.stream()
-                    .filter(e -> e.getText()
-                            .contains(Character.toString(cha)))
-                    .findFirst()
-                    .get());
-            btn.ifPresent(WebElement::click);
+        for (char ch : charArray){
+            WebElement btn =
+                abstractBtns.stream()
+                        .filter(e -> e.getText()
+                                .contains(Character.toString(ch)))
+                        .findFirst()
+                        .get();
 
+                btn.click();
         }
         return calcScreen.getText();
     }
-
 
 
 }

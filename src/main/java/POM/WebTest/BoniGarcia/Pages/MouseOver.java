@@ -31,12 +31,13 @@ public class MouseOver {
         actions = new Actions(driver);
     }
 
+    //Elementy na stronie
     @FindBy(css = "div > img.img-fluid")
     List<WebElement> imgList;
 
-
     private static final String IMG_CAPTION_XPATH  = "//*[text()='%s']";
 
+    //Metody testowe
     public WebElement getElementByCaption(String caption) {
         By by = By.xpath(String.format(IMG_CAPTION_XPATH, caption));
         wait.until(ExpectedConditions.presenceOfElementLocated(by));

@@ -25,7 +25,7 @@ public class MainPage  {
     public static final By containers = By.cssSelector("div.col-md-4, py-2");
     public static final By lead = By.cssSelector("p.lead");
     public static final By copySpan = By.cssSelector("span.text-muted");
-    public WebElement btn;
+    public static WebElement btn;
 
 
     public WebElement getBtn(String btnName) {
