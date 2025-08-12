@@ -1,4 +1,4 @@
-package POM.WebTest.BoniGarcia.Utils;
+package Base.BaseActionsAndUtils;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.ExpectedCondition;

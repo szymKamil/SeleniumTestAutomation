@@ -1,6 +1,6 @@
 package POM.WebTest.BoniGarcia.Tests;
 
-import Base.BaseActions.BaseActionsV1;
+
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.*;
 import org.openqa.selenium.WebDriver;
@@ -11,7 +11,6 @@ import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 import org. slf4j. Logger;
 
-import java.text.Format;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Supplier;
@@ -20,7 +19,6 @@ public class BaseTest  {
     /*------Bazowe-----------*/
     protected WebDriver driver;
     protected WebDriverWait wait;
-    protected BaseActionsV1 actions;
     private DriverFactoryV1 factory;
 
     Logger log;
@@ -88,7 +86,6 @@ public class BaseTest  {
         factory = new DriverFactoryV1(browser, timeout);
         this.driver = factory.getDriver();
         this.wait = factory.getWait();
-        this.actions = new BaseActionsV1(driver, wait);
         this.log = factory.getLogger();
         mainPage = new MainPage(driver, wait, log);
         webForm = new WebForm(driver, wait, log);

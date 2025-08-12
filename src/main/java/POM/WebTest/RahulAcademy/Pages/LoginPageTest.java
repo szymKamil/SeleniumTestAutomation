@@ -75,16 +75,26 @@ public class LoginPageTest {
     @FindBy(css = "button.logout-btn")
     public WebElement logoutButton;
 
+    @FindBy(css = "p.error")
+    public WebElement errorLoginMsg;
+
+
+    //Metody testowe
+    public void insertLogInTo(String login, String password) throws Exception {
+        wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(login);
+        assertThat(usernameInput.getAttribute("value").contains(login)).isTrue();
+        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(password);
+        assertThat(passwordInput.getAttribute("value").contains(password)).isTrue();
+    }
+
     public void insertLogInTo() throws Exception {
-        wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(CredentialsAES.decrypt(login));
-        assertThat(usernameInput.getAttribute("value").contains(CredentialsAES.decrypt(login))).isTrue();
-        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(CredentialsAES.decrypt(password));
-        assertThat(passwordInput.getAttribute("value").contains(CredentialsAES.decrypt(password))).isTrue();
+        insertLogInTo(CredentialsAES.decrypt(login), CredentialsAES.decrypt(password));
     }
 
     public void clickSignIn()  {
         wait.until(ExpectedConditions.elementToBeClickable(btnSubmit)).click();
     }
+
 
     public void verifySuccessfulLogin() throws Exception {
        String successInfo =  wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//*[@id=\"root\"]/div/div/div/h2\n")))).getText();
@@ -98,7 +108,10 @@ public class LoginPageTest {
        }
        wait.until(ExpectedConditions.elementToBeClickable(logoutButton)).click();
        wait.until(ExpectedConditions.visibilityOf(formBody)).isDisplayed();
+    }
 
+    public void visitUsClick()  {
+        wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
     }
 
 

@@ -1,8 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-import POM.WebTest.BoniGarcia.Utils.PageLoadedVerification;
-import org.assertj.core.api.Assertions;
-import org.openqa.selenium.JavascriptExecutor;
+import Base.BaseActionsAndUtils.PageLoadedVerification;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;

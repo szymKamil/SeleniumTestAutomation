@@ -1,13 +1,21 @@
 package POM.WebTest.RahulAcademy.Tests;
 
+import Base.BaseActionsAndUtils.PageLoadedVerification;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class MainTest extends BaseTest{
 
+
+    private static final Logger log = LoggerFactory.getLogger(MainTest.class);
 
     @Test
     public void loginTest() throws Exception {
@@ -23,6 +31,41 @@ public class MainTest extends BaseTest{
         loginPageTest.clickSignIn();
         loginPageTest.verifySuccessfulLogin();
     }
+
+    @Test
+    public void failedLogin() throws Exception {
+        //Błędny login
+        driver.get("https://rahulshettyacademy.com/locatorspractice/");
+        loginPageTest.insertLogInTo("Login", "Haslo");
+        loginPageTest.clickSignIn();
+        wait.until(ExpectedConditions.visibilityOf(loginPageTest.errorLoginMsg));
+        wait.until(ExpectedConditions.textToBePresentInElement(loginPageTest.errorLoginMsg, "* Incorrect username or password"));
+    }
+
+    @Test
+    public void visitUsTes() throws Exception {
+        //Błędny login
+        driver.get("https://rahulshettyacademy.com/locatorspractice/");
+        String currentHandle = driver.getWindowHandle();
+        loginPageTest.visitUsClick();
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        List windowHandels = driver.getWindowHandles().stream().toList();
+        if(windowHandels.size() == 2){
+            if (driver.getWindowHandle().equals(currentHandle)){
+                driver.switchTo().window(windowHandels.get(1).toString());
+            }
+        }
+        String url = driver.getCurrentUrl();
+        assert url != null;
+        assertThat(url.contains("https://rahulshettyacademy.com/")).isTrue();
+        log.info("URL po przejściu do Visit Us to: {}", url);
+
+
+    }
+
+
+
+
 
 
 }
