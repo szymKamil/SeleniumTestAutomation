@@ -87,13 +87,17 @@ public class LoginPageTest {
     }
 
     public void verifySuccessfulLogin() throws Exception {
-       String successInfo =  wait.until(ExpectedConditions.visibilityOfElementLocated((By.cssSelector("div.login-container h1")))).getText();
+       String successInfo =  wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//*[@id=\"root\"]/div/div/div/h2\n")))).getText();
        log.info("Komunikat po zalogowaniu brzmi: {}", successInfo);
        assertThat(successInfo.contains(CredentialsAES.decrypt(login))).isTrue();
        String colorInfo = wait.until(ExpectedConditions.visibilityOf(rahulShettyStrongName))
                .getCssValue("color");
        log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
+       if(!colorInfo.equals("rgba(255, 75, 43, 1)")){
+           log.error("Błędna kolorystyka elementu, ma ona wartość: {}", colorInfo);
+       }
        wait.until(ExpectedConditions.elementToBeClickable(logoutButton)).click();
+       wait.until(ExpectedConditions.visibilityOf(formBody)).isDisplayed();
 
     }
 
