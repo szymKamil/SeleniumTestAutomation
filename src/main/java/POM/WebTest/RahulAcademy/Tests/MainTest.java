@@ -44,7 +44,7 @@ public class MainTest extends BaseTest{
 
     @Test
     public void visitUsTes() throws Exception {
-        //Błędny login
+        //Weryfikacja otwarcia strony po kliknięciu w Visit us
         driver.get("https://rahulshettyacademy.com/locatorspractice/");
         String currentHandle = driver.getWindowHandle();
         loginPageTest.visitUsClick();

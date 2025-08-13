@@ -1,6 +1,7 @@
 package POM.WebTest.RahulAcademy.Pages;
 
 import Base.Utils.CredentialsAES;
+import POM.WebTest.RahulAcademy.Utils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -11,12 +12,10 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 
-import java.util.Objects;
-
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class LoginPageTest {
+public class LoginPageTest extends WebElementActions {
 
     WebDriver driver;
     WebDriverWait wait;
@@ -36,6 +35,7 @@ public class LoginPageTest {
 
 
     //Elementy strony
+
     @FindBy(css = "form.form")
     public WebElement formBody;
 
@@ -45,8 +45,12 @@ public class LoginPageTest {
     @FindBy(id = "inputUsername")
     public WebElement usernameInput;
 
+    By usernameIn = By.id("inputUsername");
+
     @FindBy(name = "inputPassword")
     public WebElement passwordInput;
+
+    By passwordIn = By.id("inputPassword");
 
     @FindBy(id = "chkboxOne")
     public WebElement checkboxRememberUserName;
@@ -113,6 +117,17 @@ public class LoginPageTest {
     public void visitUsClick()  {
         wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
     }
+
+    //DSL
+    public void enterUsername(String username){
+        find(usernameIn).enterText(username);
+    }
+
+    public void enterPassword(String password){
+        find(passwordIn).enterText(password);
+    }
+
+
 
 
 }

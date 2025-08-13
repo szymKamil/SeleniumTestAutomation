@@ -90,7 +90,6 @@ public class BaseTest  {
         mainPage = new MainPage(driver, wait, log);
         webForm = new WebForm(driver, wait, log);
         navigationPage = new Navigation(driver, wait, log);
-        ap = new AbstractPage(driver, wait, log);
         dropdownMenu = new DropdownMenu(driver, wait, log);
         mouseOver = new MouseOver(driver, wait, log);
         dragAndDrop = new DragAndDrop(driver, wait, log);
