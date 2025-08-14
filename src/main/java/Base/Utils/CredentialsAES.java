@@ -5,7 +5,7 @@ import javax.crypto.spec.SecretKeySpec;
 import java.util.Base64;
 import java.util.Scanner;
 
-public class CredentialsAES {
+public class CredentialsAES extends Utils {
 
     static Scanner scanner;
 

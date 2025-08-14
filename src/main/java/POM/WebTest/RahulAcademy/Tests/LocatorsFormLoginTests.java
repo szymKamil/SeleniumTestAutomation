@@ -1,5 +1,7 @@
 package POM.WebTest.RahulAcademy.Tests;
 
+import Base.Utils.JavaScriptUtils;
+import Base.Utils.Utils;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -8,6 +10,7 @@ import org.testng.annotations.Test;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.testng.Assert.assertTrue;
 
 public class LocatorsFormLoginTests extends BaseTest {
 
@@ -16,7 +19,7 @@ public class LocatorsFormLoginTests extends BaseTest {
 
     @Test
     public void testSuccessfullyLogin() throws Exception {
-        assertThat(loginPageTest.formBody.isDisplayed()).isTrue();
+        assertTrue(loginPageTest.formBody.isDisplayed());
         assertThat(loginPageTest.signInHeader.getText()).isEqualTo("Sign in");
         loginPageTest.insertLogInTo();
         assertThat(loginPageTest.checkboxRememberUserName.isSelected()).isFalse();

@@ -1,6 +1,7 @@
 package POM.WebTest.RahulAcademy.Pages;
 
 import Base.Utils.CredentialsAES;
+
 import POM.WebTest.RahulAcademy.Utils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -104,12 +105,9 @@ public class LoginPageTest  {
 
 
     //Metody testowe
-    public void insertLogInTo(String login, String password) throws Exception {
-        actions.find(usernameIn).enterText(login);
-        actions.find(passwordIn).enterText(password);
-//        assertThat(actions.find(usernameIn).getAttribute("value").contains(login)).isTrue();
-//        assertThat(actions.find(passwordIn).getAttribute("value").contains(password)).isTrue();
-
+    public void insertLogInTo(String login, String password)  {
+        enterUsername(login);
+        enterPassword(password);
     }
 
     public void insertLogInTo() throws Exception {

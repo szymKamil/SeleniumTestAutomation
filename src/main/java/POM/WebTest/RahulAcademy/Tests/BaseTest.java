@@ -3,7 +3,6 @@ package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Pages.LoginPageTest;
-import POM.WebTest.RahulAcademy.Utils.WebElementActions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
@@ -12,7 +11,6 @@ import org.testng.annotations.*;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.time.Duration;
 
 public class BaseTest {
 
@@ -27,7 +25,7 @@ public class BaseTest {
     private final String pageURL = "https://rahulshettyacademy.com/locatorspractice/";
 
     //Klasy stron
-    LoginPageTest loginPageTest;
+    protected LoginPageTest loginPageTest;
 
 
     @Parameters({"browser", "timeout"})
@@ -43,13 +41,7 @@ public class BaseTest {
     }
 
     @BeforeMethod()
-    public void config(Method method) throws MalformedURLException {
-//        factory = new DriverFactoryV1(browser, timeout /*, uri.toURL()*/);
-//        this.driver = factory.getDriver();
-//        this.wait = factory.getWait();
-//        this.log = factory.getLogger();
-//        loginPageTest = new LoginPageTest(driver, wait, log);
-
+    public void config(Method method)  {
         Class<?> testClass = method.getDeclaringClass();
         if (testClass.equals(LocatorsFormLoginTests.class)) {
             driver.get(pageURL);
