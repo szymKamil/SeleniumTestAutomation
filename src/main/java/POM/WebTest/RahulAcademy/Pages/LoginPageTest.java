@@ -41,6 +41,8 @@ public class LoginPageTest  {
     @FindBy(css = "form.form")
     public WebElement formBody;
 
+    By formBdy = By.cssSelector("form.form");
+
     @FindBy(css = "form.form h1")
     public WebElement signInHeader;
 
@@ -83,9 +85,12 @@ public class LoginPageTest  {
     @FindBy(css = "button.logout-btn")
     public WebElement logoutButton;
 
+    By logoutBtn = By.cssSelector("button.logout-btn");
+
     @FindBy(css = "p.error")
     public WebElement errorLoginMsg;
 
+    By successInfo = By.xpath("//*[@id=\"root\"]/div/div/div/h2");
 
 
     //DSL
@@ -117,25 +122,20 @@ public class LoginPageTest  {
 
 
     public void verifySuccessfulLogin() throws Exception {
-       String successInfo =  wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//*[@id=\"root\"]/div/div/div/h2\n")))).getText();
-       log.info("Komunikat po zalogowaniu brzmi: {}", successInfo);
-       String colorInfo = wait.until(ExpectedConditions.visibilityOf(rahulShettyStrongName))
-               .getCssValue("color");
-       log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
+       String successInfoText =  actions.find(successInfo).getText();
+       log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
+        String colorInfo = actions.getCssValue("color");
+        log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
        if(!colorInfo.equals("rgba(255, 75, 43, 1)")){
            log.error("Błędna kolorystyka elementu, ma ona wartość: {}", colorInfo);
        }
-       wait.until(ExpectedConditions.elementToBeClickable(logoutButton)).click();
-       wait.until(ExpectedConditions.visibilityOf(formBody)).isDisplayed();
+       actions.find(logoutBtn).click();
+       actions.find(formBdy).isVisible();
     }
 
     public void visitUsClick()  {
         wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
     }
-
-
-
-
 
 
 }

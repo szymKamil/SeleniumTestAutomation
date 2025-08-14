@@ -9,13 +9,13 @@ import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
-public class LocatorsFormLoginTests extends BaseTest{
+public class LocatorsFormLoginTests extends BaseTest {
 
 
     private static final Logger log = LoggerFactory.getLogger(LocatorsFormLoginTests.class);
 
     @Test
-    public void loginTest() throws Exception {
+    public void testSuccessfullyLogin() throws Exception {
         assertThat(loginPageTest.formBody.isDisplayed()).isTrue();
         assertThat(loginPageTest.signInHeader.getText()).isEqualTo("Sign in");
         loginPageTest.insertLogInTo();
@@ -29,7 +29,7 @@ public class LocatorsFormLoginTests extends BaseTest{
     }
 
     @Test
-    public void failedLogin() throws Exception {
+    public void testFailedLogin() throws Exception {
         //Błędny login
         loginPageTest.insertLogInTo("Login", "Haslo");
         loginPageTest.clickSignIn();
@@ -38,7 +38,7 @@ public class LocatorsFormLoginTests extends BaseTest{
     }
 
     @Test
-    public void visitUsTes() throws Exception {
+    public void testVisitUsButton() throws Exception {
         //Weryfikacja otwarcia strony po kliknięciu Visit us
         String currentHandle = driver.getWindowHandle();
         loginPageTest.visitUsClick();

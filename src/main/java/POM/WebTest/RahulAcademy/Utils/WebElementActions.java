@@ -24,11 +24,17 @@ public class WebElementActions {
         return new WebElementActions(driver.findElement(locator));
     }
 
+
      public WebElement enterText(String text){
         element.clear();
         element.sendKeys(text);
         return element;
     }
+
+    public String getText(){
+        return element.getText();
+    }
+
 
     public void click(){
         element.click();
@@ -38,5 +44,12 @@ public class WebElementActions {
         return element.getAttribute(attribute);
     }
 
+    public String getCssValue(String attribute){
+        return element.getCssValue(attribute);
+    }
+
+    public Boolean isVisible(){
+        return element.isDisplayed();
+    }
 
 }
