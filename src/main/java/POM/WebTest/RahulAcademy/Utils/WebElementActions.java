@@ -9,11 +9,11 @@ public class WebElementActions {
     public static WebDriver driver;
     WebElement element;
 
-    public WebElementActions(WebElement element) {
-        this.element = element;
+    public WebElementActions() {
     }
 
-    public WebElementActions() {
+    public WebElementActions(WebElement element) {
+        this.element = element;
     }
 
     public static void setDriver(WebDriver driver){

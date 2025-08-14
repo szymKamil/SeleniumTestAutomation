@@ -15,6 +15,7 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
@@ -26,7 +27,16 @@ public class DriverFactoryV1 {
     private static final ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
     Logger log;
     public WebDriver driver;
-    public WebDriverWait wait ;
+    public WebDriverWait wait;
+    public URL url;
+
+    public DriverFactoryV1(String browser, int time, URL url)  {
+        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).remoteAddress(url).create();
+        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
+        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
+        driverThread.set(driver);
+        waitThread.set(wait);
+    }
 
 
     public DriverFactoryV1(String browser, int time)  {
@@ -35,7 +45,6 @@ public class DriverFactoryV1 {
         this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
         driverThread.set(driver);
         waitThread.set(wait);
-
     }
 
     public static Capabilities loadOptionsFromFile(String browser)  {
