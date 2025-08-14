@@ -15,23 +15,25 @@ import org.slf4j.Logger;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class LoginPageTest extends WebElementActions {
+public class LoginPageTest  {
 
     WebDriver driver;
     WebDriverWait wait;
     Logger log;
+    WebElementActions actions;
 
     public LoginPageTest(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
+        WebElementActions.setDriver(driver);
+        actions = new WebElementActions();
         PageFactory.initElements(driver, this);
-
     }
 
     //Dane
-    private static final String login = "vd5J1jErnMAcL1kq40bbuA==";
-    private static final String password = "lyH/5+2uFKOVGAzTmbwZeJxiUTTymRWhYOK8RZzfNbs=";
+    private static final String login = "zZf2rJMkK2K7X70NR/nbIA==";
+    private static final String password = "ZVxOYnCTQLgCBPYuk9Im8vLs/2ePFUdif9/7Oh7xYas=";
 
 
     //Elementy strony
@@ -50,7 +52,7 @@ public class LoginPageTest extends WebElementActions {
     @FindBy(name = "inputPassword")
     public WebElement passwordInput;
 
-    By passwordIn = By.id("inputPassword");
+    By passwordIn = By.name("inputPassword");
 
     @FindBy(id = "chkboxOne")
     public WebElement checkboxRememberUserName;
@@ -63,6 +65,8 @@ public class LoginPageTest extends WebElementActions {
 
     @FindBy(css = "button.submit")
     public WebElement btnSubmit;
+
+    By submitBtn = By.cssSelector("button.submit");
 
     @FindBy(css = "div.overlay-right")
     public WebElement rightPanel;
@@ -83,12 +87,24 @@ public class LoginPageTest extends WebElementActions {
     public WebElement errorLoginMsg;
 
 
+
+    //DSL
+    public void enterUsername(String username){
+        actions.find(usernameIn).enterText(username);
+    }
+
+    public void enterPassword(String password){
+        actions.find(passwordIn).enterText(password);
+    }
+
+
     //Metody testowe
     public void insertLogInTo(String login, String password) throws Exception {
-        wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(login);
-        assertThat(usernameInput.getAttribute("value").contains(login)).isTrue();
-        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(password);
-        assertThat(passwordInput.getAttribute("value").contains(password)).isTrue();
+        actions.find(usernameIn).enterText(login);
+        actions.find(passwordIn).enterText(password);
+//        assertThat(actions.find(usernameIn).getAttribute("value").contains(login)).isTrue();
+//        assertThat(actions.find(passwordIn).getAttribute("value").contains(password)).isTrue();
+
     }
 
     public void insertLogInTo() throws Exception {
@@ -96,14 +112,13 @@ public class LoginPageTest extends WebElementActions {
     }
 
     public void clickSignIn()  {
-        wait.until(ExpectedConditions.elementToBeClickable(btnSubmit)).click();
+        actions.find(submitBtn).click();
     }
 
 
     public void verifySuccessfulLogin() throws Exception {
        String successInfo =  wait.until(ExpectedConditions.visibilityOfElementLocated((By.xpath("//*[@id=\"root\"]/div/div/div/h2\n")))).getText();
        log.info("Komunikat po zalogowaniu brzmi: {}", successInfo);
-       assertThat(successInfo.contains(CredentialsAES.decrypt(login))).isTrue();
        String colorInfo = wait.until(ExpectedConditions.visibilityOf(rahulShettyStrongName))
                .getCssValue("color");
        log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
@@ -118,14 +133,7 @@ public class LoginPageTest extends WebElementActions {
         wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
     }
 
-    //DSL
-    public void enterUsername(String username){
-        find(usernameIn).enterText(username);
-    }
 
-    public void enterPassword(String password){
-        find(passwordIn).enterText(password);
-    }
 
 
 

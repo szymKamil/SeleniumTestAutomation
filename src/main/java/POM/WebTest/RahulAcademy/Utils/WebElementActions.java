@@ -13,7 +13,10 @@ public class WebElementActions {
         this.element = element;
     }
 
-    public void setDriver(WebDriver driver){
+    public WebElementActions() {
+    }
+
+    public static void setDriver(WebDriver driver){
         WebElementActions.driver = driver;
     }
 
@@ -21,14 +24,19 @@ public class WebElementActions {
         return new WebElementActions(driver.findElement(locator));
     }
 
-    public WebElement enterText(String text){
+     public WebElement enterText(String text){
         element.clear();
         element.sendKeys(text);
         return element;
     }
 
-    public void click(By locator){
+    public void click(){
         element.click();
     }
+
+    public String getAttribute(String attribute){
+        return element.getAttribute(attribute);
+    }
+
 
 }

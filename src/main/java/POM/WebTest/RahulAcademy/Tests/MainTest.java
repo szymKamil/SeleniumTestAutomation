@@ -16,10 +16,12 @@ public class MainTest extends BaseTest{
 
 
     private static final Logger log = LoggerFactory.getLogger(MainTest.class);
+    private final String pageURL = "https://rahulshettyacademy.com/locatorspractice/";
+
 
     @Test
     public void loginTest() throws Exception {
-        driver.get("https://rahulshettyacademy.com/locatorspractice/");
+        driver.get(pageURL);
         assertThat(loginPageTest.formBody.isDisplayed()).isTrue();
         assertThat(loginPageTest.signInHeader.getText()).isEqualTo("Sign in");
         loginPageTest.insertLogInTo();
@@ -35,7 +37,7 @@ public class MainTest extends BaseTest{
     @Test
     public void failedLogin() throws Exception {
         //Błędny login
-        driver.get("https://rahulshettyacademy.com/locatorspractice/");
+        driver.get(pageURL);
         loginPageTest.insertLogInTo("Login", "Haslo");
         loginPageTest.clickSignIn();
         wait.until(ExpectedConditions.visibilityOf(loginPageTest.errorLoginMsg));
@@ -44,8 +46,8 @@ public class MainTest extends BaseTest{
 
     @Test
     public void visitUsTes() throws Exception {
-        //Weryfikacja otwarcia strony po kliknięciu w Visit us
-        driver.get("https://rahulshettyacademy.com/locatorspractice/");
+        //Weryfikacja otwarcia strony po kliknięciu Visit us
+        driver.get(pageURL);
         String currentHandle = driver.getWindowHandle();
         loginPageTest.visitUsClick();
         wait.until(ExpectedConditions.numberOfWindowsToBe(2));
