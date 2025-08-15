@@ -1,4 +1,4 @@
-package POM.WebTest.RahulAcademy.Pages;
+package POM.WebTest.RahulAcademy.Pages.LoginTest;
 
 import Base.Utils.CredentialsAES;
 
@@ -13,9 +13,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 
-import static org.assertj.core.api.Assertions.assertThat;
-
-
 public class LoginPageTest  {
 
     WebDriver driver;
@@ -27,7 +24,7 @@ public class LoginPageTest  {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
-        WebElementActions.setDriver(driver);
+        WebElementActions.setDriver(driver, wait);
         actions = new WebElementActions();
         PageFactory.initElements(driver, this);
     }
@@ -42,7 +39,7 @@ public class LoginPageTest  {
     @FindBy(css = "form.form")
     public WebElement formBody;
 
-    By formBdy = By.cssSelector("form.form");
+    public By formBdy = By.cssSelector("form.form");
 
     @FindBy(css = "form.form h1")
     public WebElement signInHeader;
@@ -63,13 +60,16 @@ public class LoginPageTest  {
     @FindBy(id = "chkboxTwo")
     public WebElement checkboxAgreeTermsAndPolicy;
 
+    By checkboxAgreeTerms = By.id("chkboxTwo");
+
+
     @FindBy(css = "div.forgot-pwd-container")
     public WebElement btnForgotPass;
 
     @FindBy(css = "button.submit")
     public WebElement btnSubmit;
 
-    By submitBtn = By.cssSelector("button.submit");
+    public By submitBtn = By.cssSelector("button.submit");
 
     @FindBy(css = "div.overlay-right")
     public WebElement rightPanel;
@@ -83,6 +83,8 @@ public class LoginPageTest  {
     @FindBy(css = "div.login-container strong")
     public WebElement rahulShettyStrongName;
 
+    By rahulShettyStrong = By.cssSelector("div.login-container strong");
+
     @FindBy(css = "button.logout-btn")
     public WebElement logoutButton;
 
@@ -90,6 +92,9 @@ public class LoginPageTest  {
 
     @FindBy(css = "p.error")
     public WebElement errorLoginMsg;
+
+    public By errorLogMsg = By.cssSelector("p.error");
+
 
     By successInfo = By.xpath("//*[@id=\"root\"]/div/div/div/h2");
 
@@ -103,11 +108,22 @@ public class LoginPageTest  {
         actions.find(passwordIn).enterText(password);
     }
 
-
     //Metody testowe
     public void insertLogInTo(String login, String password)  {
         enterUsername(login);
         enterPassword(password);
+    }
+
+    public boolean verifyElementVisibility(By element){
+       return actions.find(element).isVisible();
+    }
+
+    public void selectTermsAndConditions(){
+        actions.find(checkboxAgreeTerms).click();
+    }
+
+    public boolean verifyTermsAreSelected(){
+        return actions.find(checkboxAgreeTerms).isSelected();
     }
 
     public void insertLogInTo() throws Exception {
@@ -118,12 +134,20 @@ public class LoginPageTest  {
         actions.find(submitBtn).click();
     }
 
+    public boolean verifyElementText(By element, String textToCompare){
+        return actions.find(element).getText().equals(textToCompare);
+    }
+
+    public String getElementText(By element){
+        return actions.find(element).getText();
+    }
+
 
     public void verifySuccessfulLogin()  {
        String successInfoText =  actions.find(successInfo).getText();
        log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
-        String colorInfo = actions.getCssValue("color");
-        log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
+       String colorInfo = actions.find(rahulShettyStrong).getCss("color");
+       log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
        if(!colorInfo.equals("rgba(255, 75, 43, 1)")){
            log.error("Błędna kolorystyka elementu, ma ona wartość: {}", colorInfo);
        }

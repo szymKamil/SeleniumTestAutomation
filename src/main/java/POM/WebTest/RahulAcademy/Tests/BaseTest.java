@@ -3,16 +3,13 @@ package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Listener.Listener;
-import POM.WebTest.RahulAcademy.Pages.LoginPageTest;
+import POM.WebTest.RahulAcademy.Pages.LoginTest.LoginPageTest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
-import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
-import org.testng.ITestContext;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
-import org.testng.internal.annotations.IBeforeTest;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;

@@ -3,10 +3,13 @@ package POM.WebTest.RahulAcademy.TestActionUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WebElementActions {
 
-    public static WebDriver driver;
+    static WebDriver driver;
+    static WebDriverWait wait;
     WebElement element;
 
     public WebElementActions() {
@@ -16,12 +19,14 @@ public class WebElementActions {
         this.element = element;
     }
 
-    public static void setDriver(WebDriver driver){
+    public static void setDriver(WebDriver driver, WebDriverWait wait){
         WebElementActions.driver = driver;
+        WebElementActions.wait = wait;
     }
 
     public WebElementActions find(By locator){
-        return new WebElementActions(driver.findElement(locator));
+        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return new WebElementActions(element);
     }
 
 
@@ -44,12 +49,16 @@ public class WebElementActions {
         return element.getAttribute(attribute);
     }
 
-    public String getCssValue(String attribute){
+    public String getCss(String attribute){
         return element.getCssValue(attribute);
     }
 
     public Boolean isVisible(){
         return element.isDisplayed();
+    }
+
+    public Boolean isSelected(){
+        return element.isSelected();
     }
 
 }

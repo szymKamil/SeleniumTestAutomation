@@ -38,7 +38,6 @@ public class Screenshot {
         } catch (IOException e){
             log.error("Problem z przeniesieniem screenshota z {} do {}", screenshot, screenshotName);
         }
-
     }
 
 

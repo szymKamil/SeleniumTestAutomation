@@ -33,7 +33,7 @@ public class Listener implements WebDriverListener {
 
     @Override
     public void beforeClick(WebElement element) {
-        log.info("Klikam w element: {}", element);
+        log.info("Klikam w element: {}", element.getTagName());
     }
 
     @Override
