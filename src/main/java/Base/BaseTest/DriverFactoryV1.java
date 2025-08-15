@@ -21,14 +21,14 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public class DriverFactoryV1 {
+public  class DriverFactoryV1 {
     // Tworzenie wielowątkowości na potrzeby izolacji testów przy parallelnym uruchomieniu.
     private static final ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
     private static final ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
     Logger log;
     public WebDriver driver;
     public WebDriverWait wait;
-    public URL url;
+
 
     public DriverFactoryV1(String browser, int time, URL url)  {
         this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).remoteAddress(url).create();
@@ -47,7 +47,7 @@ public class DriverFactoryV1 {
         waitThread.set(wait);
     }
 
-    public static Capabilities loadOptionsFromFile(String browser)  {
+     static Capabilities loadOptionsFromFile(String browser)  {
         AbstractDriverOptions<?> options;
         switch(browser.toLowerCase()) {
             case "chrome" -> options = new ChromeOptions();
@@ -104,7 +104,7 @@ public class DriverFactoryV1 {
         }
     }
 
-    public static Map<String, Object> addExperimentalOptions(){
+     static Map<String, Object> addExperimentalOptions(){
         Map<String, Object> prefs = new HashMap<>();
         Path path = Path.of("src/main/resources/experimentalOptions.properties");
         try {

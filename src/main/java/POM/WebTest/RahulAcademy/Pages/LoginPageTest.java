@@ -2,7 +2,7 @@ package POM.WebTest.RahulAcademy.Pages;
 
 import Base.Utils.CredentialsAES;
 
-import POM.WebTest.RahulAcademy.Utils.WebElementActions;
+import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -119,7 +119,7 @@ public class LoginPageTest  {
     }
 
 
-    public void verifySuccessfulLogin() throws Exception {
+    public void verifySuccessfulLogin()  {
        String successInfoText =  actions.find(successInfo).getText();
        log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
         String colorInfo = actions.getCssValue("color");

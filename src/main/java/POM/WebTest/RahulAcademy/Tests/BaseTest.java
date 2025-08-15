@@ -2,11 +2,17 @@ package POM.WebTest.RahulAcademy.Tests;
 
 
 import Base.BaseTest.DriverFactoryV1;
+import POM.WebTest.RahulAcademy.Listener.Listener;
 import POM.WebTest.RahulAcademy.Pages.LoginPageTest;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
+import org.openqa.selenium.support.events.WebDriverListener;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.testng.ITestContext;
+import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.internal.annotations.IBeforeTest;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
@@ -35,25 +41,35 @@ public class BaseTest {
         this.driver = factory.getDriver();
         this.wait = factory.getWait();
         this.log = factory.getLogger();
+        driver = new EventFiringDecorator<>(new Listener()).decorate(driver);
         loginPageTest = new LoginPageTest(driver, wait, log);
-
 
     }
 
+
     @BeforeMethod()
     public void config(Method method)  {
+        log.info("Rozpoczynam test: {}", method.getName());
         Class<?> testClass = method.getDeclaringClass();
         if (testClass.equals(LocatorsFormLoginTests.class)) {
             driver.get(pageURL);
         }
     }
 
+    @AfterMethod
+    public void testInfo(ITestResult test, Method method){
+        if (ITestResult.FAILURE == test.getStatus()){
+            log.error("Test się nie powiódł!: {}", method.getName());
+        } else if (ITestResult.SUCCESS == test.getStatus()) {
+            log.info("Test zakończony pomyślnie: {}", method.getName());
+        }
+    }
 
     @AfterClass
     void shutDown(){
-       log.info("Test ukończony.");
+       log.info("Testy zostały ukończone.");
        if (driver != null) {
-           factory.quit();
+           driver.quit();
        }
     }
 

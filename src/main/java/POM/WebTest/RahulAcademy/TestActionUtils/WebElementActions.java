@@ -1,4 +1,4 @@
-package POM.WebTest.RahulAcademy.Utils;
+package POM.WebTest.RahulAcademy.TestActionUtils;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
