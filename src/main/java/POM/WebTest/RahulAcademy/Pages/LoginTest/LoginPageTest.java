@@ -115,17 +115,24 @@ public class LoginPageTest  {
     }
 
     //Metody testowe
-    public void logInTo(String login, String password)  {
+    public LoginPageTest logInTo(String login, String password)  {
         enterUsername(login).enterPassword(password);
+        return this;
     }
 
-    public boolean isPresent(By element){
-       return actions.find(element).isVisible();
+    public LoginPageTest logInTo() throws Exception {
+        logInTo(CredentialsAES.decrypt(login), CredentialsAES.decrypt(password));
+        return this;
     }
 
-    public void selectTermsAndConditions(){
+    public LoginPageTest elementShouldBeVisible(By element){
+        assertThat(actions.find(element).isVisible()).isTrue();
+        return this;
+    }
+
+    public LoginPageTest selectTermsAndConditions(){
         actions.find(checkboxAgreeTerms).click();
-
+        return this;
     }
 
     public LoginPageTest verifyTermsAreSelected(){
@@ -135,40 +142,59 @@ public class LoginPageTest  {
         return this;
     }
 
-
-
-    public LoginPageTest logInTo() throws Exception {
-        logInTo(CredentialsAES.decrypt(login), CredentialsAES.decrypt(password));
+    public LoginPageTest clickSignIn()  {
+        actions.find(submitBtn).click();
+        return this;
+    }
+    public LoginPageTest verifySuccessLoginInfo()  {
+        String successInfoText =  actions.find(successInfo).getText();
+        log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
         return this;
     }
 
-    public void clickSignIn()  {
-        actions.find(submitBtn).click();
+
+    public LoginPageTest shouldSeeErrorLoginMsg()  {
+        actions.find(errorLogMsg).getText().equals("* Incorrect username or password");
+        return this;
     }
 
-    public boolean verifyElementText(By element, String textToCompare){
-        return actions.find(element).getText().equals(textToCompare);
+
+    public LoginPageTest shouldHaveSuccessMessageColor(){
+         assertThat(actions.find(rahulShettyStrong).getCss("color").contains("255, 75, 43, 1")).isTrue();
+         return this;
     }
 
-    public void visitUsClick()  {
+    public LoginPageTest verifyElementText(By element, String textToCompare){
+        log.info("Weryfikacja tekstu z elementu {} ze spodziewanym tekstem: {}", actions.find(element).getText(), textToCompare);
+        assertThat(actions.find(element).getText().equals(textToCompare)).isTrue();
+        return this;
+    }
+
+    public LoginPageTest visitUsClick()  {
         wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
+        return this;
     }
 
-    public void verifyVisitUsBtn(){
-        //Weryfikacja otwarcia strony po kliknięciu Visit us
+    public LoginPageTest logoutVerification()  {
+        actions.find(logoutBtn).click();
+        actions.find(formBdy).isVisible();
+        return this;
+    }
+
+    public LoginPageTest useBtnVisitUs()  {
         String currentHandle = driver.getWindowHandle();
         visitUsClick();
         wait.until(ExpectedConditions.numberOfWindowsToBe(2));
-        List windowHandels = driver.getWindowHandles().stream().toList();
-        if(windowHandels.size() == 2){
-            if (driver.getWindowHandle().equals(currentHandle)){
-                driver.switchTo().window(windowHandels.get(1).toString());
-            }
+        List<String> windowHandels = driver.getWindowHandles().stream().toList();
+        if(windowHandels.size() == 2 && driver.getWindowHandle().equals(currentHandle)){
+            driver.switchTo().window(windowHandels.get(1));
         }
         String url = driver.getCurrentUrl();
         assert url != null;
         assertThat(url.contains("https://rahulshettyacademy.com/")).isTrue();
         log.info("URL po przejściu do Visit Us to: {}", url);
+
+        return this;
     }
 
 
