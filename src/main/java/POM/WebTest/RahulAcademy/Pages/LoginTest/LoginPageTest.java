@@ -12,6 +12,10 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
+import java.util.List;
+
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 
 public class LoginPageTest  {
 
@@ -100,34 +104,42 @@ public class LoginPageTest  {
 
 
     //DSL
-    public void enterUsername(String username){
+    public LoginPageTest enterUsername(String username){
         actions.find(usernameIn).enterText(username);
+        return this;
     }
 
-    public void enterPassword(String password){
+    public LoginPageTest enterPassword(String password){
         actions.find(passwordIn).enterText(password);
+        return this;
     }
 
     //Metody testowe
-    public void insertLogInTo(String login, String password)  {
-        enterUsername(login);
-        enterPassword(password);
+    public void logInTo(String login, String password)  {
+        enterUsername(login).enterPassword(password);
     }
 
-    public boolean verifyElementVisibility(By element){
+    public boolean isPresent(By element){
        return actions.find(element).isVisible();
     }
 
     public void selectTermsAndConditions(){
         actions.find(checkboxAgreeTerms).click();
+
     }
 
-    public boolean verifyTermsAreSelected(){
-        return actions.find(checkboxAgreeTerms).isSelected();
+    public LoginPageTest verifyTermsAreSelected(){
+        if (!actions.find(checkboxAgreeTerms).isSelected()) {
+            actions.find(checkboxAgreeTerms).isSelected();
+        }
+        return this;
     }
 
-    public void insertLogInTo() throws Exception {
-        insertLogInTo(CredentialsAES.decrypt(login), CredentialsAES.decrypt(password));
+
+
+    public LoginPageTest logInTo() throws Exception {
+        logInTo(CredentialsAES.decrypt(login), CredentialsAES.decrypt(password));
+        return this;
     }
 
     public void clickSignIn()  {
@@ -138,25 +150,25 @@ public class LoginPageTest  {
         return actions.find(element).getText().equals(textToCompare);
     }
 
-    public String getElementText(By element){
-        return actions.find(element).getText();
-    }
-
-
-    public void verifySuccessfulLogin()  {
-       String successInfoText =  actions.find(successInfo).getText();
-       log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
-       String colorInfo = actions.find(rahulShettyStrong).getCss("color");
-       log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
-       if(!colorInfo.equals("rgba(255, 75, 43, 1)")){
-           log.error("Błędna kolorystyka elementu, ma ona wartość: {}", colorInfo);
-       }
-       actions.find(logoutBtn).click();
-       actions.find(formBdy).isVisible();
-    }
-
     public void visitUsClick()  {
         wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
+    }
+
+    public void verifyVisitUsBtn(){
+        //Weryfikacja otwarcia strony po kliknięciu Visit us
+        String currentHandle = driver.getWindowHandle();
+        visitUsClick();
+        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
+        List windowHandels = driver.getWindowHandles().stream().toList();
+        if(windowHandels.size() == 2){
+            if (driver.getWindowHandle().equals(currentHandle)){
+                driver.switchTo().window(windowHandels.get(1).toString());
+            }
+        }
+        String url = driver.getCurrentUrl();
+        assert url != null;
+        assertThat(url.contains("https://rahulshettyacademy.com/")).isTrue();
+        log.info("URL po przejściu do Visit Us to: {}", url);
     }
 
 

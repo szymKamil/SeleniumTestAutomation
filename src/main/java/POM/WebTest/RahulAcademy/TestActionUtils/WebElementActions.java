@@ -42,7 +42,7 @@ public class WebElementActions {
 
 
     public void click(){
-        element.click();
+        wait.until(ExpectedConditions.elementToBeClickable(element)).click();
     }
 
     public String getAttribute(String attribute){

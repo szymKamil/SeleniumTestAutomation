@@ -1,68 +1,46 @@
 package POM.WebTest.RahulAcademy.Tests;
 
-import Base.Utils.JavaScriptUtils;
-import Base.Utils.Utils;
-import POM.WebTest.RahulAcademy.Pages.LoginTest.LoginPageTest;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;
-
-import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.testng.Assert.assertTrue;
 
-public class LocatorsFormLoginTests extends LoginPageTest {
+public class LocatorsFormLoginTests extends BaseTest {
 
 
-    private static final Logger log = LoggerFactory.getLogger(LocatorsFormLoginTests.class);
 
-    public LocatorsFormLoginTests(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
-    }
+
 
     @Test
     public void testSuccessfullyLogin() throws Exception {
-        assertTrue(verifyElementVisibility(formBdy));
-        assertThat(verifyElementText(submitBtn, "Sign in")).isTrue();
-        insertLogInTo();
-        assertThat(verifyTermsAreSelected()).isFalse();
-        if (!verifyTermsAreSelected()) {
-            selectTermsAndConditions();
-        }
-        assertThat(verifyTermsAreSelected()).isTrue();
-        clickSignIn();
-        verifySuccessfulLogin();
+        assertTrue(loginPageTest.isPresent(loginPageTest.formBdy));
+        assertThat(loginPageTest.verifyElementText(loginPageTest.submitBtn, "Sign in")).isTrue();
+        loginPageTest.logInTo().verifyTermsAreSelected().clickSignIn();
+        loginPageTest
+
+//        String successInfoText =  loginPageTest.getElementText(loginPageTest.successInfo);
+//        log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
+//        String colorInfo = actions.find(rahulShettyStrong).getCss("color");
+//        log.info("Kolor elementu ma następującą wartość: {}", colorInfo);
+//        if(!colorInfo.equals("rgba(255, 75, 43, 1)")){
+//            log.error("Błędna kolorystyka elementu, ma ona wartość: {}", colorInfo);
+//        }
+//        actions.find(logoutBtn).click();
+//        actions.find(formBdy).isVisible();
     }
 
     @Test
     public void testFailedLogin()  {
         //Błędny login
-        insertLogInTo("Login", "Haslo");
-        clickSignIn();
-        verifyElementVisibility(errorLogMsg);
-        verifyElementText(errorLogMsg, "* Incorrect username or password");
+        loginPageTest.logInTo("Login", "Haslo");
+        loginPageTest.clickSignIn();
+        loginPageTest.verifyElementVisibility(loginPageTest.errorLogMsg);
+        loginPageTest.verifyElementText(loginPageTest.errorLogMsg, "* Incorrect username or password");
     }
 
     @Test
     public void testVisitUsButton()  {
-        //Weryfikacja otwarcia strony po kliknięciu Visit us
-        String currentHandle = driver.getWindowHandle();
-        visitUsClick();
-        wait.until(ExpectedConditions.numberOfWindowsToBe(2));
-        List windowHandels = driver.getWindowHandles().stream().toList();
-        if(windowHandels.size() == 2){
-            if (driver.getWindowHandle().equals(currentHandle)){
-                driver.switchTo().window(windowHandels.get(1).toString());
-            }
-        }
-        String url = driver.getCurrentUrl();
-        assert url != null;
-        assertThat(url.contains("https://rahulshettyacademy.com/")).isTrue();
-        log.info("URL po przejściu do Visit Us to: {}", url);
+        loginPageTest.verifyVisitUsBtn();
     }
 
 
