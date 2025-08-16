@@ -3,7 +3,7 @@ package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Listener.Listener;
-import POM.WebTest.RahulAcademy.Pages.LoginTest.LoginPageTest;
+import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginPageTest;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.ui.WebDriverWait;

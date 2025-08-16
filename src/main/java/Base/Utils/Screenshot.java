@@ -30,7 +30,14 @@ public class Screenshot {
         TakesScreenshot ts = (TakesScreenshot) driver;
         File screenshot = ts.getScreenshotAs(OutputType.FILE);
         SessionId sessionId = ((RemoteWebDriver) driver).getSessionId();
-        String screenshotName = String.format("Screenshots/%s-%s.png", sessionId.toString(), TimeStampGenerator.generateDateTime());
+        Path directoryPath = Path.of("Screenshots/test_%s".formatted(sessionId.toString()));
+        try {
+            Files.createDirectory(directoryPath);
+            log.info("Utworzony został folder {} na screenshoty z testu {}", directoryPath, sessionId);
+        } catch (IOException e) {
+            log.error("Wystąpił problem ze stworzeniem folderu  {}", directoryPath);
+        }
+        String screenshotName = String.format("%s/%s-%s.png", directoryPath, sessionId, TimeStampGenerator.generateDateTime());
         Path destination = Paths.get(screenshotName);
         try {
             Files.move(screenshot.toPath(), destination);

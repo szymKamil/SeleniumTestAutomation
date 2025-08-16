@@ -4,6 +4,7 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WebElementActions {
@@ -11,6 +12,7 @@ public class WebElementActions {
     static WebDriver driver;
     static WebDriverWait wait;
     WebElement element;
+    Select select;
 
     public WebElementActions() {
     }
@@ -41,8 +43,9 @@ public class WebElementActions {
     }
 
 
-    public void click(){
+    public WebElement click(){
         wait.until(ExpectedConditions.elementToBeClickable(element)).click();
+        return element;
     }
 
     public String getAttribute(String attribute){
@@ -59,6 +62,15 @@ public class WebElementActions {
 
     public Boolean isSelected(){
         return element.isSelected();
+    }
+
+
+
+    public WebElementActions selectOptionByText(By element, String text){
+        select = new Select(driver.findElement(element));
+        select.selectByValue(text);
+        return this;
+
     }
 
 }

@@ -2,9 +2,6 @@ package POM.WebTest.RahulAcademy.Tests;
 
 import org.testng.annotations.Test;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.testng.Assert.assertTrue;
-
 public class LocatorsFormLoginTests extends BaseTest {
 
 

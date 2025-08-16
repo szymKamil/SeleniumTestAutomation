@@ -1,4 +1,4 @@
-package POM.WebTest.RahulAcademy.Pages.LoginTest;
+package POM.WebTest.RahulAcademy.Pages.SignInFormTest;
 
 import Base.Utils.CredentialsAES;
 
