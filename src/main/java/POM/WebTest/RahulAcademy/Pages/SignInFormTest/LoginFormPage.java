@@ -17,19 +17,18 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class LoginPageTest  {
+public class LoginFormPage extends WebElementActions {
 
     WebDriver driver;
     WebDriverWait wait;
     Logger log;
     WebElementActions actions;
 
-    public LoginPageTest(WebDriver driver, WebDriverWait wait, Logger log) {
+    public LoginFormPage(WebDriver driver, WebDriverWait wait, Logger log) {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
         WebElementActions.setDriver(driver, wait);
-        actions = new WebElementActions();
         PageFactory.initElements(driver, this);
     }
 
@@ -104,84 +103,84 @@ public class LoginPageTest  {
 
 
     //DSL
-    public LoginPageTest enterUsername(String username){
+    public LoginFormPage enterUsername(String username){
         actions.find(usernameIn).enterText(username);
         return this;
     }
 
-    public LoginPageTest enterPassword(String password){
+    public LoginFormPage enterPassword(String password){
         actions.find(passwordIn).enterText(password);
         return this;
     }
 
     //Metody testowe
-    public LoginPageTest logInTo(String login, String password)  {
+    public LoginFormPage logInTo(String login, String password)  {
         enterUsername(login).enterPassword(password);
         return this;
     }
 
-    public LoginPageTest logInTo() throws Exception {
+    public LoginFormPage logInTo() throws Exception {
         logInTo(CredentialsAES.decrypt(login), CredentialsAES.decrypt(password));
         return this;
     }
 
-    public LoginPageTest elementShouldBeVisible(By element){
+    public LoginFormPage elementShouldBeVisible(By element){
         assertThat(actions.find(element).isVisible()).isTrue();
         return this;
     }
 
-    public LoginPageTest selectTermsAndConditions(){
+    public LoginFormPage selectTermsAndConditions(){
         actions.find(checkboxAgreeTerms).click();
         return this;
     }
 
-    public LoginPageTest verifyTermsAreSelected(){
+    public LoginFormPage verifyTermsAreSelected(){
         if (!actions.find(checkboxAgreeTerms).isSelected()) {
             actions.find(checkboxAgreeTerms).isSelected();
         }
         return this;
     }
 
-    public LoginPageTest clickSignIn()  {
+    public LoginFormPage clickSignIn()  {
         actions.find(submitBtn).click();
         return this;
     }
-    public LoginPageTest verifySuccessLoginInfo()  {
+    public LoginFormPage verifySuccessLoginInfo()  {
         String successInfoText =  actions.find(successInfo).getText();
         log.info("Komunikat po zalogowaniu brzmi: {}", successInfoText);
         return this;
     }
 
 
-    public LoginPageTest shouldSeeErrorLoginMsg()  {
+    public LoginFormPage shouldSeeErrorLoginMsg()  {
         actions.find(errorLogMsg).getText().equals("* Incorrect username or password");
         return this;
     }
 
 
-    public LoginPageTest shouldHaveSuccessMessageColor(){
+    public LoginFormPage shouldHaveSuccessMessageColor(){
          assertThat(actions.find(rahulShettyStrong).getCss("color").contains("255, 75, 43, 1")).isTrue();
          return this;
     }
 
-    public LoginPageTest verifyElementText(By element, String textToCompare){
+    public LoginFormPage verifyElementText(By element, String textToCompare){
         log.info("Weryfikacja tekstu z elementu {} ze spodziewanym tekstem: {}", actions.find(element).getText(), textToCompare);
         assertThat(actions.find(element).getText().equals(textToCompare)).isTrue();
         return this;
     }
 
-    public LoginPageTest visitUsClick()  {
+    public LoginFormPage visitUsClick()  {
         wait.until(ExpectedConditions.elementToBeClickable(visitUsBtn)).click();
         return this;
     }
 
-    public LoginPageTest logoutVerification()  {
+    public LoginFormPage logoutVerification()  {
         actions.find(logoutBtn).click();
         actions.find(formBdy).isVisible();
         return this;
     }
 
-    public LoginPageTest useBtnVisitUs()  {
+    public LoginFormPage useBtnVisitUs()  {
         String currentHandle = driver.getWindowHandle();
         visitUsClick();
         wait.until(ExpectedConditions.numberOfWindowsToBe(2));

@@ -3,7 +3,9 @@ package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Listener.Listener;
-import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginPageTest;
+import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
+import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
+import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -25,11 +27,13 @@ public class BaseTest {
 
 
     protected final URI uri = URI.create("http://192.168.1.108:4444");
-    private final String pageURL = "https://rahulshettyacademy.com/locatorspractice/";
+    private final String formTestPage = "https://rahulshettyacademy.com/locatorspractice/";
+    private final String shopLoginPage = "https://rahulshettyacademy.com/loginpagePractise/\n";
 
     //Klasy stron
-    protected LoginPageTest loginPageTest;
-
+    protected LoginFormPage loginPageTest;
+    ShopLoginPageForm pageShopLoginForm;
+    ShopPage shopPage;
 
     @Parameters({"browser", "timeout"})
     @BeforeClass()
@@ -39,8 +43,9 @@ public class BaseTest {
         this.wait = factory.getWait();
         this.log = factory.getLogger();
         driver = new EventFiringDecorator<>(new Listener()).decorate(driver);
-        loginPageTest = new LoginPageTest(driver, wait, log);
-
+        loginPageTest = new LoginFormPage(driver, wait, log);
+        pageShopLoginForm = new ShopLoginPageForm(driver, wait, log);
+        shopPage = new ShopPage(driver, wait, log);
     }
 
 
@@ -49,8 +54,14 @@ public class BaseTest {
         log.info("Rozpoczynam test: {}", method.getName());
         Class<?> testClass = method.getDeclaringClass();
         if (testClass.equals(LocatorsFormLoginTests.class)) {
-            driver.get(pageURL);
+            driver.get(formTestPage);
+        } else if (testClass.equals(ShopPageTests.class)) {
+            driver.get(shopLoginPage);
+        } else {
+            log.error("Błędnie podany adres URL, test nie został uruchomiony.");
+            throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
         }
+
     }
 
     @AfterMethod

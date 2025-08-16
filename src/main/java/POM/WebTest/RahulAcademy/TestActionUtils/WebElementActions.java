@@ -9,7 +9,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 public class WebElementActions {
 
-    static WebDriver driver;
+    static public WebDriver driver;
     static WebDriverWait wait;
     WebElement element;
     Select select;
@@ -27,8 +27,8 @@ public class WebElementActions {
     }
 
     public WebElementActions find(By locator){
-        WebElement element = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        return new WebElementActions(element);
+        WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
+        return new WebElementActions(el);
     }
 
 
@@ -68,7 +68,7 @@ public class WebElementActions {
 
     public WebElementActions selectOptionByText(By element, String text){
         select = new Select(driver.findElement(element));
-        select.selectByValue(text);
+        select.selectByVisibleText(text);
         return this;
 
     }
