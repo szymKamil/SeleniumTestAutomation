@@ -3,6 +3,7 @@ package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Listener.Listener;
+import POM.WebTest.RahulAcademy.Pages.ShopTest.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
@@ -28,6 +29,7 @@ public class BaseTest {
     WebElementActions actions;
 
 
+
     protected final URI uri = URI.create("http://192.168.1.108:4444");
     private final String formTestPage = "https://rahulshettyacademy.com/locatorspractice/";
     private final String shopLoginPage = "https://rahulshettyacademy.com/loginpagePractise/\n";
@@ -36,6 +38,7 @@ public class BaseTest {
     protected LoginFormPage loginPageTest;
     ShopLoginPageForm pageShopLoginForm;
     ShopPage shopPage;
+    CheckoutPage checkoutPage;
 
     @Parameters({"browser", "timeout"})
     @BeforeClass()
@@ -49,6 +52,7 @@ public class BaseTest {
         loginPageTest = new LoginFormPage(driver, wait, log);
         pageShopLoginForm = new ShopLoginPageForm(driver, wait, log);
         shopPage = new ShopPage(driver, wait, log);
+        checkoutPage = new CheckoutPage(driver, wait, log);
     }
 
 

@@ -60,7 +60,7 @@ public  class DriverFactoryV1 {
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(optionPath.toFile()))){
             String optionsLine;
             while((optionsLine = bufferedReader.readLine()) != null){
-            String[] optionSplit = optionsLine.split("=");
+            String[] optionSplit = optionsLine.split(">");
                 if (optionSplit.length == 2){
                     String key = optionSplit[0].trim();
                     String value = optionSplit[1].trim();
@@ -115,8 +115,10 @@ public  class DriverFactoryV1 {
                if(optionSplit[1] != null){
                    try {
                        prefs.put(optionSplit[0].trim(), Integer.valueOf(optionSplit[1].trim()));
+
                    } catch (NumberFormatException e){
                        prefs.put(optionSplit[0].trim(), optionSplit[1].trim());
+
                    }
                }
             }
@@ -125,7 +127,7 @@ public  class DriverFactoryV1 {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
+         System.out.println("Dodane zostaną następujące ustawienia eksperymentalne: " + prefs);
         return prefs;
     }
 

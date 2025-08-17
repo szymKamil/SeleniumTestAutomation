@@ -18,22 +18,24 @@ public class WebElementActions {
     WebElement element;
     List<WebElementActions> elements;
 
-    // Główna instancja, która przechowuje driver i wait
+
     public WebElementActions(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
     }
 
-    // Konstruktor dla pojedynczego elementu — bierze driver i wait z głównej instancji
-    public WebElementActions(WebElement element, WebElementActions mainActions) {
+
+    public WebElementActions(WebElement element, WebElementActions instance) {
         this.element = element;
-        this.driver = mainActions.driver;
-        this.wait = mainActions.wait;
+        this.driver = instance.driver;
+        this.wait = instance.wait;
     }
 
-    // Konstruktor dla listy elementów
-    public WebElementActions(List<WebElementActions> elements) {
+
+    public WebElementActions(List<WebElementActions> elements, WebElementActions instance) {
         this.elements = elements;
+        this.driver = instance.driver;
+        this.wait = instance.wait;
     }
 
 
@@ -44,7 +46,6 @@ public class WebElementActions {
 
     public List<WebElementActions> findAll(By locator){
         List<WebElement> webElements = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
-
         return webElements.stream()
                 .map(el -> new WebElementActions(el, this))
                 .toList();
