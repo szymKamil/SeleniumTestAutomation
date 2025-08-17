@@ -73,7 +73,7 @@ public class ShopPage  {
             log.info("Wybieram produkt numer {}", i);
 
             switch (productToPick){
-                case 0 -> pickedProducts.merge("iPhone", 1, Integer::sum);
+                case 0 -> pickedProducts.merge("iphone X", 1, Integer::sum);
                 case 1 -> pickedProducts.merge("Samsung Note 8", 1, Integer::sum);
                 case 2 -> pickedProducts.merge("Nokia Edge", 1, Integer::sum);
                 case 3 -> pickedProducts.merge("Blackberry", 1, Integer::sum);

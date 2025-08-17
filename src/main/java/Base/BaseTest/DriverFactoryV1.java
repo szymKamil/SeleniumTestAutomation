@@ -85,8 +85,9 @@ public  class DriverFactoryV1 {
             Map<String, Object> prefs = addExperimentalOptions();
             if (!prefs.isEmpty()) {
                 chromeOptions.setExperimentalOption("prefs", prefs);
-                System.out.println("Dodałem opcje eksperymentalne");
             }
+            System.out.println("Dodałem opcje eksperymentalne");
+
         }
         if (options instanceof FirefoxOptions firefoxOptions){
             if (value.equalsIgnoreCase("true")){

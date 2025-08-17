@@ -51,6 +51,10 @@ public class WebElementActions {
                 .toList();
     }
 
+    public WebElementActions pickElementByText(List<WebElementActions> elements, String text){
+        return elements.stream().filter(e -> element.getText().contains(text)).findFirst().orElseThrow();
+    }
+
 
      public WebElement enterText(String text){
         element.clear();
@@ -93,7 +97,6 @@ public class WebElementActions {
         select = new Select(driver.findElement(element));
         select.selectByVisibleText(text);
         return this;
-
     }
 
 }
