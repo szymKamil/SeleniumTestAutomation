@@ -6,6 +6,7 @@ import POM.WebTest.RahulAcademy.Listener.Listener;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
+import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -20,10 +21,11 @@ import java.net.URI;
 public class BaseTest {
 
 
-    protected  WebDriver driver;
-    protected WebDriverWait wait;
+    WebDriver driver;
+    WebDriverWait wait;
     private DriverFactoryV1 factory;
     private Logger log;
+    WebElementActions actions;
 
 
     protected final URI uri = URI.create("http://192.168.1.108:4444");
@@ -43,6 +45,7 @@ public class BaseTest {
         this.wait = factory.getWait();
         this.log = factory.getLogger();
         driver = new EventFiringDecorator<>(new Listener()).decorate(driver);
+//        actions = new WebElementActions(driver, wait);
         loginPageTest = new LoginFormPage(driver, wait, log);
         pageShopLoginForm = new ShopLoginPageForm(driver, wait, log);
         shopPage = new ShopPage(driver, wait, log);

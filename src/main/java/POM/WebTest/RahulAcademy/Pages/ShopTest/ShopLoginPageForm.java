@@ -9,7 +9,7 @@ import org.slf4j.Logger;
 
 
 
-public class ShopLoginPageForm extends WebElementActions {
+public class ShopLoginPageForm  {
 
 
     Logger log;
@@ -22,9 +22,7 @@ public class ShopLoginPageForm extends WebElementActions {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
-        WebElementActions.setDriver(driver, wait);
-        actions = new WebElementActions();
-
+        actions = new WebElementActions(driver, wait);
     }
 
     //Elementy
@@ -58,8 +56,8 @@ public class ShopLoginPageForm extends WebElementActions {
 
     public ShopLoginPageForm choseRadio(String userType){
         switch (userType.toLowerCase()) {
-            case "admin" -> find(radioAdmin).click().isSelected();
-            case "user" -> find(radioUser).click().isSelected();
+            case "admin" -> actions.find(radioAdmin).click().isSelected();
+            case "user" -> actions.find(radioUser).click().isSelected();
             default -> log.error("Błędnie wybrana opcja radiobutton");
         }
         return this;
@@ -71,12 +69,12 @@ public class ShopLoginPageForm extends WebElementActions {
     }
 
     public ShopLoginPageForm selectTermsAndConditions(){
-        find(termsCheckbox).click().isSelected();
+        actions.find(termsCheckbox).click().isSelected();
         return this;
     }
 
     public ShopPage clickSignIn(){
-        find(signInBtn).click();
+        actions.find(signInBtn).click();
         return new ShopPage(driver, wait, log);
     }
 

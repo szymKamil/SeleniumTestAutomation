@@ -8,7 +8,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-public class ShopPage extends WebElementActions {
+public class ShopPage  {
 
     Logger log;
     WebDriver driver;
@@ -20,16 +20,20 @@ public class ShopPage extends WebElementActions {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
-        WebElementActions.setDriver(driver, wait);
-        actions = new WebElementActions();
+        actions = new WebElementActions(driver, wait);
         loginForm = new ShopLoginPageForm(driver, wait, log);
+
 
     }
 
 
-
     //Elementy
     By appShop = By.xpath("//app-shop");
+    By carouselSlider = By.id("carouselExampleIndicators");
+    By carouselSliderNext = By.cssSelector("a.carousel-control-next");
+    By carouselSliderList = By.cssSelector("ol.carousel-indicators");
+
+
 
     public ShopPage logInToAppAs(String userType, String userRole){
         loginForm.insertLogin().insertPassword().choseRadio(userType).selectForms(userRole).selectTermsAndConditions().clickSignIn();
@@ -37,8 +41,19 @@ public class ShopPage extends WebElementActions {
     }
 
     public ShopPage verifyShopIsOnline(){
-        find(appShop);
+        actions.find(appShop);
         return this;
+    }
+
+    public ShopPage verifySlider(){
+    actions.find(carouselSlider).isVisible();
+    String className;
+    do{
+         actions.find(carouselSliderNext).click();
+         className = actions.findAll(carouselSliderNext).getFirst().classGetter();
+     } while (className.equals("active"));
+     return this;
+
     }
 
 

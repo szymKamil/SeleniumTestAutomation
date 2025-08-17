@@ -17,7 +17,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class LoginFormPage extends WebElementActions {
+public class LoginFormPage  {
 
     WebDriver driver;
     WebDriverWait wait;
@@ -28,8 +28,8 @@ public class LoginFormPage extends WebElementActions {
         this.driver = driver;
         this.wait = wait;
         this.log = log;
-        WebElementActions.setDriver(driver, wait);
         PageFactory.initElements(driver, this);
+        actions = new WebElementActions(driver, wait);
     }
 
     //Dane

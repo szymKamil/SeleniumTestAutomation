@@ -22,9 +22,9 @@ public class ShopPageTests extends BaseTest {
 
     @Test
     public void verifyShopIsOnline(){
-        shopPage.logInToAppAs("Admin", "Student").verifyShopIsOnline();
-
+        shopPage.logInToAppAs("Admin", "Student").verifyShopIsOnline().verifySlider();
     }
+
 
 
 

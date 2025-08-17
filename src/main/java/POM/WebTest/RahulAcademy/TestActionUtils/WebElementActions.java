@@ -7,28 +7,47 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class WebElementActions {
 
-    static public WebDriver driver;
-    static WebDriverWait wait;
-    WebElement element;
+    public WebDriver driver;
+     WebDriverWait wait;
     Select select;
+    WebElement element;
+    List<WebElementActions> elements;
 
-    public WebElementActions() {
+    // Główna instancja, która przechowuje driver i wait
+    public WebElementActions(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
     }
 
-    public WebElementActions(WebElement element) {
+    // Konstruktor dla pojedynczego elementu — bierze driver i wait z głównej instancji
+    public WebElementActions(WebElement element, WebElementActions mainActions) {
         this.element = element;
+        this.driver = mainActions.driver;
+        this.wait = mainActions.wait;
     }
 
-    public static void setDriver(WebDriver driver, WebDriverWait wait){
-        WebElementActions.driver = driver;
-        WebElementActions.wait = wait;
+    // Konstruktor dla listy elementów
+    public WebElementActions(List<WebElementActions> elements) {
+        this.elements = elements;
     }
+
 
     public WebElementActions find(By locator){
         WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        return new WebElementActions(el);
+        return new WebElementActions(el, this);
+    }
+
+    public List<WebElementActions> findAll(By locator){
+        List<WebElement> webElements = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
+
+        return webElements.stream()
+                .map(el -> new WebElementActions(el, this))
+                .toList();
     }
 
 
@@ -52,6 +71,10 @@ public class WebElementActions {
         return element.getAttribute(attribute);
     }
 
+    public String classGetter(){
+        return String.valueOf(element.getClass());
+    }
+
     public String getCss(String attribute){
         return element.getCssValue(attribute);
     }
@@ -63,7 +86,6 @@ public class WebElementActions {
     public Boolean isSelected(){
         return element.isSelected();
     }
-
 
 
     public WebElementActions selectOptionByText(By element, String text){
