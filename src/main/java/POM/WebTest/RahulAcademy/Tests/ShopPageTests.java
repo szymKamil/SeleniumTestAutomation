@@ -13,7 +13,6 @@ import java.time.Duration;
 public class ShopPageTests extends BaseTest {
 
 
-
     @Test
     public void loginFormVerification(){
         pageShopLoginForm.insertLogin().insertPassword().choseRadio("Admin").selectForms("Consultant")

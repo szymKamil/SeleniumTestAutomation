@@ -1,8 +1,5 @@
 package POM.WebTest.BoniGarcia.Tests;
 
-
-
-
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;

@@ -1,8 +1,7 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 import Base.BaseActionsAndUtils.PageLoadedVerification;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -11,6 +10,9 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -29,7 +31,10 @@ public class LoginFormPage {
         this.driver = driver;
         this.wait = wait;
         PageFactory.initElements(driver, this);
-        fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(1)).withTimeout(Duration.ofSeconds(3));
+        Collection<Class<? extends RuntimeException>> errorsCollection = new ArrayList<>(List.of(NoSuchElementException.class, TimeoutException.class));
+        fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(1))
+                .withTimeout(Duration.ofSeconds(3))
+                .ignoreAll(errorsCollection);
     }
 
     //Elementy na stronie
@@ -59,8 +64,11 @@ public class LoginFormPage {
 
     public void clickSubmitBtn(){
         wait.until(ExpectedConditions.elementToBeClickable(submitBtn)).click();
-        fluentWait.until(ExpectedConditions.visibilityOf(spinnerIcon));
-        fluentWait.until(ExpectedConditions.invisibilityOf(spinnerIcon));
+        fluentWait.until(ExpectedConditions.or(
+                ExpectedConditions.invisibilityOf(spinnerIcon),
+                ExpectedConditions.numberOfElementsToBe(By.id("spinner"), 0)
+        ));
+
     }
 
     public void verifySuccessLogin(){

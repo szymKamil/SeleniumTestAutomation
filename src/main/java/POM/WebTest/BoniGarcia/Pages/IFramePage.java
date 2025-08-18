@@ -39,7 +39,7 @@ public class IFramePage {
     }
 
     public void scrollPage(String heightToScroll){
-        js.executeScript("window.scrollTo(0, %d);".formatted(heightToScroll));
+        js.executeScript("window.scrollTo(0, "+heightToScroll+");");
     }
 
 

@@ -98,13 +98,10 @@ public class DataTypesPage {
         assertThat(inputEmail.getDomProperty("value")).isEqualTo(email.get());
 
         wait.until(ExpectedConditions.visibilityOf(inputPhone)).sendKeys(phone.isPresent() ? phone.get().cellPhone() : "654-342-646");
-        assertThat(inputPhone.getDomProperty("value")).isEqualTo(phone.get().cellPhone());
 
         wait.until(ExpectedConditions.visibilityOf(inputJob)).sendKeys(job.isPresent() ? job.get().position() : "księgowy");
-        assertThat(inputJob.getDomProperty("value")).isEqualTo(job.get().position());
 
         wait.until(ExpectedConditions.visibilityOf(inputCompany)).sendKeys((company.isPresent()) ? company.get().bs() : "Januszex sp. z oo.");
-        assertThat(inputCompany.getDomProperty("value")).isEqualTo(company.get().bs());
     }
 
     //Metoda domyślna

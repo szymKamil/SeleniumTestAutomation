@@ -36,7 +36,7 @@ public class LongPage {
 
     //Metody testowe
     public String getTextFromParagraph(int i){
-        return wait.until(ExpectedConditions.visibilityOf(leads.get(i))).getText();
+        return wait.until(ExpectedConditions.visibilityOfAllElements(leads)).get(i).getText();
 
     }
 
