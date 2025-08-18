@@ -39,5 +39,21 @@ public class ShopPageTests extends BaseTest {
         checkoutPage.verifyNumberOfProducts(result);
     }
 
+    @Test
+    public void shoppingCartRemoveFromCartTest(){
+        CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
+        shopPage.goToCheckout();
+        checkoutPage.verifyNumberOfProducts(result).removeProductsFromCart();
+    }
+
+
+    @Test
+    public void shoppingCartFinaliseOrderTest(){
+        CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
+        shopPage.goToCheckout();
+        checkoutPage.verifyNumberOfProducts(result).goToCheckout().finaliseOrder("Lublin");
+    }
+
+
 
 }
