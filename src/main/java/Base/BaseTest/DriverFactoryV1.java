@@ -56,7 +56,10 @@ public final class DriverFactoryV1 {
     }
 
     public static void initDriver(String browser, int time, URL url) {
+        Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
+        logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriver driver;
+        try {
         if (url != null) {
             driver = WebDriverManager.getInstance(browser)
                     .capabilities(loadOptionsFromFile(browser))
@@ -70,7 +73,11 @@ public final class DriverFactoryV1 {
         DRIVER_THREAD.set(driver);
         waitThread.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
         loggerThreadLocal.set(LoggerFactory.getLogger(DriverFactoryV1.class));
-
+        logger.info("Driver zainicjalizowany pomyślnie dla wątku: {}", Thread.currentThread().getId());
+        } catch (Exception e) {
+            logger.error("Błąd podczas inicjalizacji drivera: ", e);
+            throw new RuntimeException("Nie udało się zainicjalizować drivera", e);
+        }
     }
 
 
@@ -103,11 +110,15 @@ public final class DriverFactoryV1 {
     }
 
     private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value){
-        if (options instanceof ChromeOptions chromeOptions){
-            if (value.equalsIgnoreCase("true")){
+        if (options instanceof ChromeOptions chromeOptions) {
+            if (value.equalsIgnoreCase("true")) {
                 chromeOptions.addArguments("--" + key);
-            } else if (value.contains(",")){
-                chromeOptions.addArguments("--" + key + "=" +value);
+            } else if (value.contains(",")) {
+                chromeOptions.addArguments("--" + key + "=" + value);
+            } else if (key.equals("user-data-dir")) {
+                // Podstaw unikalny identyfikator wątku
+                String threadId = String.valueOf(Thread.currentThread().getId());
+                chromeOptions.addArguments("--" + key + "=" + value.replace("${threadId}", threadId));
             }
             Map<String, Object> prefs = addExperimentalOptions();
             if (!prefs.isEmpty()) {

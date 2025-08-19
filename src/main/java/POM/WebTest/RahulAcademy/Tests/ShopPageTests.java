@@ -20,7 +20,6 @@ public class ShopPageTests extends BaseTest {
                 .clickSignIn();
     }
 
-
     @Test
     public void verifyShopIsOnline(){
         shopPage.logInToAppAs("Admin", "Student").verifyShopIsOnline().verifySlider();

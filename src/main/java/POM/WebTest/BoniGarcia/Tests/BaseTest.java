@@ -30,6 +30,7 @@ public abstract class BaseTest  {
     {
         try {
             url = new URI("http://localhost:4444/").toURL();
+           // url = new URI("http://192.168.1.104:5555/").toURL();
         } catch (MalformedURLException e) {
             throw new RuntimeException(e);
         } catch (URISyntaxException e) {
@@ -94,7 +95,7 @@ public abstract class BaseTest  {
     @Parameters({"browser", "timeout"})
     @BeforeMethod
     public void config(@Optional("Chrome") String browser, @Optional("55") int timeout) throws Exception {
-        DriverFactoryV1.initDriver(browser, timeout /*url*/);
+        DriverFactoryV1.initDriver(browser, timeout/*, url*/);
         this.driver = DriverFactoryV1.getDriver();
         this.wait = DriverFactoryV1.getWait();
         this.log = DriverFactoryV1.getLogger();
