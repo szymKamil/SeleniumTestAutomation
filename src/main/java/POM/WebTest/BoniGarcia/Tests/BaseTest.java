@@ -3,6 +3,7 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.*;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
@@ -89,6 +90,15 @@ public abstract class BaseTest  {
         }
         return stringBuilder.toString();
     };
+
+
+    @BeforeSuite
+    public static void setupWebDriverManager() {
+        WebDriverManager.chromedriver().setup();
+        WebDriverManager.firefoxdriver().setup();
+        WebDriverManager.edgedriver().setup();
+    }
+
 
 
     //    @Listeners(TestListener.class)

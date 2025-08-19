@@ -38,18 +38,25 @@ public final class DriverFactoryV1 {
     public static void initDriver(String browser, int time, URL url) {
         Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
+        WebDriverManager.getInstance(browser).setup();
         WebDriver driver;
         try {
-        if (url != null) {
-            driver = WebDriverManager.getInstance(browser)
-                    .capabilities(loadOptionsFromFile(browser))
-                    .remoteAddress(url)
-                    .create();
-        } else {
-            driver = WebDriverManager.getInstance(browser)
-                    .capabilities(loadOptionsFromFile(browser))
-                    .create();
-        }
+            // Inicjalizacja WebDriverManager dla danej przeglądarki
+            WebDriverManager.getInstance(browser).setup();
+            // Synchronizacja, aby uniknąć konfliktów
+            synchronized (DriverFactoryV1.class) {
+                if (url != null) {
+                    driver = WebDriverManager.getInstance(browser)
+                            .capabilities(loadOptionsFromFile(browser))
+                            .remoteAddress(url)
+                            .create();
+                } else {
+                    driver = WebDriverManager.getInstance(browser)
+                            .capabilities(loadOptionsFromFile(browser))
+                            .create();
+                }
+            }
+
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
         THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));
