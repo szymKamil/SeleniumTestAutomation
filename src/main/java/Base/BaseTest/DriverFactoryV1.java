@@ -21,31 +21,58 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public  class DriverFactoryV1 {
+public final class DriverFactoryV1 {
     // Tworzenie wielowątkowości na potrzeby izolacji testów przy parallelnym uruchomieniu.
-    private static final ThreadLocal<WebDriver> driverThread = new ThreadLocal<>();
+    private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
     private static final ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
-    Logger log;
-    public WebDriver driver;
-    public WebDriverWait wait;
+    private static final ThreadLocal<Logger> loggerThreadLocal = new ThreadLocal<>();
+//    Logger log;
+//    WebDriver driver;
+//    WebDriverWait wait;
 
-
-    public DriverFactoryV1(String browser, int time, URL url)  {
-        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).remoteAddress(url).create();
-        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
-        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
-        driverThread.set(driver);
-        waitThread.set(wait);
+    private DriverFactoryV1() {
     }
 
 
-    public DriverFactoryV1(String browser, int time)  {
-        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).create();
-        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
-        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
-        driverThread.set(driver);
-        waitThread.set(wait);
+//    public DriverFactoryV1(String browser, int time, URL url)  {
+//        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).remoteAddress(url).create();
+//        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
+//        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
+//        driverThread.set(driver);
+//        waitThread.set(wait);
+//    }
+//
+//
+//    public DriverFactoryV1(String browser, int time)  {
+//        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).create();
+//        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
+//        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
+//        driverThread.set(driver);
+//        waitThread.set(wait);
+//    }
+
+    public static void initDriver(String browser, int time) {
+        initDriver(browser, time, null);
     }
+
+    public static void initDriver(String browser, int time, URL url) {
+        WebDriver driver;
+        if (url != null) {
+            driver = WebDriverManager.getInstance(browser)
+                    .capabilities(loadOptionsFromFile(browser))
+                    .remoteAddress(url)
+                    .create();
+        } else {
+            driver = WebDriverManager.getInstance(browser)
+                    .capabilities(loadOptionsFromFile(browser))
+                    .create();
+        }
+        DRIVER_THREAD.set(driver);
+        waitThread.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
+        loggerThreadLocal.set(LoggerFactory.getLogger(DriverFactoryV1.class));
+
+    }
+
 
      static Capabilities loadOptionsFromFile(String browser)  {
         AbstractDriverOptions<?> options;
@@ -133,24 +160,26 @@ public  class DriverFactoryV1 {
     }
 
 
-    public Logger getLogger() {
-        return log;
+    public static Logger getLogger() {
+        return loggerThreadLocal.get();
     }
 
-    public WebDriver getDriver() {
-        return driverThread.get();
+    public static WebDriver getDriver() {
+        return DRIVER_THREAD.get();
     }
 
-    public WebDriverWait getWait() {
+    public static WebDriverWait getWait() {
         return waitThread.get();
     }
 
 
-    public void quit() {
-        if (driverThread.get() != null) {
-            driverThread.get().quit();
-            driverThread.remove();
+    public static void quit() {
+        WebDriver driver = DRIVER_THREAD.get();
+        if (driver != null) {
+            driver.quit();
+            DRIVER_THREAD.remove();
             waitThread.remove();
+            loggerThreadLocal.remove();
         }
     }
 }

@@ -10,11 +10,11 @@ import org.slf4j.Logger;
  * Klasa zawierająca abstrakcyjne elementy, występujące na każdej ze stron testowych Boni Garciego.
  */
 
-public abstract class AbstractPage {
+public class AbstractPage {
 
-    WebDriver driver;
-    WebDriverWait wait;
-    Logger log ;
+    protected final WebDriver driver;
+    protected final WebDriverWait wait;
+    protected final Logger log ;
 
 
     public AbstractPage(WebDriver driver, WebDriverWait wait, Logger log) {

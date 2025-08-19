@@ -20,19 +20,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Optional;
 
-public class DataTypesPage {
+public class DataTypesPage extends AbstractPage{
 
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
     Faker faker;
 
     public DataTypesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
         faker = new Faker();
     }
 

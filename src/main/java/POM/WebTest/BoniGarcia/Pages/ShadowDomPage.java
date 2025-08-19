@@ -7,20 +7,14 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-public class ShadowDomPage {
-
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+public class ShadowDomPage extends AbstractPage{
 
 
     public ShadowDomPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
-
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
     }
+
     //Elementy na stronie
     @FindBy(id = "content")
     WebElement shadowRootDiv;

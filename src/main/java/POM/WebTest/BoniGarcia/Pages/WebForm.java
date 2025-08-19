@@ -22,20 +22,17 @@ import java.util.Date;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class WebForm {
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+public class WebForm extends AbstractPage{
+
+
     public Select select;
     JavascriptExecutor js;
 
 
     public WebForm(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
-        js = (JavascriptExecutor) driver;
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
+        js = (JavascriptExecutor) this.driver;
     }
 
     //Elementy na stronie

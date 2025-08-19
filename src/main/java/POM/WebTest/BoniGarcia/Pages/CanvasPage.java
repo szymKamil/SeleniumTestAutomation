@@ -10,20 +10,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-public class CanvasPage {
+public class CanvasPage extends AbstractPage{
 
-
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
-    Actions actions;
+    private final Actions actions;
 
     public CanvasPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
-        actions = new Actions(driver);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
+        actions = new Actions(this.driver);
     }
 
     //Elementy strony

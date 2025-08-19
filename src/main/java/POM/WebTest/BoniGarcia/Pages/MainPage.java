@@ -9,16 +9,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
 
-public class MainPage  {
-    WebDriver driver;
-    WebDriverWait wait;
-    Logger log ;
+public class MainPage extends AbstractPage {
 
 
     public MainPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
+        super(driver, wait, log);
     }
 
     public static final String boniGarciaMainURL = "https://bonigarcia.dev/selenium-webdriver-java/";

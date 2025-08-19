@@ -17,10 +17,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
-public class LoginFormPage {
+public class LoginFormPage extends AbstractPage{
 
-    private WebDriver driver;
-    private WebDriverWait wait;
     private final static String login = "user";
     private final static String password = "user";
     private final static String loggedURL = "https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html";
@@ -28,11 +26,10 @@ public class LoginFormPage {
 
 
     public LoginFormPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        PageFactory.initElements(driver, this);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
         Collection<Class<? extends RuntimeException>> errorsCollection = new ArrayList<>(List.of(NoSuchElementException.class, TimeoutException.class));
-        fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(1))
+        fluentWait = new FluentWait<>(this.driver).pollingEvery(Duration.ofSeconds(1))
                 .withTimeout(Duration.ofSeconds(3))
                 .ignoreAll(errorsCollection);
     }

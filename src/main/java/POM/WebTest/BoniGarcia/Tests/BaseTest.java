@@ -5,26 +5,37 @@ import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.*;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
+import org.testng.annotations.*;
 import org. slf4j. Logger;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.function.Supplier;
 
-public class BaseTest  {
+public abstract class BaseTest  {
     /*------Bazowe-----------*/
     protected WebDriver driver;
     protected WebDriverWait wait;
-    private DriverFactoryV1 factory;
+    protected Logger log;
 
-    Logger log;
-    Random random;
+    Random random; //TODO: dodać do utilsów
     /*-----------------*/
 
+    URL url;
+
+    {
+        try {
+            url = new URI("http://localhost:4444/").toURL();
+        } catch (MalformedURLException e) {
+            throw new RuntimeException(e);
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
     /*------Klasy stron-----------*/
@@ -82,11 +93,11 @@ public class BaseTest  {
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("25") int timeout) throws Exception {
-        factory = new DriverFactoryV1(browser, timeout);
-        this.driver = factory.getDriver();
-        this.wait = factory.getWait();
-        this.log = factory.getLogger();
+    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout) throws Exception {
+        DriverFactoryV1.initDriver(browser, timeout /*url*/);
+        this.driver = DriverFactoryV1.getDriver();
+        this.wait = DriverFactoryV1.getWait();
+        this.log = DriverFactoryV1.getLogger();
         mainPage = new MainPage(driver, wait, log);
         webForm = new WebForm(driver, wait, log);
         navigationPage = new Navigation(driver, wait, log);
@@ -97,28 +108,28 @@ public class BaseTest  {
         loadingImagesPage = new LoadingImagesPage(driver, wait, log);
         slowCalculator = new SlowCalculator(driver, wait, log);
         longPage = new LongPage(driver, wait, log);
-        infiniteScroll = new InfiniteScrollPage(driver, wait);
+        infiniteScroll = new InfiniteScrollPage(driver, wait, log);
         shadowDomPage = new ShadowDomPage(driver, wait, log);
         cookiesPage = new CookiesPage(driver, wait, log);
         framesPage = new FramesPage(driver, wait, log);
         iFramePage = new IFramePage(driver, wait, log);
         dialogBoxesPage = new DialogBoxesPage(driver, wait, log);
-        webStoragePage = new WebStoragePage(driver, wait, log);
-        geolocationPage = new GeolocationPage(driver, wait, log);
-        notificationPage = new NotificationPage(driver, wait, log);
-        userMediaPage = new UserMediaPage(driver, wait, log);
-        multilanguagePage = new MultilanguagePage(driver, wait, log);
+//        webStoragePage = new WebStoragePage(driver, wait, log);
+//        geolocationPage = new GeolocationPage(driver, wait, log);
+//        notificationPage = new NotificationPage(driver, wait, log);
+//        userMediaPage = new UserMediaPage(driver, wait, log);
+/*        multilanguagePage = new MultilanguagePage(driver, wait, log);
         consoleLogsPage = new ConsoleLogsPage(driver, wait, log);
         loginFormPage = new LoginFormPage(driver, wait, log);
         randomCalculatorPage = new RandomCalculatorPage(driver, wait, log);
         fileDownloadPage = new FileDownloadPage(driver, wait, log);
         abTestingPage = new ABTestingPage(driver, wait, log);
-        dataTypesPage = new DataTypesPage(driver, wait, log);
+        dataTypesPage = new DataTypesPage(driver, wait, log);*/
     }
 
 
     @AfterMethod
-    void shutDown(){
-        factory.quit();
+    void tearDown(){
+        DriverFactoryV1.quit();
     }
 }

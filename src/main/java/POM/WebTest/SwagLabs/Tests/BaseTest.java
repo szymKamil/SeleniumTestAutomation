@@ -17,7 +17,7 @@ public class BaseTest  {
 
     @BeforeClass
     public void initiateDriver(){
-        factory = new DriverFactoryV1()
+//        factory = new DriverFactoryV1();
 
 
     }

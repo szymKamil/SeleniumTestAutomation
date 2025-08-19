@@ -17,18 +17,14 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LoadingImagesPage {
+public class LoadingImagesPage  extends AbstractPage{
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
     Actions actions;
     FluentWait<WebDriver> fluentWait;
 
     public LoadingImagesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
+        super(driver, wait, log);
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
         fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(2))

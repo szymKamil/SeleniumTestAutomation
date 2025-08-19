@@ -7,18 +7,14 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-public class DialogBoxesPage {
+public class DialogBoxesPage extends AbstractPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
 
 
     public DialogBoxesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
     }
 
     //Elementy na stronie

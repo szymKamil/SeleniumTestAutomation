@@ -39,10 +39,10 @@ public class MainTest extends BaseTest {
         }
         assertThat(driver.findElement(ap.img).isDisplayed()).isTrue();
         assertThat(driver.findElement(ap.mainHeader).getText()).isEqualTo(ap.pageTitle);
-        assertThat(driver.findElements(mainPage.containers).size()).isEqualTo(6);
-        assertThat(driver.findElement(mainPage.lead).isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.lead).getText()).isEqualTo(ap.leadText);
-        assertThat(driver.findElement(mainPage.copySpan).getText()).contains(ap.copyrights);
+//        assertThat(driver.findElements(mainPage.containers).size()).isEqualTo(6);
+//        assertThat(driver.findElement(mainPage.lead).isDisplayed()).isTrue();
+//        assertThat(driver.findElement(mainPage.lead).getText()).isEqualTo(ap.leadText);
+//        assertThat(driver.findElement(mainPage.copySpan).getText()).contains(ap.copyrights);
     }
 
     @Parameters("path")

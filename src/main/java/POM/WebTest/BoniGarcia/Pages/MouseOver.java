@@ -15,20 +15,16 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class MouseOver {
+public class MouseOver extends AbstractPage{
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
     Actions actions;
 
 
     public MouseOver(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
-        actions = new Actions(driver);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
+        actions = new Actions(this.driver);
     }
 
     //Elementy na stronie

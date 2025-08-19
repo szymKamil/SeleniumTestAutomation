@@ -15,21 +15,17 @@ import org.slf4j.Logger;
 
 import java.util.Optional;
 
-public class GeolocationPage {
+public class GeolocationPage extends AbstractPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
     Actions actions;
     DevTools devTools;
 
     public GeolocationPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
-        actions = new Actions(driver);
-        devTools = ((HasDevTools) driver).getDevTools();
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
+        actions = new Actions(this.driver);
+        devTools = ((HasDevTools) this.driver).getDevTools();
     }
 
     //Elementy strony

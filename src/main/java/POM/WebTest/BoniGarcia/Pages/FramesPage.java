@@ -8,17 +8,13 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-public class FramesPage {
+public class FramesPage extends AbstractPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
 
     public FramesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
     }
 
     //Elementy strony

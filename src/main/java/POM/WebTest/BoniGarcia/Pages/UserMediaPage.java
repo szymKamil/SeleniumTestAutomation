@@ -18,24 +18,18 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-public class UserMediaPage {
+public class UserMediaPage extends AbstractPage{
 
-
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
     Actions actions;
     DevTools devTools;
     JavascriptExecutor js;
 
     public UserMediaPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
+        super(driver, wait, log);
         PageFactory.initElements(driver, this);
-        actions = new Actions(driver);
-        devTools = ((HasDevTools) driver).getDevTools();
-        js = (JavascriptExecutor) driver;
+        actions = new Actions(this.driver);
+        devTools = ((HasDevTools) this.driver).getDevTools();
+        js = (JavascriptExecutor) this.driver;
     }
 
     //Elementy na stronie

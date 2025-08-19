@@ -10,19 +10,15 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-public class DropdownMenu {
+public class DropdownMenu extends AbstractPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
     Actions actions;
 
     public DropdownMenu(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
+        super(driver, wait, log);
         PageFactory.initElements(driver, this);
-        actions = new Actions(driver);
+        actions = new Actions(this.driver);
     }
 
     //Elementy na stronie

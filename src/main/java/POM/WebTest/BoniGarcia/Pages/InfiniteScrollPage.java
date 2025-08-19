@@ -6,19 +6,18 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
 
-public class InfiniteScrollPage {
+public class InfiniteScrollPage extends AbstractPage {
 
-    private WebDriver driver;
-    private WebDriverWait wait;
+
     Actions actions;
     JavascriptExecutor js;
 
-    public InfiniteScrollPage(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
-        actions = new Actions(driver);
-        js = (JavascriptExecutor) driver;
+    public InfiniteScrollPage(WebDriver driver, WebDriverWait wait, Logger log) {
+        super(driver, wait, log);
+        actions = new Actions(this.driver);
+        js = (JavascriptExecutor) this.driver;
     }
 
     public Long getPageHeight(){

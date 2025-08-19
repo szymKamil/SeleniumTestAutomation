@@ -12,20 +12,16 @@ import org.slf4j.Logger;
 
 import java.util.List;
 
-public class LongPage {
+public class LongPage extends AbstractPage{
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
+
     private Actions actions;
 
 
     public LongPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        actions = new Actions(driver);
-        PageFactory.initElements(driver, this);
+        super(driver, wait, log);
+        actions = new Actions(this.driver);
+        PageFactory.initElements(this.driver, this);
     }
 
     //Elementy na stronie

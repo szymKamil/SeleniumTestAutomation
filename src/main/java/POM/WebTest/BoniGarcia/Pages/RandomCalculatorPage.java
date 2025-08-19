@@ -17,18 +17,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class RandomCalculatorPage {
+public class RandomCalculatorPage extends AbstractPage{
 
-    private WebDriver driver;
-    private WebDriverWait wait;
-    private Logger log;
 
 
     public RandomCalculatorPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        PageFactory.initElements(driver, this);
+        super(driver, wait, log);
+        PageFactory.initElements(this.driver, this);
     }
 
     //Elementy na stronie
