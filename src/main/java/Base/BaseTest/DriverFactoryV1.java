@@ -24,32 +24,12 @@ import java.util.Map;
 public final class DriverFactoryV1 {
     // Tworzenie wielowątkowości na potrzeby izolacji testów przy parallelnym uruchomieniu.
     private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
-    private static final ThreadLocal<WebDriverWait> waitThread = new ThreadLocal<>();
-    private static final ThreadLocal<Logger> loggerThreadLocal = new ThreadLocal<>();
-//    Logger log;
-//    WebDriver driver;
-//    WebDriverWait wait;
+    private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
+    private static final ThreadLocal<Logger> THREAD_LOCAL = new ThreadLocal<>();
 
     private DriverFactoryV1() {
     }
 
-
-//    public DriverFactoryV1(String browser, int time, URL url)  {
-//        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).remoteAddress(url).create();
-//        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
-//        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
-//        driverThread.set(driver);
-//        waitThread.set(wait);
-//    }
-//
-//
-//    public DriverFactoryV1(String browser, int time)  {
-//        this.driver = WebDriverManager.getInstance(browser).capabilities(loadOptionsFromFile(browser)).create();
-//        this.wait = new WebDriverWait(driver,Duration.ofSeconds(time));
-//        this.log = LoggerFactory.getLogger(DriverFactoryV1.class);
-//        driverThread.set(driver);
-//        waitThread.set(wait);
-//    }
 
     public static void initDriver(String browser, int time) {
         initDriver(browser, time, null);
@@ -71,12 +51,12 @@ public final class DriverFactoryV1 {
                     .create();
         }
         DRIVER_THREAD.set(driver);
-        waitThread.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
-        loggerThreadLocal.set(LoggerFactory.getLogger(DriverFactoryV1.class));
-        logger.info("Driver zainicjalizowany pomyślnie dla wątku: {}", Thread.currentThread().getId());
+        WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
+        THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));
+        logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
         } catch (Exception e) {
             logger.error("Błąd podczas inicjalizacji drivera: ", e);
-            throw new RuntimeException("Nie udało się zainicjalizować drivera", e);
+            throw new RuntimeException("Nie udało się uruchomić drivera", e);
         }
     }
 
@@ -116,7 +96,6 @@ public final class DriverFactoryV1 {
             } else if (value.contains(",")) {
                 chromeOptions.addArguments("--" + key + "=" + value);
             } else if (key.equals("user-data-dir")) {
-                // Podstaw unikalny identyfikator wątku
                 String threadId = String.valueOf(Thread.currentThread().getId());
                 chromeOptions.addArguments("--" + key + "=" + value.replace("${threadId}", threadId));
             }
@@ -172,7 +151,7 @@ public final class DriverFactoryV1 {
 
 
     public static Logger getLogger() {
-        return loggerThreadLocal.get();
+        return THREAD_LOCAL.get();
     }
 
     public static WebDriver getDriver() {
@@ -180,7 +159,7 @@ public final class DriverFactoryV1 {
     }
 
     public static WebDriverWait getWait() {
-        return waitThread.get();
+        return WAIT_THREAD.get();
     }
 
 
@@ -189,8 +168,8 @@ public final class DriverFactoryV1 {
         if (driver != null) {
             driver.quit();
             DRIVER_THREAD.remove();
-            waitThread.remove();
-            loggerThreadLocal.remove();
+            WAIT_THREAD.remove();
+            THREAD_LOCAL.remove();
         }
     }
 }
