@@ -3,6 +3,8 @@ package Base.BaseTest;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
@@ -39,24 +41,24 @@ public final class DriverFactoryV1 {
         Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
-        WebDriver driver;
         try {
-            // Inicjalizacja WebDriverManager dla danej przeglądarki
-            WebDriverManager.getInstance(browser).setup();
-            // Synchronizacja, aby uniknąć konfliktów
-            synchronized (DriverFactoryV1.class) {
-                if (url != null) {
-                    driver = WebDriverManager.getInstance(browser)
-                            .capabilities(loadOptionsFromFile(browser))
-                            .remoteAddress(url)
-                            .create();
-                } else {
-                    driver = WebDriverManager.getInstance(browser)
-                            .capabilities(loadOptionsFromFile(browser))
-                            .create();
-                }
-            }
+            Thread.sleep(5000); // Opóźnienie 5 sekund
+            WebDriver driver;
+        if (url != null) {
+            driver = WebDriverManager.getInstance(browser)
+                    .capabilities(loadOptionsFromFile(browser))
+                    .remoteAddress(url)
+                    .create();
+        } else {
+            driver = new ChromeDriver();
+            //TODO: udoskonalić stabilność kodu
+//
+//            WebDriverManager.getInstance(browser)
+//                    .capabilities(loadOptionsFromFile(browser))
+//                    .create();
+            Thread.sleep(5000); // Opóźnienie 5 sekund
 
+        }
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
         THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));

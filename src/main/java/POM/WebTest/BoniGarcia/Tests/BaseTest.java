@@ -92,15 +92,6 @@ public abstract class BaseTest  {
     };
 
 
-    @BeforeSuite
-    public static void setupWebDriverManager() {
-        WebDriverManager.chromedriver().setup();
-        WebDriverManager.firefoxdriver().setup();
-        WebDriverManager.edgedriver().setup();
-    }
-
-
-
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
