@@ -96,7 +96,7 @@ public abstract class BaseTest  {
     @Parameters({"browser", "timeout"})
     @BeforeMethod
     public void config(@Optional("Chrome") String browser, @Optional("55") int timeout) throws Exception {
-        DriverFactoryV1.initDriver(browser, timeout /*url*/);
+        DriverFactoryV1.initDriver("chrome", timeout /*url*/);
         this.driver = DriverFactoryV1.getDriver();
         this.wait = DriverFactoryV1.getWait();
         this.log = DriverFactoryV1.getLogger();

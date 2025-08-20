@@ -6,9 +6,12 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
+import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.AbstractDriverOptions;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,23 +44,17 @@ public final class DriverFactoryV1 {
         Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
+        WebDriver driver = null;
         try {
-            Thread.sleep(5000); // Opóźnienie 5 sekund
-            WebDriver driver;
         if (url != null) {
-            driver = WebDriverManager.getInstance(browser)
-                    .capabilities(loadOptionsFromFile(browser))
-                    .remoteAddress(url)
-                    .create();
+             driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
         } else {
-            driver = new ChromeDriver();
-            //TODO: udoskonalić stabilność kodu
-//
-//            WebDriverManager.getInstance(browser)
-//                    .capabilities(loadOptionsFromFile(browser))
-//                    .create();
-            Thread.sleep(5000); // Opóźnienie 5 sekund
-
+            switch(browser.toLowerCase()) {
+                case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser));
+                case "firefox" -> driver = new FirefoxDriver((FirefoxOptions) loadOptionsFromFile(browser));
+                case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser));
+                default -> logger.info("Błędnie wybrana przeglądarka!!!");
+            }
         }
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
