@@ -1,5 +1,7 @@
 package POM.WebTest.BoniGarcia.Tests;
 
+import Base.Utils.GenerateRandomText;
+import POM.WebTest.BoniGarcia.Pages.MainPage;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebElement;
@@ -28,6 +30,8 @@ public class MainTest extends BaseTest {
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka.
          */
+        //TODO:
+        MainPage mainPage = new MainPage(driver, wait, log);
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         String currentUrl = driver.getCurrentUrl();
@@ -39,10 +43,10 @@ public class MainTest extends BaseTest {
         }
         assertThat(driver.findElement(ap.img).isDisplayed()).isTrue();
         assertThat(driver.findElement(ap.mainHeader).getText()).isEqualTo(ap.pageTitle);
-//        assertThat(driver.findElements(mainPage.containers).size()).isEqualTo(6);
-//        assertThat(driver.findElement(mainPage.lead).isDisplayed()).isTrue();
-//        assertThat(driver.findElement(mainPage.lead).getText()).isEqualTo(ap.leadText);
-//        assertThat(driver.findElement(mainPage.copySpan).getText()).contains(ap.copyrights);
+        assertThat(driver.findElements(mainPage.containers).size()).isEqualTo(6);
+        assertThat(driver.findElement(mainPage.lead).isDisplayed()).isTrue();
+        assertThat(driver.findElement(mainPage.lead).getText()).isEqualTo(ap.leadText);
+        assertThat(driver.findElement(mainPage.copySpan).getText()).contains(ap.copyrights);
     }
 
     @Parameters("path")
@@ -86,7 +90,7 @@ public class MainTest extends BaseTest {
         } else {
             log.error("Hasło niepoprawne, wpisano: '{}'", passwordValue);
         }
-        webForm.fillTextAreaInput(randomGeneratedText.get());
+        webForm.fillTextAreaInput(GenerateRandomText.randomGeneratedText());
         String randomTextInput = webForm.textArea.getAttribute("value");
         log.info("Wpisano w pole tekstowe: {}", randomTextInput);
         webForm.selectElementOnDropdownList("Two");
