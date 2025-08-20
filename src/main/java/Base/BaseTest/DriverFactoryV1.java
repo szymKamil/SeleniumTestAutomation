@@ -36,23 +36,25 @@ public final class DriverFactoryV1 {
     }
 
 
-    public static void initDriver(String browser, int time) {
+    public static void initDriver(String browser, int time) throws InterruptedException {
         initDriver(browser, time, null);
     }
 
-    public static void initDriver(String browser, int time, URL url) {
+    public static void initDriver(String browser, int time, URL url) throws InterruptedException {
         Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
+        Thread.sleep(Duration.ofSeconds(3));
         WebDriver driver = null;
         try {
         if (url != null) {
-             driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
+//             driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
+            driver = new RemoteWebDriver(url,loadOptionsFromFile(browser, true));
         } else {
             switch(browser.toLowerCase()) {
-                case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser));
-                case "firefox" -> driver = new FirefoxDriver((FirefoxOptions) loadOptionsFromFile(browser));
-                case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser));
+                case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser, false));
+                case "firefox" -> driver = new FirefoxDriver((FirefoxOptions) loadOptionsFromFile(browser, false));
+                case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser, false));
                 default -> logger.info("Błędnie wybrana przeglądarka!!!");
             }
         }
@@ -67,7 +69,7 @@ public final class DriverFactoryV1 {
     }
 
 
-     static Capabilities loadOptionsFromFile(String browser)  {
+     static Capabilities loadOptionsFromFile(String browser, boolean flag)  {
         AbstractDriverOptions<?> options;
         switch(browser.toLowerCase()) {
             case "chrome" -> options = new ChromeOptions();
@@ -75,7 +77,6 @@ public final class DriverFactoryV1 {
             case "edge" -> options = new EdgeOptions();
             default -> throw new IllegalArgumentException("Błędna nazwa przeglądarki %s. Użyj jednej z następujących: chrome, firefox, edge.".formatted(browser));
         }
-
         Path optionPath = Path.of("src/main/resources/options.properties");
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(optionPath.toFile()))){
             String optionsLine;
@@ -84,7 +85,9 @@ public final class DriverFactoryV1 {
                 if (optionSplit.length == 2){
                     String key = optionSplit[0].trim();
                     String value = optionSplit[1].trim();
-                    addOptionsToDriver(options, key, value);
+                    if (!flag == true && !key.contains("local")){
+                        addOptionsToDriver(options, key, value);
+                    }
                 }
             }
         } catch (IOException e){
@@ -101,6 +104,7 @@ public final class DriverFactoryV1 {
                 chromeOptions.addArguments("--" + key);
             } else if (value.contains(",")) {
                 chromeOptions.addArguments("--" + key + "=" + value);
+
             } else if (key.equals("user-data-dir")) {
                 String threadId = String.valueOf(Thread.currentThread().getId());
                 chromeOptions.addArguments("--" + key + "=" + value.replace("${threadId}", threadId));

@@ -3,7 +3,6 @@ package POM.WebTest.BoniGarcia.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.*;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.annotations.*;
@@ -96,7 +95,7 @@ public abstract class BaseTest  {
     @Parameters({"browser", "timeout"})
     @BeforeMethod
     public void config(@Optional("Chrome") String browser, @Optional("55") int timeout) throws Exception {
-        DriverFactoryV1.initDriver("chrome", timeout /*url*/);
+        DriverFactoryV1.initDriver("chrome", timeout, url);
         this.driver = DriverFactoryV1.getDriver();
         this.wait = DriverFactoryV1.getWait();
         this.log = DriverFactoryV1.getLogger();

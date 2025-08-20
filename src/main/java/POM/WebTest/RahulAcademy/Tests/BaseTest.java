@@ -21,13 +21,11 @@ import java.net.URI;
 
 public class BaseTest {
 
-
     WebDriver driver;
     WebDriverWait wait;
     private DriverFactoryV1 factory;
     private Logger log;
     WebElementActions actions;
-
 
 
     protected final URI uri = URI.create("http://192.168.1.108:4444");
@@ -42,12 +40,11 @@ public class BaseTest {
 
     @Parameters({"browser", "timeout"})
     @BeforeClass()
-    public void config(@Optional("Chrome") String browser, @Optional("25") int timeout) throws MalformedURLException {
-//        factory = new DriverFactoryV1(browser, timeout /*, uri.toURL()*/);
+    public void config(@Optional("Chrome") String browser, @Optional("25") int timeout) throws MalformedURLException, InterruptedException {
         DriverFactoryV1.initDriver(browser, timeout);
-        this.driver = factory.getDriver();
-        this.wait = factory.getWait();
-        this.log = factory.getLogger();
+        this.driver = DriverFactoryV1.getDriver();
+        this.wait = DriverFactoryV1.getWait();
+        this.log = DriverFactoryV1.getLogger();
         driver = new EventFiringDecorator<>(new Listener()).decorate(driver);
         loginPageTest = new LoginFormPage(driver, wait, log);
         pageShopLoginForm = new ShopLoginPageForm(driver, wait, log);
