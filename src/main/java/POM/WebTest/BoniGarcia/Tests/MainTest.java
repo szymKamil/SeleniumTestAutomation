@@ -1,9 +1,7 @@
 package POM.WebTest.BoniGarcia.Tests;
 
-import POM.WebTest.BoniGarcia.Pages.MainPage;
-import POM.WebTest.BoniGarcia.Pages.WebForm;
+import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
-import org.openqa.selenium.By;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
@@ -37,7 +35,6 @@ public class MainTest extends BaseTest {
          * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie, weryfikację i przesłanie formularza oraz upewnienie się,
          * że formularz został poprawnie przesłany.
          */
-
         MainPage mainPage = new MainPage(driver, wait, log);
         mainPage.openMainPage();
         mainPage.goToSubPage("Web form");
@@ -60,116 +57,60 @@ public class MainTest extends BaseTest {
 
 
 
-   /* @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
+    @Test(priority = 3, dependsOnMethods ={"mainPageTestElementsVerification"})
     public void navigationPageTest(){
-        *//***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację adresu URL oraz tekstu nagłówka, a następnie weryfikację działania przycisków i weryfikację
+         * zmieniającej się treści w paragrafach.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Navigation");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/navigation1.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-        StringBuilder loremIpsum = new StringBuilder(navigationPage.leadParagraph.getText());
-        navigationPage.activeBtnInfo();
-        log.info("Pierwszy paragraf brzmi: {}", loremIpsum);
-        navigationPage.btnNext();
-        navigationPage.activeBtnInfo();
-        loremIpsum = new StringBuilder(navigationPage.leadParagraph.getText());
-        log.info("Drugi paragraf brzmi: {}", loremIpsum);
-        navigationPage.btnNext();
-        navigationPage.activeBtnInfo();
-        loremIpsum = new StringBuilder(navigationPage.leadParagraph.getText());
-        log.info("Trzeci paragraf brzmi: {}", loremIpsum);
-        navigationPage.btnPrev();
-        navigationPage.activeBtnInfo();
-        navigationPage.btnPrev();
-        navigationPage.activeBtnInfo();
-    }*/
+        mainPage.verifyAbstractPage();
+        NavigationPage navigationPage = new NavigationPage(driver, wait, log);
+        navigationPage.verifyBtns();
+    }
 
-}
-/*
+
+
     @Test()
     public void dropdownMenuTest(){
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i użycie wybranych dropdownów i kliknięcie w odpowiednie linki.
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację adresu URL oraz tekstu nagłówka, i użycie wybranych dropdownów i kliknięcie odpowiednich przycisków w menu.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Dropdown menu");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/dropdown-menu.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-        dropdownMenu.openDropdownOne();
-        dropdownMenu.pickDropdownElement( 1);
-        dropdownMenu.openDropdownTwo();
-        dropdownMenu.pickDropdownElement( 2);
-        dropdownMenu.openDropdownThree();
-        dropdownMenu.pickDropdownElement( 3);
+        mainPage.verifyAbstractPage();
+        DropdownMenuPage dropdownMenu = new DropdownMenuPage(driver, wait, log);
+        dropdownMenu.openDropOneAndPick(1);
+        dropdownMenu.openDropTwoAndPick(2);
+        dropdownMenu.openDropThreeAndPick(3);
+
     }
 
     @Test()
     public void mouseOverTest() {
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację adresu URL oraz tekstu nagłówka, i weryfikacje podpisów pod rysunkami,
+         * które widoczne są dopiero po umieszczeniu kursora na obrazkach.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Mouse over");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/mouse-over.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
-        String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
-
-        for (int i = 0; i < imgCaptions.length; i++) {
-            mouseOver.hoverOverImg(i);
-            String imgCaption = mouseOver.getCaptionElementByIndex(i)
-                    .getText();
-            log.info("Element numer {} ma podpis: {}", (i + 1), imgCaption);
-        }
+        mainPage.verifyAbstractPage();
+        MouseOverPage mouseOverPage = new MouseOverPage(driver, wait, log);
+        mouseOverPage.hoverOverImg(2);
+        mouseOverPage.choseAndWaitFormElementToBeVisible("Award");
+        mouseOverPage.verifyImgCaptions();
     }
 
         @Test()
         public void dragAndDropTest(){
-            */
-/***
+            /***
              * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
              * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
              *//*
@@ -877,13 +818,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void dataTypesTest() {
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
+         */
 
-        consoleLogsPage.startListening();
+    /*    consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Data types");
@@ -902,11 +842,11 @@ public class MainTest extends BaseTest {
 
         dataTypesPage.insertDataToForm();
         dataTypesPage.submitForm();
-        dataTypesPage.verifySuccessForm();
+        dataTypesPage.verifySuccessForm();*/
     }
 
 }
 
 
 
-*/
+
