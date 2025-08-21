@@ -8,6 +8,10 @@ public class GenerateRandomText extends Utils{
 
 
     public static String randomGeneratedText() {
+        return randomGeneratedText(60);
+    }
+
+    public static String randomGeneratedText(int textSize) {
         Random random = new Random(2);
         ArrayList<Character> randomTextInput = new ArrayList<>();
         for (char ch = 'a'; ch <= 'z'; ch++) {
@@ -21,7 +25,7 @@ public class GenerateRandomText extends Utils{
         randomTextInput.add(' ');
         StringBuilder stringBuilder = new StringBuilder();
 
-        for (int i = 0; i < 60; i++){
+        for (int i = 0; i < textSize; i++){
             stringBuilder.append(randomTextInput.get(random.nextInt(randomTextInput.size())));
         }
         return stringBuilder.toString();

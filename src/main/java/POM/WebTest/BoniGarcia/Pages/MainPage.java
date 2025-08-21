@@ -23,13 +23,12 @@ public class MainPage extends AbstractPage {
         super(driver, wait, log);
     }
 
-    public static final By CONTAINERS = By.cssSelector("div.col-md-4, py-2");
-    public static final By LEAD_SELECTOR = By.cssSelector("p.lead");
-    public static final By COPYRIGHTS_SELECTOR = By.cssSelector("span.text-muted");
+    public static final By CONTAINERS = By.cssSelector("div.col-md-4.py-2");
     public static final int EXPECTED_CONTAINERS_COUNT = 6;
     //Elementy
     public static final String BONI_GARCIA_MAIN_URL = "https://bonigarcia.dev/selenium-webdriver-java/";
-
+    public static final String LEAD_TEXT = "This site contains a collection of sample web pages to be tested with Selenium WebDriver. " +
+            "Check out the O'Reilly book and the source code on GitHub.";
 
     public WebElement getBtn(String btnName) {
         By btn = By.xpath("//a[@class='btn btn-outline-primary mb-2' and text()='" + btnName + "']");
@@ -49,61 +48,43 @@ public class MainPage extends AbstractPage {
         log.info("Czas potrzebny na załadowanie strony wynosi {} sekund", time);
     }
 
+
+
     public void verifyHomePageContent() {
-        verifyUrl();
-        verifyMainHeader();
-        verifyImage();
-        verifyContainers();
+        verifyAbstractPage();
         verifyLead();
-        verifyCopyrights();
+        verifyUrl();
+        verifyContainers();
     }
+
+
+    private void verifyLead() {
+        WebElement leadElement = getLead();
+        assertThat(leadElement.isDisplayed()).isTrue().withFailMessage("Nagłówek nie jest widoczny.");
+        assertThat(leadElement.getText()).isEqualTo(LEAD_TEXT).withFailMessage("nagłówek ma błędny tekst w sobie. ");
+    }
+
 
     private void verifyUrl() {
         String currentUrl = driver.getCurrentUrl();
         assertThat(currentUrl)
-                .contains(BONI_GARCIA_MAIN_URL)
+                .isEqualTo(BONI_GARCIA_MAIN_URL)
                 .withFailMessage("Niepoprawny adres URL: %s", currentUrl);
-    }
-
-    private void verifyMainHeader() {
-        WebElement header = getMainHeader();
-        assertThat(header.isDisplayed()).isTrue();
-        assertThat(header.getText()).isEqualTo(AbstractPage.PAGE_TITLE);
-    }
-
-    private void verifyImage() {
-        assertThat(getImage().isDisplayed()).isTrue();
-    }
-
-    private void verifyContainers() {
-        assertThat(driver.findElements(CONTAINERS).size()).isEqualTo(EXPECTED_CONTAINERS_COUNT);
-    }
-
-    private void verifyLead() {
-        WebElement leadElement = getLead();
-        assertThat(leadElement.isDisplayed()).isTrue();
-        assertThat(leadElement.getText()).isEqualTo(AbstractPage.LEAD_TEXT);
-    }
-
-    private void verifyCopyrights() {
-        assertThat(getCopySpan().getText()).contains(COPYRIGHTS);
-    }
-
-    // Gettery
-    private WebElement getMainHeader() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(MAIN_HEADER));
-    }
-
-    private WebElement getImage() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(MAIN_ICON));
     }
 
     private WebElement getLead() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(LEAD_SELECTOR));
     }
 
-    private WebElement getCopySpan() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(COPYRIGHTS_SELECTOR));
+
+    private void verifyContainers() {
+        assertThat(driver.findElements(CONTAINERS).size()).isEqualTo(EXPECTED_CONTAINERS_COUNT);
     }
+
+
+
+
+
+
 }
 

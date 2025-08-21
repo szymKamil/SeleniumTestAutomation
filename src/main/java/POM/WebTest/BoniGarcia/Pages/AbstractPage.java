@@ -2,8 +2,12 @@ package POM.WebTest.BoniGarcia.Pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 
 /***
@@ -25,11 +29,49 @@ public class AbstractPage {
 
     //Elementy
     public static final String PAGE_TITLE = "Hands-On Selenium WebDriver with Java";
-    public static final String LEAD_TEXT = "This site contains a collection of sample web pages to be tested with Selenium WebDriver. " +
-            "Check out the O'Reilly book and the source code on GitHub.";
     public static final String COPYRIGHTS = "Copyright © 2021-2025";
     public static final By MAIN_HEADER = By.xpath("//h1[@class='display-4']");
     public static final By MAIN_ICON = By.cssSelector("img.img-fluid");
+
+    public static final By LEAD_SELECTOR = By.cssSelector("p.lead");
+    public static final By COPYRIGHTS_SELECTOR = By.cssSelector("span.text-muted");
+
+    public void verifyAbstractPage(){
+        verifyMainHeader();
+        verifyImage();
+        verifyCopyrights();
+    }
+
+
+
+    private void verifyCopyrights() {
+        assertThat(getCopySpan().getText()).contains(COPYRIGHTS);
+    }
+
+    private void verifyMainHeader() {
+        WebElement header = getMainHeader();
+        assertThat(header.isDisplayed()).isTrue();
+        assertThat(header.getText()).isEqualTo(AbstractPage.PAGE_TITLE);
+    }
+
+    private void verifyImage() {
+        assertThat(getImage().isDisplayed()).isTrue();
+    }
+
+    // Gettery
+    private WebElement getMainHeader() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(MAIN_HEADER));
+    }
+
+    private WebElement getImage() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(MAIN_ICON));
+    }
+
+
+
+    private WebElement getCopySpan() {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(COPYRIGHTS_SELECTOR));
+    }
 
 
 

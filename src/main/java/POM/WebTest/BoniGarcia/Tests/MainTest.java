@@ -1,22 +1,14 @@
 package POM.WebTest.BoniGarcia.Tests;
 
-import Base.Utils.GenerateRandomText;
 import POM.WebTest.BoniGarcia.Pages.MainPage;
+import POM.WebTest.BoniGarcia.Pages.WebForm;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.time.Duration;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -24,7 +16,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MainTest extends BaseTest {
 
 
-    @Test
+    @Test(priority = 1)
     public void mainPageTestElementsVerification() {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -36,72 +28,33 @@ public class MainTest extends BaseTest {
     }
 
 
+
     @Parameters("path")
-    @Test(priority = 2, dependsOnMethods = {"mainPageTestElementsVerification"})
-    public void webFormTest(@Optional("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf") String path) {
+    @Test(priority = 1)
+    public void webFormTest(@Optional("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf")String path) {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
+         * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie, weryfikację i przesłanie formularza oraz upewnienie się,
+         * że formularz został poprawnie przesłany.
          */
 
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Web form");
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/web-form.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: {}", currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-        assertThat(driver.findElement(By.linkText("Return to index"))
-                .isDisplayed()).isTrue();
-        String testString = "Tekst przykładowy";
-        webForm.fillTextInput(testString);
-        String value = webForm.textInput.getAttribute("value");
-        if (value.equals(testString)) {
-            log.info("Tekst poprawnie wpisany w pole.");
-        } else {
-            log.error("Tekst niepoprawny, wpisano: '{}'", value);
-        }
-        String testPassword = "Haslo123_456";
-        webForm.fillPasswordInput(testPassword);
-        String passwordValue = webForm.passwordInput.getAttribute("value");
-        assert passwordValue != null;
-        if (!passwordValue.equals(testPassword)) {
-            log.info("Hasło poprawnie wpisane w pole.");
-        } else {
-            log.error("Hasło niepoprawne, wpisano: '{}'", passwordValue);
-        }
-        webForm.fillTextAreaInput(GenerateRandomText.randomGeneratedText());
-        String randomTextInput = webForm.textArea.getAttribute("value");
-        log.info("Wpisano w pole tekstowe: {}", randomTextInput);
+        ap.verifyAbstractPage();
+        WebForm webForm = new WebForm(driver, wait, log);
+        webForm.fillTextInput();
+        webForm.fillPasswordInput();
+        webForm.fillTextAreaInput();
         webForm.selectElementOnDropdownList("Two");
-        log.info("W pierwszej liście wybrano: {}", webForm.select.getFirstSelectedOption()
-                .getText());
+        webForm.verifyDisabledFields();
         webForm.selectElementOnDataList(DropdownOptions.OPTION_B);
-        assertThat(webForm.fileField.isDisplayed()).isTrue();
         webForm.uploadFile(path);
-        assertThat(webForm.checkbox1.isDisplayed()).isTrue();
-        webForm.checkboxSelector(1);
+        webForm.checkboxSelector();
         webForm.radioSelector(2);
-        assertThat(webForm.colorElement.isDisplayed()).isTrue();
-        String initialColor = webForm.colorElement.getDomProperty("value");
         webForm.colorPicker(new Color(65, 45, 34, 2).asHex());
-        String modifyColor = webForm.colorElement.getDomProperty("value");
-        log.info("Początkową wartością koloru było {}, po zmianie było to {}", initialColor, modifyColor);
         webForm.dateSetter(LocalDate.now());
-        log.info("Wpisana została data: {}", webForm.dateField.getText());
-        assertThat(webForm.submitButton.isDisplayed()).isTrue();
-        webForm.submitButton.click();
-        wait.until(ExpectedConditions.visibilityOf(webForm.h1SubmitFormConfirmation));
-        assertThat(driver.findElement(By.className("lead"))
-                .getText()).isEqualTo("Received!");
+        webForm.submitForm();
     }
 
 }

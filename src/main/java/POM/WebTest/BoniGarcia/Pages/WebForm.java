@@ -1,11 +1,9 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Utils.GenerateRandomText;
+import Base.Utils.ParseWord;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
-import net.datafaker.providers.base.TimeAndDate;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -13,11 +11,9 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-import java.nio.file.Path;
-import java.sql.Time;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -27,7 +23,6 @@ public class WebForm extends AbstractPage{
 
     public Select select;
     JavascriptExecutor js;
-
 
     public WebForm(WebDriver driver, WebDriverWait wait, Logger log) {
         super(driver, wait, log);
@@ -39,98 +34,130 @@ public class WebForm extends AbstractPage{
     @FindBy(xpath = "//h1[@class='display-6']")
     public WebElement mainHeader;
 
-    @FindBy(xpath = "//label[contains(., 'Text input')]/input")
-    public WebElement textInput;
+    @FindBy(id = "my-text-id")
+    public WebElement TEXT_INPUT_ELE;
 
-    @FindBy(xpath = "//label[contains(., 'Password')]/input")
+    @FindBy(name = "my-password")
     public WebElement passwordInput;
 
     @FindBy(xpath = "//label[contains(., 'Textarea')]/textarea")
-    public WebElement textArea;
+    public WebElement TEXT_AREA_FIELD;
+
+    @FindBy(name = "my-disabled")
+    public WebElement DISABLED_FIELD;
+
+    @FindBy(name = "my-readonly")
+    public WebElement READ_ONLY_FIELD;
 
     @FindBy(name = "my-select")
-    public WebElement selectElementList;
+    public WebElement DROPDOWN_SELECT_ELEMENT;
 
     @FindBy(name = "my-datalist")
-    public WebElement dataList;
+    public WebElement DATA_LIST_ELEMENT;
 
     @FindBy(name = "my-file")
-    public WebElement fileField;
+    public WebElement FILE_FIELD;
 
     @FindBy(id = "my-check-1")
-    public WebElement checkbox1;
+    public WebElement CHECKBOX_1;
 
     @FindBy(id = "my-check-2")
-    public WebElement checkbox2;
+    public WebElement CHECKBOX_2;
 
     @FindBy(id = "my-radio-1")
-    public WebElement radio1;
+    public WebElement RADIO_1;
 
     @FindBy(id = "my-radio-2")
-    public WebElement radio2;
+    public WebElement RADIO_2;
 
     @FindBy(name = "my-colors")
-    public WebElement colorElement;
+    public WebElement COLOR_ELEMENT_PICKER;
 
     @FindBy(name = "my-date")
-    public WebElement dateField;
+    public WebElement DATE_FIELD;
 
     @FindBy(xpath = "//button[@type='submit']")
-    public WebElement submitButton;
+    public WebElement SUBMIT_BTN;
 
     @FindBy(xpath = "//h1[@class='display-6' and text()='Form submitted']")
-    public WebElement h1SubmitFormConfirmation;
+    public WebElement FORM_SUBMITTED_CONFIRMATION;
+
+    //TEST DATA
+
+    public final String TEST_STRING = "Tekst przykładowy";
+    public final String TEST_PASSWORD = "Haslo_123_456";
+    final String TEST_RANDOM_TEXT = GenerateRandomText.randomGeneratedText(88);
+    final String VALUE = "value";
+    final String CONFIRMATION_TEXT = "Form submitted";
 
     //Metody testowe
-    public void fillTextInput(String inputText){
-        wait.until(ExpectedConditions.visibilityOf(textInput)).sendKeys(inputText);
+    public void fillTextInput(){
+        wait.until(ExpectedConditions.visibilityOf(TEXT_INPUT_ELE)).sendKeys(TEST_STRING);
+        wait.until(ExpectedConditions.attributeToBe(TEXT_INPUT_ELE, VALUE, TEST_STRING));
+        log.info("Login został  poprawnie wpisany.");
     }
 
-    public void fillPasswordInput(String inputText){
-        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(inputText);
+    public void fillPasswordInput(){
+        wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(TEST_PASSWORD);
+        wait.until(ExpectedConditions.attributeToBe(TEXT_INPUT_ELE, VALUE, TEST_STRING));
+        log.info("Hasło zostało poprawnie wpisane.");
     }
 
-    public void fillTextAreaInput(String inputText){
-        wait.until(ExpectedConditions.visibilityOf(textArea)).sendKeys(inputText);
+    public void fillTextAreaInput(){
+        wait.until(ExpectedConditions.visibilityOf(TEXT_AREA_FIELD)).sendKeys(TEST_RANDOM_TEXT);
+        wait.until(ExpectedConditions.attributeToBe(TEXT_AREA_FIELD, VALUE, TEST_RANDOM_TEXT));
+        log.info("Uzupełniony został tekst w polu Textarea.");
     }
+
+    public void verifyDisabledFields(){
+        wait.until(ExpectedConditions.domAttributeToBe(DISABLED_FIELD, "placeholder", "Disabled input"));
+        wait.until(ExpectedConditions.domAttributeToBe(READ_ONLY_FIELD, VALUE, "Readonly input"));
+        log.info("Nieaktywne przyciski są poprawnie wyłączne.");
+    }
+
 
     public void selectElementOnDropdownList(String selectDropdownText){
-        select = new Select(selectElementList);
-        wait.until(ExpectedConditions.visibilityOf(selectElementList)).click();
+        select = new Select(DROPDOWN_SELECT_ELEMENT);
+        wait.until(ExpectedConditions.visibilityOf(DROPDOWN_SELECT_ELEMENT)).click();
         select.selectByVisibleText(selectDropdownText);
+        wait.until(ExpectedConditions.attributeToBe(DROPDOWN_SELECT_ELEMENT, VALUE, ParseWord.parseWord(selectDropdownText).toString()));
     }
 
     public void selectElementOnDataList(DropdownOptions dropdownOption){
         String dropdownElementText = getDataListOption(dropdownOption);
-        dataList.sendKeys(dropdownElementText);
+        DATA_LIST_ELEMENT.sendKeys(dropdownElementText);
+        wait.until(ExpectedConditions.attributeToBe(DATA_LIST_ELEMENT, VALUE, dropdownElementText));
     }
 
     public String getDataListOption(DropdownOptions option) {
         String xpath = "//datalist/option[contains(@value, '" + option.getValue() + "')]";
-        return driver.findElement(By.xpath(xpath)).getAttribute("value");
+        return driver.findElement(By.xpath(xpath)).getAttribute(VALUE);
     }
 
     public void uploadFile(String path){
-        Path filePath = Path.of(path);
-        fileField.sendKeys(filePath.toString());
+        FILE_FIELD.sendKeys(path);
     }
 
 
     public void checkboxSelector(int checkboxNumToSelect){
-        WebElement checkbox = switch (checkboxNumToSelect) {
-            case 1 -> checkbox1;
-            case 2 -> checkbox2;
+        List<WebElement> checkboxesList = switch (checkboxNumToSelect) {
+            case 1 -> List.of(CHECKBOX_1, CHECKBOX_2);
+            case 2 -> List.of(CHECKBOX_2, CHECKBOX_1);
             default -> throw new IllegalArgumentException("Błędny numer checkboxa");
         };
-        if (!checkbox.isSelected()) {
-            checkbox.click();
+        for (WebElement checkBox : checkboxesList) {
+            checkBox.click();
         }
+    }
+
+    public void checkboxSelector(){
+        checkboxSelector(1);
     }
 
     public void radioSelector(int radioNumToSelect){
         WebElement radioBtn = switch (radioNumToSelect) {
-            case 1 -> radio1;
-            case 2 -> radio2;
+            case 1 -> RADIO_1;
+            case 2 -> RADIO_2;
             default -> throw new IllegalArgumentException("Błędny numer radiobutton");
         };
         if (!radioBtn.isSelected()) {
@@ -139,14 +166,27 @@ public class WebForm extends AbstractPage{
     }
 
     public void colorPicker(String hexColor){
-        js.executeScript("arguments[0].setAttribute('value', '%s')".formatted(hexColor), colorElement);
+        String initialColor = COLOR_ELEMENT_PICKER.getDomProperty("value");
+        js.executeScript("arguments[0].setAttribute('value', '%s')".formatted(hexColor), COLOR_ELEMENT_PICKER);
+        String modifyColor = COLOR_ELEMENT_PICKER.getDomProperty("value");
+        log.info("Początkową wartością koloru było {}, po zmianie było to {}", initialColor, modifyColor);
     }
 
     public void dateSetter(LocalDate dataTestowa){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
         String formatedDate = dataTestowa.format(formatter);
-        dateField.sendKeys(formatedDate);
+        DATE_FIELD.sendKeys(formatedDate);
+        DATE_FIELD.sendKeys(Keys.ENTER);
+        log.info("Wpisana została data: {}", DATE_FIELD.getText());
     }
+
+    public void submitForm(){
+        wait.until(ExpectedConditions.elementToBeClickable(SUBMIT_BTN)).click();
+        wait.until(ExpectedConditions.textToBePresentInElement(FORM_SUBMITTED_CONFIRMATION, CONFIRMATION_TEXT));
+
+
+    }
+
 
 
 }
