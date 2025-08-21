@@ -31,20 +31,25 @@ public final class DriverFactoryV1 {
     private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
     private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
     private static final ThreadLocal<Logger> THREAD_LOCAL = new ThreadLocal<>();
+    private static final Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
 
     private DriverFactoryV1() {
     }
 
-
     public static void initDriver(String browser, int time) throws InterruptedException {
         initDriver(browser, time, null);
+
+        synchronized (DriverFactoryV1.class) {
+            logger.info("Czekam na inicjalizację drivera dla wątku: {}", Thread.currentThread()
+                    .getId());
+            Thread.sleep(1000); // Opóźnienie 1 sekunda między instancjami
+        }
     }
 
     public static void initDriver(String browser, int time, URL url) throws InterruptedException {
-        Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
-        Thread.sleep(Duration.ofSeconds(3));
+        Thread.sleep(Duration.ofSeconds(5));
         WebDriver driver = null;
         try {
         if (url != null) {
@@ -58,6 +63,7 @@ public final class DriverFactoryV1 {
                 default -> logger.info("Błędnie wybrana przeglądarka!!!");
             }
         }
+        Thread.sleep(Duration.ofSeconds(2));
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
         THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));

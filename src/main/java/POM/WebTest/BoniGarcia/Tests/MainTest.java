@@ -58,12 +58,11 @@ public class MainTest extends BaseTest {
         webForm.submitForm();
     }
 
-}
-/*
-    @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
+
+
+   /* @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
     public void navigationPageTest(){
-        */
-/***
+        *//***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
          *//*
@@ -98,9 +97,10 @@ public class MainTest extends BaseTest {
         navigationPage.activeBtnInfo();
         navigationPage.btnPrev();
         navigationPage.activeBtnInfo();
-    }
+    }*/
 
-
+}
+/*
     @Test()
     public void dropdownMenuTest(){
         */
