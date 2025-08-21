@@ -68,7 +68,6 @@ public class AbstractPage {
     }
 
 
-
     private WebElement getCopySpan() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(COPYRIGHTS_SELECTOR));
     }

@@ -10,7 +10,9 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.testng.ITestResult;
 
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -76,11 +78,16 @@ public class WebForm extends AbstractPage{
     @FindBy(name = "my-date")
     public WebElement DATE_FIELD;
 
+    @FindBy(name = "my-range")
+    public WebElement RANGE_SLIDER;
+
     @FindBy(xpath = "//button[@type='submit']")
     public WebElement SUBMIT_BTN;
 
     @FindBy(xpath = "//h1[@class='display-6' and text()='Form submitted']")
     public WebElement FORM_SUBMITTED_CONFIRMATION;
+
+
 
     //TEST DATA
 
@@ -121,12 +128,14 @@ public class WebForm extends AbstractPage{
         wait.until(ExpectedConditions.visibilityOf(DROPDOWN_SELECT_ELEMENT)).click();
         select.selectByVisibleText(selectDropdownText);
         wait.until(ExpectedConditions.attributeToBe(DROPDOWN_SELECT_ELEMENT, VALUE, ParseWord.parseWord(selectDropdownText).toString()));
+        log.info("Wybrany został select w Dropdown List {}.", selectDropdownText);
     }
 
     public void selectElementOnDataList(DropdownOptions dropdownOption){
         String dropdownElementText = getDataListOption(dropdownOption);
         DATA_LIST_ELEMENT.sendKeys(dropdownElementText);
         wait.until(ExpectedConditions.attributeToBe(DATA_LIST_ELEMENT, VALUE, dropdownElementText));
+        log.info("Wybrany został następujący select w Data List {}.", dropdownElementText);
     }
 
     public String getDataListOption(DropdownOptions option) {
@@ -136,6 +145,7 @@ public class WebForm extends AbstractPage{
 
     public void uploadFile(String path){
         FILE_FIELD.sendKeys(path);
+        log.info("Plik został poprawnie przesłany.");
     }
 
 
@@ -148,6 +158,7 @@ public class WebForm extends AbstractPage{
         for (WebElement checkBox : checkboxesList) {
             checkBox.click();
         }
+        log.info("Zmieniono zaznaczenie checkboxów.");
     }
 
     public void checkboxSelector(){
@@ -163,6 +174,7 @@ public class WebForm extends AbstractPage{
         if (!radioBtn.isSelected()) {
             radioBtn.click();
         }
+        log.info("Test radio button zakończony.");
     }
 
     public void colorPicker(String hexColor){
@@ -177,14 +189,18 @@ public class WebForm extends AbstractPage{
         String formatedDate = dataTestowa.format(formatter);
         DATE_FIELD.sendKeys(formatedDate);
         DATE_FIELD.sendKeys(Keys.ENTER);
-        log.info("Wpisana została data: {}", DATE_FIELD.getText());
+        log.info("Wpisana została data: {}", DATE_FIELD.getAttribute(VALUE));
     }
+
+    public void changeRange(){
+        wait.until(ExpectedConditions.visibilityOf(RANGE_SLIDER)).sendKeys(Keys.ARROW_LEFT);
+
+    }
+
 
     public void submitForm(){
         wait.until(ExpectedConditions.elementToBeClickable(SUBMIT_BTN)).click();
         wait.until(ExpectedConditions.textToBePresentInElement(FORM_SUBMITTED_CONFIRMATION, CONFIRMATION_TEXT));
-
-
     }
 
 

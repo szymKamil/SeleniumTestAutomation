@@ -54,6 +54,7 @@ public class MainTest extends BaseTest {
         webForm.radioSelector(2);
         webForm.colorPicker(new Color(65, 45, 34, 2).asHex());
         webForm.dateSetter(LocalDate.now());
+        webForm.changeRange();
         webForm.submitForm();
     }
 
