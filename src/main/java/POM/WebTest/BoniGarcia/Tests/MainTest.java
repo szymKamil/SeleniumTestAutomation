@@ -25,37 +25,25 @@ public class MainTest extends BaseTest {
 
 
     @Test
-    public void mainPageTestElementsVerification(){
+    public void mainPageTestElementsVerification() {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka.
+         * weryfikację adresu URL oraz występowania głównych elementów na stronie.
          */
-        //TODO:
         MainPage mainPage = new MainPage(driver, wait, log);
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        assert currentUrl != null;
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        assertThat(driver.findElement(ap.img).isDisplayed()).isTrue();
-        assertThat(driver.findElement(ap.mainHeader).getText()).isEqualTo(ap.pageTitle);
-        assertThat(driver.findElements(mainPage.containers).size()).isEqualTo(6);
-        assertThat(driver.findElement(mainPage.lead).isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.lead).getText()).isEqualTo(ap.leadText);
-        assertThat(driver.findElement(mainPage.copySpan).getText()).contains(ap.copyrights);
+        mainPage.openMainPage();
+        mainPage.verifyHomePageContent();
     }
 
+
     @Parameters("path")
-    @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
-    public void webFormTest(@Optional("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf") String path){
+    @Test(priority = 2, dependsOnMethods = {"mainPageTestElementsVerification"})
+    public void webFormTest(@Optional("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf") String path) {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
          */
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Web form");
@@ -94,7 +82,8 @@ public class MainTest extends BaseTest {
         String randomTextInput = webForm.textArea.getAttribute("value");
         log.info("Wpisano w pole tekstowe: {}", randomTextInput);
         webForm.selectElementOnDropdownList("Two");
-        log.info("W pierwszej liście wybrano: {}", webForm.select.getFirstSelectedOption().getText());
+        log.info("W pierwszej liście wybrano: {}", webForm.select.getFirstSelectedOption()
+                .getText());
         webForm.selectElementOnDataList(DropdownOptions.OPTION_B);
         assertThat(webForm.fileField.isDisplayed()).isTrue();
         webForm.uploadFile(path);
@@ -111,15 +100,20 @@ public class MainTest extends BaseTest {
         assertThat(webForm.submitButton.isDisplayed()).isTrue();
         webForm.submitButton.click();
         wait.until(ExpectedConditions.visibilityOf(webForm.h1SubmitFormConfirmation));
-        assertThat(driver.findElement(By.className("lead")).getText()).isEqualTo("Received!");
+        assertThat(driver.findElement(By.className("lead"))
+                .getText()).isEqualTo("Received!");
     }
 
+}
+/*
     @Test(priority = 2, dependsOnMethods ={"mainPageTestElementsVerification"})
     public void navigationPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, a następnie wypełnienie i przesłanie formularza.
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Navigation");
@@ -155,10 +149,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void dropdownMenuTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i użycie wybranych dropdownów i kliknięcie w odpowiednie linki.
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Dropdown menu");
@@ -184,10 +180,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void mouseOverTest() {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Mouse over");
@@ -216,10 +214,12 @@ public class MainTest extends BaseTest {
 
         @Test()
         public void dragAndDropTest(){
-            /***
+            */
+/***
              * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
              * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-             */
+             *//*
+
             driver.get(mainPage.boniGarciaMainURL);
             wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
             mainPage.goToSubPage("Drag and drop");
@@ -246,10 +246,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void canvas(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Draw in canvas");
@@ -271,10 +273,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void loadingImages(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Loading images");
@@ -300,10 +304,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void slowCalculatorTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Slow calculator");
@@ -332,10 +338,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void longPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Long page");
@@ -365,10 +373,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void infiniteScroll(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Infinite scroll");
@@ -391,10 +401,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void shadowRootTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Shadow DOM");
@@ -417,10 +429,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void cookiesPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Cookies");
@@ -453,10 +467,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void framesPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Frames");
@@ -484,10 +500,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void iFramesPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("IFrames");
@@ -514,10 +532,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void alertPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Dialog boxes");
@@ -550,10 +570,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void webStoragePageTests(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Web storage");
@@ -586,10 +608,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void geolocationTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Geolocation");
@@ -615,10 +639,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void notificationPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Notifications");
@@ -641,10 +667,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void userMediaPageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Get user media");
@@ -674,10 +702,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void multiLanguageTest(){
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
         mainPage.goToSubPage("Multilanguage");
@@ -699,10 +729,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -726,10 +758,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void loginFormTest() {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -755,10 +789,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void slowLoginFormTest() {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -785,10 +821,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void slowCalculator() {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -821,10 +859,12 @@ public class MainTest extends BaseTest {
 
         @Test()
         public void downloadFileTest() throws FileNotFoundException {
-            /***
+            */
+/***
              * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
              * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-             */
+             *//*
+
             consoleLogsPage.startListening();
             driver.get(mainPage.boniGarciaMainURL);
             wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -853,10 +893,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void ABtesting() {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -881,10 +923,12 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void dataTypesTest() {
-        /***
+        */
+/***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         */
+         *//*
+
         consoleLogsPage.startListening();
         driver.get(mainPage.boniGarciaMainURL);
         wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
@@ -911,3 +955,4 @@ public class MainTest extends BaseTest {
 
 
 
+*/

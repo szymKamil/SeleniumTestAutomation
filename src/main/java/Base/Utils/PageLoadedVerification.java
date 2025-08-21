@@ -1,10 +1,16 @@
-package Base.BaseActionsAndUtils;
+package Base.Utils;
 
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.support.ui.ExpectedCondition;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class PageLoadedVerification {
+import java.time.LocalDateTime;
 
+public class PageLoadedVerification extends Utils{
+
+
+    private static final Logger log = LoggerFactory.getLogger(PageLoadedVerification.class);
 
     public static ExpectedCondition<Boolean> pageIsLoaded() {
         return driver -> ((JavascriptExecutor) driver)

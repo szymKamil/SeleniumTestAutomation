@@ -1,6 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-import Base.BaseActionsAndUtils.PageLoadedVerification;
+import Base.Utils.PageLoadedVerification;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
