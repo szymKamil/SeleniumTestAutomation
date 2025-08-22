@@ -4,12 +4,12 @@ import Base.Utils.Screenshot;
 import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import POM.WebTest.BoniGarcia.Utils.PointForCanvas;
-import java.;
 import org.openqa.selenium.support.Color;
-import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.slf4j.Logger;
 import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 
+import java.awt.*;
 import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -17,6 +17,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
 
+import static java.awt.SystemColor.info;
 import static org.assertj.core.api.Assertions.assertThat;
 
 
@@ -320,7 +321,8 @@ public class MainTest extends BaseTest {
         log.info("Alert posiada tekst: {}", alertString);
         dialogBoxesPage.launchConfirm();
         String confirmText = dialogBoxesPage.getTextFromConfirm("ok");
-        assertThat(confirmText).isEqualTo("You chose: true");
+        assertThat(confirmText).isEqualTo("Is this correct?");
+        assertThat(dialogBoxesPage.getTextFromConfirmParagraph()).isEqualTo("You chose: true");
         String promptText = "To jest prompt :)";
         dialogBoxesPage.launchPrompt();
         dialogBoxesPage.setTextToPromptAlert(promptText);
@@ -491,7 +493,6 @@ public class MainTest extends BaseTest {
             randomCalculator.setPercentOfCorrectResults("15");
             String result = randomCalculator.calculate("2+2=");
             log.info("Wynik działania uruchomienia numer {} to: {}", i, result);
-
             randomCalculator.setPercentOfCorrectResults("99");
             result = randomCalculator.calculate("2+2=");
             log.info("Wynik działania uruchomienia numer {} to: {}", i, result);
@@ -539,7 +540,8 @@ public class MainTest extends BaseTest {
     public void dataTypesTest() {
         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Data types, wypełnienie formularza i weryfikację,
+         * czy wszystkie pola posiadają poprawne dane po przesłaniu formularza.
          */
 
         MainPage mainPage = new MainPage(driver, wait, log);
@@ -549,7 +551,7 @@ public class MainTest extends BaseTest {
         dataTypesPage.verifyAbstractPage();
         dataTypesPage.insertDataToForm();
         dataTypesPage.submitForm();
-        dataTypesPage.verifySuccessForm();*/
+        dataTypesPage.verifySuccessForm();
     }
 
 }

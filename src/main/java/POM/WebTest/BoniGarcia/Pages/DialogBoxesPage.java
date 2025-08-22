@@ -143,4 +143,8 @@ public class DialogBoxesPage extends AbstractPage {
         return wait.until(ExpectedConditions.visibilityOf(MODAL_TEXT_PARAGRAPH)).getText();
     }
 
+    public String getTextFromConfirmParagraph(){
+        return wait.until(ExpectedConditions.visibilityOf(CONFIRM_TEXT_PARAGRAPH)).getText();
+    }
+
 }

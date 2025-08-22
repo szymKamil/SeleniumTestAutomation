@@ -62,7 +62,6 @@ public class NavigationPage extends AbstractPage{
         btnPrev();
         activeBtnInfo();
         btnPrev();
-        btnPrev();
         activeBtnInfo();
 
     }

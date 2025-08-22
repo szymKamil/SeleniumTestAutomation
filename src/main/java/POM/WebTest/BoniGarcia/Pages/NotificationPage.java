@@ -41,11 +41,18 @@ public class NotificationPage extends AbstractPage{
     public void createAndSendNotification(String title, String notificationBody){
         Object result = js.executeAsyncScript("""
                 const callback = arguments[arguments.length - 1];
-                new Notification("%s", { body: "%s" });
-                setTimeout(() => callback("Notification sent!"), 4000);
+                if (typeof Notification === "undefined") {
+                        callback("Notification API not available");
+                        return;
+                    }
+                if (Notification.permission === "granted") {
+                        new Notification("%s", { body: "%s" });
+                        setTimeout(() => callback("Notification sent!"), 4000);
+                    } else {
+                        callback("Notification not granted");
+                    }
                 """.formatted(title, notificationBody));
         assertThat(result).isEqualTo("Notification sent!");
-
     }
 
 
