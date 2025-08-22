@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
@@ -22,10 +23,10 @@ public class CookiesPage extends AbstractPage{
 
     //Główne elementy strony
     @FindBy(id = "refresh-cookies")
-    public WebElement refreshCookiesBtn;
+    WebElement REFRESH_COOKIES_BTN;
 
     @FindBy(id = "cookies-list")
-    public WebElement cookiesParagraph;
+    WebElement COOKIES_PARAGRAPH;
 
     //Metody testowe
     public void deleteAllCookies(){
@@ -46,6 +47,17 @@ public class CookiesPage extends AbstractPage{
                 addCookie(cookie.name(), cookie.value());
             }
         }
+    }
+
+    public void refreshCookiesBtn(){
+        wait.until(ExpectedConditions.elementToBeClickable(REFRESH_COOKIES_BTN)).click();
+    }
+
+    public String getCookiesText(){
+        wait.until(ExpectedConditions.visibilityOf(COOKIES_PARAGRAPH));
+        String cookiesParagraphText = COOKIES_PARAGRAPH.getText();
+        log.info("Ciasteczka są następujące: {}", cookiesParagraphText);
+        return cookiesParagraphText;
     }
 
 }

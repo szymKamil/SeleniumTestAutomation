@@ -35,6 +35,7 @@ public class InfiniteScrollPage extends AbstractPage {
 
 
     public void scrollXTimes(){
+        //Default
         scrollXTimes(3);
     }
 

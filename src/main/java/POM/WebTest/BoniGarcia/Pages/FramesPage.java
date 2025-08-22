@@ -1,5 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -19,22 +20,28 @@ public class FramesPage extends AbstractPage {
 
     //Elementy strony
     @FindBy(name = "frame-header")
-    public WebElement frameHeader;
+    WebElement frameHeader;
 
     @FindBy(name = "frame-body")
-    public WebElement frameBody;
+    WebElement frameBody;
 
     @FindBy(name = "frame-footer")
-    public WebElement frameFooter;
+    WebElement frameFooter;
 
     //Metody testowe
-    public void switchToFrame(WebElement element){
+    public void switchToFrame(String text){
         driver.switchTo().defaultContent();
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(element));
+        switch (text.toLowerCase()){
+            case "header" -> wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameHeader));
+            case "body" -> wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameBody));
+            case "footer" -> wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(frameFooter));
+            default -> throw new IllegalArgumentException("Błędnie wybrana ramka!");
+        }
     }
 
-
-
-
+    public void verifyVisibilityOfParagraphs(){
+        int paragraphsSize = driver.findElements(By.cssSelector("p")).size();
+        log.info("W teście po przełączeniu się na ramkę widocznych jest {} paragrafów", paragraphsSize);
+    }
 
 }

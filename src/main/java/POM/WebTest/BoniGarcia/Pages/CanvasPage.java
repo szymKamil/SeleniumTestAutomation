@@ -22,13 +22,13 @@ public class CanvasPage extends AbstractPage{
 
     //Elementy strony
     @FindBy(id = "my-canvas")
-    public WebElement canvas;
+    public WebElement CANVAS_ELEMENT;
 
 
     //Metody testowe
     public void paintInCanvas(PointForCanvas... points){
-        wait.until(ExpectedConditions.visibilityOf(canvas));
-        actions.moveToElement(canvas).clickAndHold().perform();
+        wait.until(ExpectedConditions.visibilityOf(CANVAS_ELEMENT));
+        actions.moveToElement(CANVAS_ELEMENT).clickAndHold().perform();
         for(PointForCanvas point : points) {
             actions.moveByOffset(point.x(), point.y()).perform();
         }

@@ -21,38 +21,43 @@ public class SlowCalculator extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "delay")
-    public WebElement delayInput;
+    public WebElement DELAY_INPUT;
 
     @FindBy(id = "calculator")
-    public WebElement calculator;
+    public WebElement CALCULATOR_ELEMENT;
 
     @FindBy(css = "div.screen")
-    public WebElement screen;
+    public WebElement CALCULATOR_SCREEN;
 
     @FindBy(id = "spinner")
-    public WebElement spinner;
+    public WebElement SPINNER_ICON;
 
 
     //Metody testowe
     public void setCalcDelay(int calcDelay){
-        wait.until(ExpectedConditions.visibilityOf(delayInput)).sendKeys(Keys.BACK_SPACE, Integer.toString(calcDelay));
+        wait.until(ExpectedConditions.visibilityOf(DELAY_INPUT)).clear();
+        DELAY_INPUT.sendKeys(Keys.BACK_SPACE, Integer.toString(calcDelay));
+        String delayModified = DELAY_INPUT.getAttribute("value");
+        log.info("Kalkulator ma delay ustawiony na {}", delayModified);
     }
 
     public void useCalculator(String inputs){
-        wait.until(ExpectedConditions.visibilityOf(calculator));
+        wait.until(ExpectedConditions.visibilityOf(CALCULATOR_ELEMENT));
             for (char c : inputs.toCharArray()) {
                 useCalcBtn(String.valueOf(c));
             }
     }
 
     public void useCalcBtn(String x) {
-        calculator.findElement(By.xpath(String.format("//*[text()='%s']", x)))
+        CALCULATOR_ELEMENT.findElement(By.xpath(String.format("//*[text()='%s']", x)))
                 .click();
     }
 
     public String getResultOfCalc(){
-        wait.until(ExpectedConditions.invisibilityOf(spinner));
-        return screen.getText();
+        wait.until(ExpectedConditions.invisibilityOf(SPINNER_ICON));
+        String result = wait.until(ExpectedConditions.visibilityOf(CALCULATOR_SCREEN)).getText();
+        log.info("Wynik działania na kalkulatorze to: {}", result);
+        return result;
 
     }
 }

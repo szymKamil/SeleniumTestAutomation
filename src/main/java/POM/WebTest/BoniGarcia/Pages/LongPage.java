@@ -26,32 +26,33 @@ public class LongPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(css = "p.lead")
-    List<WebElement> leads;
+    List<WebElement> LEADS_ELEMENTS;
 
-    private By lead = By.cssSelector("p.lead");
+    private By LEAD = By.cssSelector("p.lead");
 
     //Metody testowe
     public String getTextFromParagraph(int i){
-        return wait.until(ExpectedConditions.visibilityOfAllElements(leads)).get(i).getText();
+        String paragraphText = wait.until(ExpectedConditions.visibilityOfAllElements(LEADS_ELEMENTS)).get(i).getText();
+        log.info("Paragraf {} ma tekst {}", i, paragraphText);
+        return paragraphText;
 
     }
 
     public void printAllParagraphs(){
-        for (int i = 0; i < leads.size(); i++){
+        for (int i = 0; i < LEADS_ELEMENTS.size(); i++){
             String paragraphText = getTextFromParagraph(i);
             log.info("Paragraf numer {} posiada tekst: {}", (i+1), paragraphText);
         }
     }
 
     public void scrollToParagraph(int number){
-       actions.scrollToElement(leads.get(number)).perform();
+       actions.scrollToElement(LEADS_ELEMENTS.get(number)).perform();
 
     }
 
     public void scrollToLastParagraph(){
         WebElement lastParagraph = driver.findElement(By.cssSelector("p:last-of-type"));
         actions.scrollToElement(lastParagraph).perform();
-
     }
 
 

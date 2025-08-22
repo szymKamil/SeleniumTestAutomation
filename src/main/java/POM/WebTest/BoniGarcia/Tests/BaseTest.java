@@ -19,9 +19,11 @@ public abstract class BaseTest  {
     protected WebDriver driver;
     protected WebDriverWait wait;
     protected Logger log;
+
     /*-----------------*/
     final static URI LOCAL_URL =  URI.create("http://localhost:4444/");
     final static URI DOCKER_URL = URI.create("http://192.168.1.104:5555/");
+    /*-----------------*/
 
     /*------Klasy stron-----------*/
     AbstractPage ap;

@@ -43,18 +43,17 @@ public class AbstractPage {
     }
 
 
-
-    private void verifyCopyrights() {
+    public void verifyCopyrights() {
         assertThat(getCopySpan().getText()).contains(COPYRIGHTS);
     }
 
-    private void verifyMainHeader() {
+    public void verifyMainHeader() {
         WebElement header = getMainHeader();
         assertThat(header.isDisplayed()).isTrue();
         assertThat(header.getText()).isEqualTo(AbstractPage.PAGE_TITLE);
     }
 
-    private void verifyImage() {
+    public void verifyImage() {
         assertThat(getImage().isDisplayed()).isTrue();
     }
 

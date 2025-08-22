@@ -1,7 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 import org.openqa.selenium.*;
-import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -17,13 +16,14 @@ public class ShadowDomPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "content")
-    WebElement shadowRootDiv;
+    WebElement SHADOW_ROOT_DIV;
 
     //Metody testowe
     public String getShadowRootContent(){
-        SearchContext searchContext = shadowRootDiv.getShadowRoot();
-        return searchContext.findElement(By.cssSelector("p")).getText();
-
+        SearchContext searchContext = SHADOW_ROOT_DIV.getShadowRoot();
+        String shadowDOMtext = searchContext.findElement(By.cssSelector("p")).getText();
+        log.info("ShadowDOM posiada tekst: {}", shadowDOMtext);
+        return shadowDOMtext;
     }
 
 

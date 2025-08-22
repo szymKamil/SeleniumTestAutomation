@@ -4,12 +4,10 @@ import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.FindAll;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
-import org.openqa.selenium.support.ui.Wait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
@@ -35,29 +33,33 @@ public class LoadingImagesPage  extends AbstractPage{
 
         //Elementy na stronie
         @FindBy(id = "compass")
-        public WebElement compassImage;
+        public WebElement COMPASS_IMAGE;
 
         @FindBy(id = "calendar")
-        public WebElement calendarImage;
+        public WebElement CALENDAR_IMAGE;
 
         @FindBy(id = "award")
-        public WebElement awardImage;
+        public WebElement AWARD_IMAGE;
 
         @FindBy(id = "landscape")
-        public WebElement landscapeImage;
+        public WebElement LADSCAPE_IMAGE;
 
         @FindBy(id = "text")
-        public WebElement paragraphText;
+        public WebElement CONFIRMATION_PARAGRAPH_TEXT;
 
 
         //Metody testowe
         public void waitForImagesToLoad(){
-            List<WebElement> imagesList = new ArrayList<>(List.of(compassImage, calendarImage, awardImage, landscapeImage));
+            List<WebElement> imagesList = new ArrayList<>(List.of(COMPASS_IMAGE, CALENDAR_IMAGE, AWARD_IMAGE, LADSCAPE_IMAGE));
             log.info("Czekam na załadowanie obrazów...");
             fluentWait.until(ExpectedConditions.visibilityOfAllElements(imagesList));
             log.info("Obrazy zostały załadowane!");
         }
 
+        public void confirmElementsVisibility(){
+            wait.until(ExpectedConditions.textToBePresentInElement(CONFIRMATION_PARAGRAPH_TEXT, "Done!"));
+            log.info("Wszystkie elementy są widoczne i poprawnie zostały załadowane.");
+        }
 
 
 }
