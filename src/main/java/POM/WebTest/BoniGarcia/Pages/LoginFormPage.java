@@ -19,9 +19,9 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class LoginFormPage extends AbstractPage{
 
-    private final static String login = "user";
-    private final static String password = "user";
-    private final static String loggedURL = "https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html";
+    private final static String LOGIN = "user";
+    private final static String PASSWORD = "user";
+    private final static String LOGGED_SUCESS_URL = "https://bonigarcia.dev/selenium-webdriver-java/login-sucess.html";
     FluentWait<WebDriver> fluentWait;
 
 
@@ -36,42 +36,41 @@ public class LoginFormPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "username")
-    WebElement inputUsername;
+    WebElement INPUT_USERNAME;
 
     @FindBy(id = "password")
-    WebElement inputPassword;
+    WebElement INPUT_PASSWORD;
 
     @FindBy(css = "button.btn")
-    WebElement submitBtn;
+    WebElement SUBMIT_BTN;
 
     @FindBy(id = "success")
-    WebElement loginSuccessDiv;
+    WebElement LOGIN_SUCESS_DIV;
 
     @FindBy(id = "spinner")
-    WebElement spinnerIcon;
+    WebElement SPINNER_ICON;
 
 
     //Metody testowe
     public void logIn(){
-        wait.until(ExpectedConditions.elementToBeClickable(inputUsername)).sendKeys(login);
-        wait.until(ExpectedConditions.elementToBeClickable(inputPassword)).sendKeys(password);
-        assertThat(inputUsername.getDomProperty("value")).isEqualTo(login);
-        assertThat(inputPassword.getDomProperty("value")).isEqualTo(password);
+        wait.until(ExpectedConditions.elementToBeClickable(INPUT_USERNAME)).sendKeys(LOGIN);
+        wait.until(ExpectedConditions.elementToBeClickable(INPUT_PASSWORD)).sendKeys(PASSWORD);
+        assertThat(INPUT_USERNAME.getDomProperty("value")).isEqualTo(LOGIN);
+        assertThat(INPUT_PASSWORD.getDomProperty("value")).isEqualTo(PASSWORD);
     }
 
     public void clickSubmitBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(submitBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(SUBMIT_BTN)).click();
         fluentWait.until(ExpectedConditions.or(
-                ExpectedConditions.invisibilityOf(spinnerIcon),
+                ExpectedConditions.invisibilityOf(SPINNER_ICON),
                 ExpectedConditions.numberOfElementsToBe(By.id("spinner"), 0)
         ));
 
     }
-
     public void verifySuccessLogin(){
         wait.until(PageLoadedVerification.pageIsLoaded());
-        assertThat(driver.getCurrentUrl()).contains(loggedURL);
-        assertThat(loginSuccessDiv.getText()).isEqualTo("Login successful");
+        assertThat(driver.getCurrentUrl()).contains(LOGGED_SUCESS_URL);
+        assertThat(LOGIN_SUCESS_DIV.getText()).isEqualTo("Login successful");
     }
 
 }

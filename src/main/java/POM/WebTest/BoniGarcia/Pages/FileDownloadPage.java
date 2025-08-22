@@ -19,9 +19,6 @@ import java.util.Objects;
 public class FileDownloadPage extends AbstractPage {
 
 
-
-
-
     public FileDownloadPage(WebDriver driver, WebDriverWait wait, Logger log) {
         super(driver, wait, log);
         PageFactory.initElements(this.driver, this);
@@ -29,16 +26,16 @@ public class FileDownloadPage extends AbstractPage {
 
     //Elementy na stronie
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.png']")
-    WebElement btnDownloadWebDriverLogo;
+    WebElement DOWNLOAD_WEBDRIVER_LOGO_BTN;
 
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.pdf']")
-    WebElement btnDownloadWebDriverLogoPDF;
+    WebElement DOWNLOAD_WEBDRIVER_LOGO_PDF_BTN;
 
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='selenium-jupiter.png']")
-    WebElement btnDownloadSeleniumLogo;
+    WebElement DOWNLOAD_SELENIUM_LOGO_BTN;
 
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='selenium-jupiter.pdf']")
-    WebElement btnDownloadSeleniumLogoPDF;
+    WebElement DOWNLOAD_WSELENIUM_LOGO_PDF_BTN;
 
     //Metody testowe
     public void downloadFile(int choseFileToDownload) throws FileNotFoundException {
@@ -47,7 +44,7 @@ public class FileDownloadPage extends AbstractPage {
         File downloadFolder = new File("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\DownloadFolder");
 
         if (choseFileToDownload >= 0 && choseFileToDownload <= 4){
-            List<WebElement> btns = List.of(btnDownloadWebDriverLogo, btnDownloadWebDriverLogoPDF, btnDownloadSeleniumLogo, btnDownloadSeleniumLogoPDF);
+            List<WebElement> btns = List.of(DOWNLOAD_WEBDRIVER_LOGO_BTN, DOWNLOAD_WEBDRIVER_LOGO_PDF_BTN, DOWNLOAD_SELENIUM_LOGO_BTN, DOWNLOAD_WSELENIUM_LOGO_PDF_BTN);
             WebElement btn = btns.get(choseFileToDownload);
             wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
         } else {

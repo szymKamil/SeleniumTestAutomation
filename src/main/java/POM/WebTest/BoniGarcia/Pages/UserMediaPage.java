@@ -1,7 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 import POM.WebTest.BoniGarcia.Utils.TimeStampGenerator;
-import ch.qos.logback.core.util.FileUtil;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.devtools.DevTools;
@@ -16,7 +15,6 @@ import org.slf4j.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 
 public class UserMediaPage extends AbstractPage{
 
@@ -34,27 +32,18 @@ public class UserMediaPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "start")
-    WebElement startBtn;
+    WebElement START_BTN;
 
     @FindBy(id = "video-device")
-    WebElement videoDeviceInfo;
+    WebElement VIDEO_DEVICE_INFO;
 
     //Metody testowe
     public void runUserMedia(){
-        wait.until(ExpectedConditions.elementToBeClickable(startBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(START_BTN)).click();
     }
 
-    public String getVideoDeviceInfo(){
-        return wait.until(ExpectedConditions.visibilityOf(videoDeviceInfo)).getText();
-    }
-
-    //TODO: do przeniesienia do uniwersalnych metod
-    public void takeScreenshot(String testName) throws IOException {
-        File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-        Path pathForScreens = Path.of("src/main/java/POM/WebTest/BoniGarcia/Screenshots").toAbsolutePath();
-        String fileName = "screenshot_" + testName + TimeStampGenerator.generateDateTime() + ".png";
-        File targetDirectory = pathForScreens.resolve( fileName).toFile();
-        FileUtils.copyFile(screenshot, targetDirectory);
+    public String getVIDEO_DEVICE_INFO(){
+        return wait.until(ExpectedConditions.visibilityOf(VIDEO_DEVICE_INFO)).getText();
     }
 
 }

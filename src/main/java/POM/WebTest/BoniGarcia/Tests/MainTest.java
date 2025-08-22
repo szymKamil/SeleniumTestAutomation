@@ -1,17 +1,21 @@
 package POM.WebTest.BoniGarcia.Tests;
 
+import Base.Utils.Screenshot;
 import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import POM.WebTest.BoniGarcia.Utils.PointForCanvas;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebElement;
+import java.;
 import org.openqa.selenium.support.Color;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.annotations.*;
+import org.testng.annotations.Optional;
 
+import java.io.FileNotFoundException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.TimeoutException;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -285,8 +289,6 @@ public class MainTest extends BaseTest {
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
          * weryfikację tekstu nagłówka, i następnie przejście do podstrony IFrames, przescrollowanie i weryfikację tekstu w ostatnim paragrafie.
          */
-
-
         MainPage mainPage = new MainPage(driver, wait, log);
         mainPage.openMainPage();
         mainPage.goToSubPage("IFrames");
@@ -305,57 +307,40 @@ public class MainTest extends BaseTest {
     public void alertPageTest(){
          /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Dialog boxes, następnie uruchomienie każdego z aletrów
+          * i weryfikację poprawności ich wyświetlania i działania, w kontekście przesłanego tekstu.
          */
         MainPage mainPage = new MainPage(driver, wait, log);
         mainPage.openMainPage();
-        mainPage.goToSubPage("IFrames");
+        mainPage.goToSubPage("Dialog boxes");
         DialogBoxesPage dialogBoxesPage = new DialogBoxesPage(driver, wait, log);
         dialogBoxesPage.verifyAbstractPage();
-
-
-
-
-
         dialogBoxesPage.launchAlert();
         String alertString = dialogBoxesPage.getTextFromAlert();
         log.info("Alert posiada tekst: {}", alertString);
         dialogBoxesPage.launchConfirm();
-        dialogBoxesPage.getTextFromConfirm("ok");
-        assertThat(dialogBoxesPage.confirmTextParagraph.getText()).isEqualTo("You chose: true");
+        String confirmText = dialogBoxesPage.getTextFromConfirm("ok");
+        assertThat(confirmText).isEqualTo("You chose: true");
         String promptText = "To jest prompt :)";
         dialogBoxesPage.launchPrompt();
         dialogBoxesPage.setTextToPromptAlert(promptText);
-        assertThat(dialogBoxesPage.promptTextParagraph.getText()).isEqualTo("You typed: " + promptText);
+        assertThat(dialogBoxesPage.getTextFromPrompt()).isEqualTo("You typed: " + promptText);
         dialogBoxesPage.handleModalWindow("save");
-        assertThat(dialogBoxesPage.modalTextParagraph.getText()).isEqualTo("You chose: Save changes");
+        assertThat(dialogBoxesPage.getTextFromModal()).isEqualTo("You chose: Save changes");
     }
 
     @Test()
     public void webStoragePageTests(){
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Web storage, następnie wyczyszczenie lokalnej pamięci przeglądarki i dodanie nowych kluczy,
+         * a na końcu weryfikacja ich widoczności.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Web storage");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/web-storage.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
-
+        WebStoragePage webStoragePage = new WebStoragePage(driver, wait, log);
+        webStoragePage.verifyAbstractPage();
         webStoragePage.clearLocalStorage();
         webStoragePage.clearSessionStorage();
         webStoragePage.inputValueToLocalStorage("Klucz testowy sesji lokalnej 1", "Wartość testowa");
@@ -364,35 +349,23 @@ public class MainTest extends BaseTest {
         webStoragePage.inputValueToSessionStorage("Klucz testowy pamięci sesji 2", "Wartość testowa sesji");
         webStoragePage.clickLocalStorageBtn();
         webStoragePage.clickLocalSessionBtn();
-        log.info("Local storage posiada wartości: {}", webStoragePage.localStorageParagraph.getText());
-        log.info("Session storage posiada wartości: {}", webStoragePage.localSessionParagraph.getText());
+        log.info("Local storage posiada wartości: {}", webStoragePage.getTextFormStorageParagraph());
+        log.info("Session storage posiada wartości: {}", webStoragePage.getTextFormSessionParagraph());
     }
 
 
     @Test()
     public void geolocationTest(){
-        */
-/***
+         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Geolocation, następnie zmianę ustawień przeglądarki i zmianę informacji o geolokacji, miejscu przeglądarki,
+          * i weryfikację widoczności tych zmian.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Geolocation");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/geolocation.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        GeolocationPage geolocationPage = new GeolocationPage(driver, wait, log);
+        geolocationPage.verifyAbstractPage();
 
         geolocationPage.setCoordinates(4.323, 4.53);
         geolocationPage.clickGeolocationBtn();
@@ -402,147 +375,80 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void notificationPageTest(){
-        */
-/***
+         /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Notifications, następnie przesłanie powiadomienia i weryfikację, czy powiadomienie o przesłanym powiadomieniu miało callback.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Notifications");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/notifications.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        NotificationPage notificationPage = new NotificationPage(driver, wait, log);
+        notificationPage.verifyAbstractPage();
         notificationPage.sendMeNotification();
         notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
     }
 
     @Test()
     public void userMediaPageTest(){
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Get user media, i uruchomienie fejkowej kamery i weryfikacja widoczności informacji o urządzeniu.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Get user media");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/get-user-media.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        UserMediaPage userMediaPage = new UserMediaPage(driver, wait, log);
+        userMediaPage.verifyAbstractPage();
         userMediaPage.runUserMedia();
-        String videoInfo = userMediaPage.getVideoDeviceInfo();
-        log.info("W teście po uruchomieniu mediów przeglądarka używa : {}", videoInfo);
-        try {
-            userMediaPage.takeScreenshot("userMediaPageTest");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        log.info("W teście po uruchomieniu mediów przeglądarka używa : {}", userMediaPage.getVIDEO_DEVICE_INFO());
+        Screenshot.takeScreenshot(driver);
+        log.info("Screenshot został wykonany");
     }
 
     @Test()
     public void multiLanguageTest(){
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Multilanguage, i sprawdzenie widoczności tekstu w paragrafach,
+         * który to tekst powinien być przetłumaczony na hiszpański.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Multilanguage");
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/multilanguage.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
-        String paragraphsEs = multilanguagePage.getParagraphsInfo();
-        log.info("Paragrafy posiadają następujące wartości: {}", paragraphsEs);
+        MultilanguagePage multilanguagePage = new MultilanguagePage(driver, wait, log);
+        multilanguagePage.verifyAbstractPage();
+        log.info("Paragrafy posiadają następujące wartości: {}", multilanguagePage.getParagraphsInfo());
     }
+
 
     @Test()
     public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
-        */
-/***
-         * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
+        /***
+         * Test ma na celu uruchomienie przeglądarki i uruchomienie nasłuchiwania logów, przejście do głównej strony,
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Console logs, i wydrukowanie logówz konsoli.
+         */
+        ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(driver, wait, log);
         consoleLogsPage.startListening();
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Console logs");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/console-logs.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        consoleLogsPage.verifyAbstractPage();
         consoleLogsPage.getConsoleLogs();
 
     }
 
     @Test()
     public void loginFormTest() {
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        consoleLogsPage.startListening();
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Login form, a następnie zalogowanie się i
+         * weryfikację widoczności komunikatu o poprawnym zalogowaniu.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Login form");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/login-form.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
+        LoginFormPage loginFormPage = new LoginFormPage(driver, wait, log);
+        loginFormPage.verifyAbstractPage();
 
         loginFormPage.logIn();
         loginFormPage.clickSubmitBtn();
@@ -552,99 +458,58 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void slowLoginFormTest() {
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Login form, a następnie zalogowanie się i
+         * weryfikację widoczności komunikatu o poprawnym zalogowaniu. Wszystko to z uwzględnieniem wolniejszego działania formularza.
+         */
 
-        consoleLogsPage.startListening();
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Slow login");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/login-slow.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        LoginFormPage loginFormPage = new LoginFormPage(driver, wait, log);
+        loginFormPage.verifyAbstractPage();
         loginFormPage.logIn();
         loginFormPage.clickSubmitBtn();
         loginFormPage.verifySuccessLogin();
-
     }
 
 
     @Test()
-    public void slowCalculator() {
-        */
-/***
+    public void randomCalculator() {
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        consoleLogsPage.startListening();
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony Random calculator, a następnie wykonanie obliczeń w pętli.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Random calculator");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/random-calculator.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
-
-        randomCalculatorPage.setCorrectTimesToRun("20");
+        RandomCalculatorPage randomCalculator = new RandomCalculatorPage(driver, wait, log);
+        randomCalculator.verifyAbstractPage();
+        randomCalculator.setCorrectTimesToRun("20");
         for (int i = 1; i < 10; i++) {
-            randomCalculatorPage.setPercentOfCorrectResults("15");
-            String result = randomCalculatorPage.calculate("2+2=");
+            randomCalculator.setPercentOfCorrectResults("15");
+            String result = randomCalculator.calculate("2+2=");
             log.info("Wynik działania uruchomienia numer {} to: {}", i, result);
 
-            randomCalculatorPage.setPercentOfCorrectResults("99");
-            result = randomCalculatorPage.calculate("2+2=");
+            randomCalculator.setPercentOfCorrectResults("99");
+            result = randomCalculator.calculate("2+2=");
             log.info("Wynik działania uruchomienia numer {} to: {}", i, result);
         }
     }
 
         @Test()
         public void downloadFileTest() throws FileNotFoundException {
-            */
-/***
+            /***
              * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-             * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-             *//*
-
-            consoleLogsPage.startListening();
-            driver.get(mainPage.boniGarciaMainURL);
-            wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+             * weryfikację tekstu nagłówka, i następnie przejście do podstrony Download files,
+             * i pobranie wybranego pliku poprzez użycie przycisku na stronie.
+             */
+            MainPage mainPage = new MainPage(driver, wait, log);
+            mainPage.openMainPage();
             mainPage.goToSubPage("Download files");
-            wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-            String currentUrl = driver.getCurrentUrl();
-            if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/download.html")) {
-                log.info("Adres URL jest poprawny.");
-            } else {
-                log.error("Niepoprawny adres URL: " + currentUrl);
-            }
-            wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-            assertThat(driver.findElement(ap.img)
-                    .isDisplayed()).isTrue();
-            assertThat(driver.findElement(mainPage.copySpan)
-                    .getText()).contains(ap.copyrights);
-
+            FileDownloadPage fileDownloadPage = new FileDownloadPage(driver, wait, log);
+            fileDownloadPage.verifyAbstractPage();
             try {
                 fileDownloadPage.downloadFile(1);
             } catch (FileNotFoundException e) {
@@ -656,29 +521,15 @@ public class MainTest extends BaseTest {
 
     @Test()
     public void ABtesting() {
-        */
-/***
+        /***
          * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-         * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
-         *//*
-
-        consoleLogsPage.startListening();
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+         * weryfikację tekstu nagłówka, i następnie przejście do podstrony A/B Testing, i weryfikację, który wariant strony uruchomił się w tym teście.
+         */
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("A/B Testing");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/ab-testing.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        ABTestingPage abTestingPage = new ABTestingPage(driver, wait, log);
+        abTestingPage.verifyAbstractPage();
         abTestingPage.verifyTypeOfVariation();
 
     }
@@ -691,23 +542,11 @@ public class MainTest extends BaseTest {
          * weryfikację adresu URL oraz tekstu nagłówka, i .//TODO
          */
 
-    /*    consoleLogsPage.startListening();
-        driver.get(mainPage.boniGarciaMainURL);
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
+        MainPage mainPage = new MainPage(driver, wait, log);
+        mainPage.openMainPage();
         mainPage.goToSubPage("Data types");
-        wait.until(ExpectedConditions.visibilityOf(navigationPage.mainHeader));
-        String currentUrl = driver.getCurrentUrl();
-        if (currentUrl.contains("https://bonigarcia.dev/selenium-webdriver-java/data-types.html")) {
-            log.info("Adres URL jest poprawny.");
-        } else {
-            log.error("Niepoprawny adres URL: " + currentUrl);
-        }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(ap.mainHeader));
-        assertThat(driver.findElement(ap.img)
-                .isDisplayed()).isTrue();
-        assertThat(driver.findElement(mainPage.copySpan)
-                .getText()).contains(ap.copyrights);
-
+        DataTypesPage dataTypesPage = new DataTypesPage(driver, wait, log);
+        dataTypesPage.verifyAbstractPage();
         dataTypesPage.insertDataToForm();
         dataTypesPage.submitForm();
         dataTypesPage.verifySuccessForm();*/

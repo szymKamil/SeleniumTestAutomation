@@ -4,9 +4,6 @@ import net.datafaker.Faker;
 import net.datafaker.providers.base.Company;
 import net.datafaker.providers.base.Job;
 import net.datafaker.providers.base.PhoneNumber;
-import net.datafaker.sequence.FakeCollection;
-import org.openqa.selenium.By;
-import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -34,37 +31,40 @@ public class DataTypesPage extends AbstractPage{
 
     //Elementy strony
     @FindBy(xpath = "//*[@name='first-name' or @id='first-name']")
-    WebElement inputFirstName;
+    WebElement INPUT_FIRST_NAME;
 
     @FindBy(xpath = "//*[@name='last-name' or @id='last-name']")
-    WebElement inputLastName;
+    WebElement INPUT_LAST_NAME;
 
     @FindBy(xpath = "//*[@name='address' or @id='address']")
-    WebElement inputAdress;
+    WebElement INPUT_ADRESS;
 
     @FindBy(xpath = "//*[@name='zip-code' or @id='zip-code']")
-    WebElement inputZipCode;
+    WebElement INPUT_ZIP_CODE;
 
     @FindBy(xpath = "//*[@name='city' or @id='city']")
-    WebElement inputCity;
+    WebElement INPUT_CITY;
 
     @FindBy(xpath = "//*[@name='country' or @id='country']")
-    WebElement inputCountry;
+    WebElement INPUT_COUNTRY;
 
     @FindBy(xpath = "//*[@name='e-mail' or @id='e-mail']")
-    WebElement inputEmail;
+    WebElement INPUT_EMAIL;
 
     @FindBy(xpath = "//*[@name='phone' or @id='phone']")
-    WebElement inputPhone;
+    WebElement INPUT_PHONE;
 
     @FindBy(xpath = "//*[@name='job-position' or @id='job-position']")
-    WebElement inputJob;
+    WebElement INPUT_JOB;
 
     @FindBy(xpath = "//*[@name='company' or @id='company']")
-    WebElement inputCompany;
+    WebElement INPUT_COMPANY;
 
     @FindBy(css = "button[type=submit]")
-    WebElement submitBnt;
+    WebElement SUBMIT_BTN;
+
+    final String ATTRIBUTE = "class";
+    final String VALUE = "alert-success";
 
 
     //Metody testowe
@@ -72,32 +72,23 @@ public class DataTypesPage extends AbstractPage{
     public void insertDataToForm(Optional<String> firstName, Optional<String> lastName, Optional<String> address, Optional<String> zipCode,
                                  Optional<String> city, Optional<String> country, Optional<String> email, Optional<PhoneNumber> phone, Optional<Job> job,
                                  Optional<Company> company ){
-        wait.until(ExpectedConditions.visibilityOf(inputFirstName)).sendKeys(firstName.orElse("Jan"));
-        assertThat(inputFirstName.getDomProperty("value")).isEqualTo(firstName.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputLastName)).sendKeys(lastName.orElse("Nowak"));
-        assertThat(inputLastName.getDomProperty("value")).isEqualTo(lastName.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputAdress)).sendKeys(address.orElse("ul. Zawilcowa 22/2"));
-        assertThat(inputAdress.getDomProperty("value")).isEqualTo(address.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputZipCode)).sendKeys(zipCode.orElse("00-001"));
-        assertThat(inputZipCode.getDomProperty("value")).isEqualTo(zipCode.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputCity)).sendKeys(city.orElse("Warszawa"));
-        assertThat(inputCity.getDomProperty("value")).isEqualTo(city.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputCountry)).sendKeys(country.orElse("Polska"));
-        assertThat(inputCountry.getDomProperty("value")).isEqualTo(country.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputEmail)).sendKeys(email.orElse("test_12345@google.com"));
-        assertThat(inputEmail.getDomProperty("value")).isEqualTo(email.get());
-
-        wait.until(ExpectedConditions.visibilityOf(inputPhone)).sendKeys(phone.isPresent() ? phone.get().cellPhone() : "654-342-646");
-
-        wait.until(ExpectedConditions.visibilityOf(inputJob)).sendKeys(job.isPresent() ? job.get().position() : "księgowy");
-
-        wait.until(ExpectedConditions.visibilityOf(inputCompany)).sendKeys((company.isPresent()) ? company.get().bs() : "Januszex sp. z oo.");
+        wait.until(ExpectedConditions.visibilityOf(INPUT_FIRST_NAME)).sendKeys(firstName.orElse("Jan"));
+        assertThat(INPUT_FIRST_NAME.getDomProperty("value")).isEqualTo(firstName.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_LAST_NAME)).sendKeys(lastName.orElse("Nowak"));
+        assertThat(INPUT_LAST_NAME.getDomProperty("value")).isEqualTo(lastName.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_ADRESS)).sendKeys(address.orElse("ul. Zawilcowa 22/2"));
+        assertThat(INPUT_ADRESS.getDomProperty("value")).isEqualTo(address.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_ZIP_CODE)).sendKeys(zipCode.orElse("00-001"));
+        assertThat(INPUT_ZIP_CODE.getDomProperty("value")).isEqualTo(zipCode.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_CITY)).sendKeys(city.orElse("Warszawa"));
+        assertThat(INPUT_CITY.getDomProperty("value")).isEqualTo(city.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_COUNTRY)).sendKeys(country.orElse("Polska"));
+        assertThat(INPUT_COUNTRY.getDomProperty("value")).isEqualTo(country.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_EMAIL)).sendKeys(email.orElse("test_12345@google.com"));
+        assertThat(INPUT_EMAIL.getDomProperty("value")).isEqualTo(email.get());
+        wait.until(ExpectedConditions.visibilityOf(INPUT_PHONE)).sendKeys(phone.isPresent() ? phone.get().cellPhone() : "654-342-646");
+        wait.until(ExpectedConditions.visibilityOf(INPUT_JOB)).sendKeys(job.isPresent() ? job.get().position() : "księgowy");
+        wait.until(ExpectedConditions.visibilityOf(INPUT_COMPANY)).sendKeys((company.isPresent()) ? company.get().bs() : "Januszex sp. z oo.");
     }
 
     //Metoda domyślna
@@ -109,25 +100,22 @@ public class DataTypesPage extends AbstractPage{
     }
 
     public void submitForm(){
-        wait.until(ExpectedConditions.elementToBeClickable(submitBnt)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(SUBMIT_BTN)).click();
     }
 
     public void verifySuccessForm(){
         //Weryfikacja elementów po wypełnieniu formularza
-        final String attribute = "class";
-        final String value = "alert-success";
-
-        wait.until(ExpectedConditions.invisibilityOf(submitBnt));
-        wait.until(ExpectedConditions.attributeContains(inputFirstName, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputLastName, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputAdress, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputZipCode, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputCity, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputCountry, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputEmail, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputPhone, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputJob, attribute, value));
-        wait.until(ExpectedConditions.attributeContains(inputCompany, attribute, value));
+        wait.until(ExpectedConditions.invisibilityOf(SUBMIT_BTN));
+        wait.until(ExpectedConditions.attributeContains(INPUT_FIRST_NAME, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_LAST_NAME, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_ADRESS, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_ZIP_CODE, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_CITY, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_COUNTRY, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_EMAIL, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_PHONE, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_JOB, ATTRIBUTE, VALUE));
+        wait.until(ExpectedConditions.attributeContains(INPUT_COMPANY, ATTRIBUTE, VALUE));
 
     }
 

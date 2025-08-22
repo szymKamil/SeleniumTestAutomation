@@ -10,8 +10,6 @@ import org.slf4j.Logger;
 public class DialogBoxesPage extends AbstractPage {
 
 
-
-
     public DialogBoxesPage(WebDriver driver, WebDriverWait wait, Logger log) {
         super(driver, wait, log);
         PageFactory.initElements(this.driver, this);
@@ -19,34 +17,34 @@ public class DialogBoxesPage extends AbstractPage {
 
     //Elementy na stronie
     @FindBy(id = "my-alert")
-    public WebElement launchAlertBtn;
+    WebElement LAUNCH_ALERT_BTN;
 
     @FindBy(id = "my-confirm")
-    public WebElement confirmAlertBtn;
+    WebElement LAUNCH_CONFIRM_BTN;
 
     @FindBy(id = "my-prompt")
-    public WebElement promptAlertBtn;
+    WebElement PROMPT_ALERT_BTN;
 
     @FindBy(id = "my-modal")
-    public WebElement modalAlertBtn;
+    WebElement MODAL_ALERT_BTN;
 
     @FindBy(id = "confirm-text")
-    public WebElement confirmTextParagraph;
+    WebElement CONFIRM_TEXT_PARAGRAPH;
 
     @FindBy(id = "prompt-text")
-    public WebElement promptTextParagraph;
+    WebElement PROMPT_TEXT_PARAGRAPH;
 
     @FindBy(id = "modal-text")
-    public WebElement modalTextParagraph;
+    WebElement MODAL_TEXT_PARAGRAPH;
 
     @FindBy(id = "example-modal")
-    public WebElement modalAlertBody;
+    WebElement MODAL_ALERT_BODY;
 
     @FindBy(css = "button.btn-primary")
-    public WebElement modalAlertSaveBtn;
+    WebElement MODAL_ALERT_SAVE_BTN;
 
     @FindBy(css = "button.btn-secondary")
-    public WebElement modalAlertCloseBtn;
+    WebElement MODAL_ALERT_CANCEL_BTN;
 
     //Metody testowe
     public void launchAlertAndChoseBtn(WebElement btn){
@@ -54,16 +52,16 @@ public class DialogBoxesPage extends AbstractPage {
     }
 
     public void launchAlert(){
-        launchAlertAndChoseBtn(launchAlertBtn);
+        launchAlertAndChoseBtn(LAUNCH_ALERT_BTN);
     }
     public void launchConfirm(){
-        launchAlertAndChoseBtn(confirmAlertBtn);
+        launchAlertAndChoseBtn(LAUNCH_CONFIRM_BTN);
     }
     public void launchPrompt(){
-        launchAlertAndChoseBtn(promptAlertBtn);
+        launchAlertAndChoseBtn(PROMPT_ALERT_BTN);
     }
     public void launchModal(){
-        launchAlertAndChoseBtn(modalAlertBtn);
+        launchAlertAndChoseBtn(MODAL_ALERT_BTN);
     }
 
     public String getTextFromAlert(){
@@ -80,7 +78,7 @@ public class DialogBoxesPage extends AbstractPage {
         }
         String alertText =  driver.switchTo().alert().getText();
         driver.switchTo().alert().accept();
-        return  alertText;
+        return alertText;
 
     }
 
@@ -102,7 +100,11 @@ public class DialogBoxesPage extends AbstractPage {
         } else {
             driver.switchTo().alert().dismiss();
         }
-        return  alertText;
+        return alertText;
+    }
+
+    public String getTextFromPrompt(){
+        return wait.until(ExpectedConditions.visibilityOf(PROMPT_TEXT_PARAGRAPH)).getText();
     }
 
     public void setTextToPromptAlert(String promptAlertInput){
@@ -120,22 +122,25 @@ public class DialogBoxesPage extends AbstractPage {
 
     public String handleModalWindow(String saveOrClose){
         String modalBodyText;
-        if(modalAlertBody.isDisplayed()){
-            modalBodyText = modalAlertBody.findElement(By.cssSelector("div.modal-body")).getText();
+        if(MODAL_ALERT_BODY.isDisplayed()){
+            modalBodyText = MODAL_ALERT_BODY.findElement(By.cssSelector("div.modal-body")).getText();
         } else {
             launchModal();
-            wait.until(ExpectedConditions.visibilityOf(modalAlertBody));
+            wait.until(ExpectedConditions.visibilityOf(MODAL_ALERT_BODY));
             modalBodyText = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.modal-body"))).getText();
         }
         if (saveOrClose.equalsIgnoreCase("save")){
-            modalAlertSaveBtn.click();
+            MODAL_ALERT_SAVE_BTN.click();
         } else if (saveOrClose.equalsIgnoreCase("close")){
-            modalAlertCloseBtn.click();
+            MODAL_ALERT_CANCEL_BTN.click();
         } else {
             throw  new RuntimeException("Błędna komenda do wykonania w oknie modalnym");
         }
         return modalBodyText;
     }
 
+    public String getTextFromModal(){
+        return wait.until(ExpectedConditions.visibilityOf(MODAL_TEXT_PARAGRAPH)).getText();
+    }
 
 }

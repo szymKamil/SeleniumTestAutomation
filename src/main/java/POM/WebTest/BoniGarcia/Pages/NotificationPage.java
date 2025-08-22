@@ -30,11 +30,11 @@ public class NotificationPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "notify-me")
-    WebElement notifyMeBtn;
+    WebElement NOTIFY_ME_BTN;
 
     //Metody testowe
     public void sendMeNotification(){
-        notifyMeBtn.click();
+        NOTIFY_ME_BTN.click();
     }
 
 

@@ -29,24 +29,24 @@ public class WebStoragePage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "display-local")
-    public WebElement localStorageBtn;
+    WebElement LOCAL_STORAGE_BTN;
 
     @FindBy(id = "display-session")
-    public WebElement localSessionBtn;
+    WebElement LOCAL_SESSION_BTN;
 
     @FindBy(id = "local-storage")
-    public WebElement localStorageParagraph;
+    WebElement LOCAL_STORAGE_PARAGRAPH;
 
     @FindBy(id = "session-storage")
-    public WebElement localSessionParagraph;
+    WebElement LOCAL_SESSION_PARAGRAPH;
 
     //Metody testowe
     public void clickLocalStorageBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(localStorageBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(LOCAL_STORAGE_BTN)).click();
     }
 
     public void clickLocalSessionBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(localSessionBtn)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(LOCAL_SESSION_BTN)).click();
     }
 
     public void clearLocalStorage(){
@@ -65,6 +65,14 @@ public class WebStoragePage extends AbstractPage{
 
     public void inputValueToSessionStorage(String key, String value) {
         js.executeScript("sessionStorage.setItem(arguments[0], arguments[1]);", key, value);
+    }
+
+    public String getTextFormStorageParagraph(){
+        return wait.until(ExpectedConditions.visibilityOf(LOCAL_STORAGE_PARAGRAPH)).getText();
+    }
+
+    public String getTextFormSessionParagraph(){
+        return wait.until(ExpectedConditions.visibilityOf(LOCAL_SESSION_PARAGRAPH)).getText();
     }
 
 }
