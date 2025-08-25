@@ -23,8 +23,8 @@ public class DataTypesPage extends AbstractPage{
 
     Faker faker;
 
-    public DataTypesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public DataTypesPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
         faker = new Faker();
     }

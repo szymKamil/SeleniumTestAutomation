@@ -8,42 +8,41 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 
-import static org.assertj.core.api.Assertions.assertThat;
 
 public class NavigationPage extends AbstractPage{
 
 
     private StringBuilder LOREM_IPSUM;
 
-    public NavigationPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public NavigationPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 
     //Elementy na stronie
     @FindBy(xpath = "//a[contains(text(), 'Next')]")
-    public WebElement NEXT_BTN;
+    WebElement nextButton;
 
     @FindBy(xpath = "//a[contains(text(), 'Previous')]")
-    public WebElement PREV_BTN;
+    WebElement prevButton;
 
     @FindBy(className = "lead")
-    public WebElement LEAD_PARAGRAPH;
+    WebElement leadParagraph;
 
     @FindBy(xpath = "(//li[contains(@class, 'active')])[1]")
-    public WebElement BTN_ACTIVE_INFO;
+    WebElement btnActiveInfo;
 
     //Metody testowe
     public void btnNext(){
-        wait.until(ExpectedConditions.elementToBeClickable(NEXT_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(nextButton)).click();
     }
 
     public void btnPrev(){
-        wait.until(ExpectedConditions.elementToBeClickable(PREV_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(prevButton)).click();
     }
 
     public void activeBtnInfo(){
-        String btnNumber = wait.until(ExpectedConditions.visibilityOf(BTN_ACTIVE_INFO)).getText();
+        String btnNumber = wait.until(ExpectedConditions.visibilityOf(btnActiveInfo)).getText();
         log.info("Aktywnym przyciskiem jest aktualnie {}", btnNumber);
     }
 
@@ -69,7 +68,7 @@ public class NavigationPage extends AbstractPage{
     //Getters
 
     public String getTextFromLead(){
-        return wait.until(ExpectedConditions.visibilityOf(LEAD_PARAGRAPH)).getText();
+        return wait.until(ExpectedConditions.visibilityOf(leadParagraph)).getText();
     }
 
 

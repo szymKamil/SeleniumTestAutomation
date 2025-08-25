@@ -19,8 +19,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class MainPage extends AbstractPage {
 
 
-    public MainPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public MainPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
     }
 
     public static final By CONTAINERS = By.cssSelector("div.col-md-4.py-2");

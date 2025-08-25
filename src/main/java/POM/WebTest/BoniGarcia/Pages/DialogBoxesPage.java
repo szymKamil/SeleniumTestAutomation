@@ -10,8 +10,8 @@ import org.slf4j.Logger;
 public class DialogBoxesPage extends AbstractPage {
 
 
-    public DialogBoxesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public DialogBoxesPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

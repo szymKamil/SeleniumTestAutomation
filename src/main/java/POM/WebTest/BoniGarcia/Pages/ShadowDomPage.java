@@ -9,8 +9,8 @@ import org.slf4j.Logger;
 public class ShadowDomPage extends AbstractPage{
 
 
-    public ShadowDomPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public ShadowDomPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

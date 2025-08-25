@@ -20,8 +20,8 @@ public class MouseOverPage extends AbstractPage {
     Actions actions;
 
 
-    public MouseOverPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public MouseOverPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
         actions = new Actions(this.driver);
     }

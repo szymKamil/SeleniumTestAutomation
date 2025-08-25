@@ -1,11 +1,14 @@
 package POM.WebTest.RahulAcademy.Pages.ShopTest;
 
+import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -13,18 +16,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class CheckoutPage {
 
-    Logger log;
+    Logger log = LoggerFactory.getLogger("Logger");
     WebDriver driver;
     WebDriverWait wait;
     WebElementActions actions;
     ShopPage shopPage;
 
-    public CheckoutPage( WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        actions = new WebElementActions(driver, wait);
-        shopPage = new ShopPage(driver, wait, log);
+    public CheckoutPage( ) {
+        this.driver = DriverFactoryV1.getDriver();
+        this.wait = DriverFactoryV1.getWait();
+//        this.log = DriverFactoryV1.getLogger();
+        actions = new WebElementActions();
+        actions.initiate();
+        shopPage = new ShopPage();
     }
 
     //Elementy

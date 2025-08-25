@@ -14,8 +14,8 @@ public class RandomCalculatorPage extends AbstractPage{
 
 
 
-    public RandomCalculatorPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public RandomCalculatorPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

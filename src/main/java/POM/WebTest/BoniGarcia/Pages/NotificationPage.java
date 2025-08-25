@@ -20,8 +20,8 @@ public class NotificationPage extends AbstractPage{
     DevTools devTools;
     JavascriptExecutor js;
 
-    public NotificationPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public NotificationPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(driver, this);
         actions = new Actions(this.driver);
         devTools = ((HasDevTools) this.driver).getDevTools();

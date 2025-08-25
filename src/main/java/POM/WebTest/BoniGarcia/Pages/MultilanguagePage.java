@@ -13,8 +13,8 @@ public class MultilanguagePage extends AbstractPage {
 
 
 
-    public MultilanguagePage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public MultilanguagePage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

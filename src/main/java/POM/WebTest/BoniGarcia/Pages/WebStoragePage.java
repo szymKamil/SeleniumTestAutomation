@@ -20,8 +20,8 @@ public class WebStoragePage extends AbstractPage{
     private JavascriptExecutor js;
     DevTools devTools;
 
-    public WebStoragePage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public WebStoragePage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         devTools = ((HasDevTools) this.driver).getDevTools();
         PageFactory.initElements(this.driver, this);
         js = (JavascriptExecutor) this.driver;

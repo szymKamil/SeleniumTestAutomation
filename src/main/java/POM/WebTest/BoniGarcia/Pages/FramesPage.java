@@ -13,8 +13,8 @@ public class FramesPage extends AbstractPage {
 
 
 
-    public FramesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public FramesPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

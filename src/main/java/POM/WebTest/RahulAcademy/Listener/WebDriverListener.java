@@ -6,7 +6,6 @@ import static Base.Utils.Screenshot.takeScreenshot;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.events.WebDriverListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import java.lang.reflect.InvocationTargetException;
@@ -14,10 +13,10 @@ import java.lang.reflect.Method;
 
 
 
-public class Listener implements WebDriverListener {
+public class WebDriverListener implements org.openqa.selenium.support.events.WebDriverListener {
 
 
-    private static final Logger log = LoggerFactory.getLogger(Listener.class);
+    private static final Logger log = LoggerFactory.getLogger(WebDriverListener.class);
 
 
     @Override

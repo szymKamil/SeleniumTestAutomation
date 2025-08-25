@@ -1,5 +1,6 @@
 package POM.WebTest.RahulAcademy.Pages.ShopTest;
 
+import Base.BaseTest.DriverFactoryV1;
 import Base.Utils.RandomUtils;
 import Base.Utils.Utils;
 import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
@@ -10,6 +11,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -24,12 +26,12 @@ public class ShopPage  {
     WebElementActions actions;
     ShopLoginPageForm loginForm;
 
-    public ShopPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        actions = new WebElementActions(driver, wait);
-        loginForm = new ShopLoginPageForm(driver, wait, log);
+    public ShopPage() {
+        this.driver = DriverFactoryV1.getDriver();
+        this.wait = DriverFactoryV1.getWait();
+        this.log = LoggerFactory.getLogger("Logger");
+        actions = new WebElementActions();
+        loginForm = new ShopLoginPageForm();
     }
 
 
@@ -85,7 +87,7 @@ public class ShopPage  {
 
     public CheckoutPage goToCheckout(){
         actions.find(checkoutBtn).click();
-        return new CheckoutPage(driver, wait, log);
+        return new CheckoutPage();
     }
 
 }

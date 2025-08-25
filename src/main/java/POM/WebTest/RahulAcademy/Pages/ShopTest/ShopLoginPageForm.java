@@ -1,12 +1,14 @@
 package POM.WebTest.RahulAcademy.Pages.ShopTest;
 
+import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
-
+import org.slf4j.LoggerFactory;
 
 
 public class ShopLoginPageForm  {
@@ -18,11 +20,11 @@ public class ShopLoginPageForm  {
     WebElementActions actions;
 
 
-    public ShopLoginPageForm(WebDriver driver, WebDriverWait wait, Logger log) {
-        this.driver = driver;
-        this.wait = wait;
-        this.log = log;
-        actions = new WebElementActions(driver, wait);
+    public ShopLoginPageForm() {
+        this.driver = DriverFactoryV1.getDriver();
+        this.wait = DriverFactoryV1.getWait();
+        this.log = LoggerFactory.getLogger("Logger");
+        actions = new WebElementActions();
     }
 
     //Elementy
@@ -35,6 +37,8 @@ public class ShopLoginPageForm  {
     By selectList = By.cssSelector("select.form-control");
     By loginInfo = By.cssSelector("p b:first-child i");
     By passwordInfo = By.cssSelector("p b:last-child i");
+    By modalBody = By.cssSelector("div.modal-body");
+    By modalBodyOKBtn = By.id("okayBtn");
 
 
     public String getLogin(){
@@ -57,11 +61,24 @@ public class ShopLoginPageForm  {
     public ShopLoginPageForm choseRadio(String userType){
         switch (userType.toLowerCase()) {
             case "admin" -> actions.find(radioAdmin).click().isSelected();
-            case "user" -> actions.find(radioUser).click().isSelected();
+            case "user" -> {
+                actions.find(radioUser)
+                        .click()
+                        .isSelected();
+                handleAlert();
+            }
             default -> log.error("Błędnie wybrana opcja radiobutton");
         }
         return this;
     }
+
+
+    public void handleAlert(){
+        wait.until(ExpectedConditions.visibilityOfElementLocated(modalBody));
+        wait.until(ExpectedConditions.elementToBeClickable(modalBodyOKBtn)).click();
+    }
+
+
 
     public ShopLoginPageForm selectForms(String text){
         actions.selectOptionByText(selectList, text);
@@ -75,7 +92,7 @@ public class ShopLoginPageForm  {
 
     public ShopPage clickSignIn(){
         actions.find(signInBtn).click();
-        return new ShopPage(driver, wait, log);
+        return new ShopPage();
     }
 
 

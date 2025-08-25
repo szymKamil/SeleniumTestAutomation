@@ -1,16 +1,19 @@
 package POM.WebTest.RahulAcademy.Pages.SignInFormTest;
 
+import Base.BaseTest.DriverFactoryV1;
 import Base.Utils.CredentialsAES;
 
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.devtools.v137.page.Page;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -19,26 +22,32 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 public class LoginFormPage  {
 
-    WebDriver driver;
-    WebDriverWait wait;
-    Logger log;
-    WebElementActions actions;
 
-    public LoginFormPage(WebDriver driver, WebDriverWait wait, Logger log) {
+    Logger log = LoggerFactory.getLogger("LoginFormPage Logger");
+    private WebDriver driver;
+    private WebDriverWait wait;
+    private WebElementActions actions;
+
+
+    public LoginFormPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        this.log = log;
         PageFactory.initElements(driver, this);
-        actions = new WebElementActions(driver, wait);
     }
+
+//    public void initiate(){
+//        driver = DriverFactoryV1.getDriver();
+//        wait = DriverFactoryV1.getWait();
+//        actions = new WebElementActions();
+//        actions.initiate();
+//        PageFactory.initElements(DriverFactoryV1.getDriver(), this);
+//    }
 
     //Dane
     private static final String login = "zZf2rJMkK2K7X70NR/nbIA==";
     private static final String password = "ZVxOYnCTQLgCBPYuk9Im8vLs/2ePFUdif9/7Oh7xYas=";
 
-
     //Elementy strony
-
     @FindBy(css = "form.form")
     public WebElement formBody;
 

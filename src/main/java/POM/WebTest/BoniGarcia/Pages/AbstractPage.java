@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -18,13 +19,13 @@ public class AbstractPage {
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
-    protected final Logger log ;
+    protected final Logger log = LoggerFactory.getLogger("Logger");;
 
 
-    public AbstractPage(WebDriver driver, WebDriverWait wait, Logger log) {
+    public AbstractPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        this.log = log;
+//        this.log = log;
     }
 
     //Elementy

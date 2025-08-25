@@ -22,8 +22,8 @@ public class UserMediaPage extends AbstractPage{
     DevTools devTools;
     JavascriptExecutor js;
 
-    public UserMediaPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public UserMediaPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(driver, this);
         actions = new Actions(this.driver);
         devTools = ((HasDevTools) this.driver).getDevTools();

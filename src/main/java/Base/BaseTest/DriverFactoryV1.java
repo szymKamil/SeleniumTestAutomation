@@ -27,10 +27,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 public final class DriverFactoryV1 {
-    // Tworzenie wielowątkowości na potrzeby izolacji testów przy parallelnym uruchomieniu.
     private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
     private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
-    private static final ThreadLocal<Logger> THREAD_LOCAL = new ThreadLocal<>();
+//    private static final ThreadLocal<Logger> THREAD_LOCAL = new ThreadLocal<>();
     private static final Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
 
     private DriverFactoryV1() {
@@ -39,17 +38,16 @@ public final class DriverFactoryV1 {
     public static void initDriver(String browser, int time) throws InterruptedException {
         initDriver(browser, time, null);
 
-        synchronized (DriverFactoryV1.class) {
-            logger.info("Czekam na inicjalizację drivera dla wątku: {}", Thread.currentThread()
-                    .getId());
-            Thread.sleep(1000); // Opóźnienie 1 sekunda między instancjami
-        }
+//        synchronized (DriverFactoryV1.class) {
+//            logger.info("Czekam na inicjalizację drivera dla wątku: {}", Thread.currentThread()
+//                    .getId());
+//            Thread.sleep(1000); // Opóźnienie 1 sekunda między instancjami
+//        }
     }
 
     public static void initDriver(String browser, int time, URL url) throws InterruptedException {
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
-        Thread.sleep(Duration.ofSeconds(5));
         WebDriver driver = null;
         try {
         if (url != null) {
@@ -63,15 +61,16 @@ public final class DriverFactoryV1 {
                 default -> logger.info("Błędnie wybrana przeglądarka!!!");
             }
         }
-        Thread.sleep(Duration.ofSeconds(2));
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
-        THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));
+//        THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));
         logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
         } catch (Exception e) {
             logger.error("Błąd podczas inicjalizacji drivera: ", e);
+            quit();
             throw new RuntimeException("Nie udało się uruchomić drivera", e);
         }
+        logger.info("Uruchomiony został thread {}", Thread.currentThread().getName());
     }
 
 
@@ -166,26 +165,38 @@ public final class DriverFactoryV1 {
     }
 
 
-    public static Logger getLogger() {
-        return THREAD_LOCAL.get();
-    }
+//    public static Logger getLogger() {
+//        return THREAD_LOCAL.get();
+//    }
 
     public static WebDriver getDriver() {
-        return DRIVER_THREAD.get();
+        WebDriver driver = DRIVER_THREAD.get();
+        if (driver == null) {
+            throw new IllegalStateException("Driver nie został zainicjalizowany dla wątku: " + Thread.currentThread().getId());
+        }
+        return driver;
     }
 
     public static WebDriverWait getWait() {
-        return WAIT_THREAD.get();
+        WebDriverWait wait = WAIT_THREAD.get();
+        if (wait == null) {
+            throw new IllegalStateException("WebDriverWait nie został zainicjalizowany dla wątku: " + Thread.currentThread().getId());
+        }
+        return wait;
     }
 
 
     public static void quit() {
         WebDriver driver = DRIVER_THREAD.get();
         if (driver != null) {
-            driver.quit();
-            DRIVER_THREAD.remove();
-            WAIT_THREAD.remove();
-            THREAD_LOCAL.remove();
+            try {
+                driver.quit();
+            } catch (Exception e) {
+                logger.error("Błąd podczas zamykania drivera: ", e);
+            } finally {
+                DRIVER_THREAD.remove();
+                WAIT_THREAD.remove();
+            }
         }
     }
 }

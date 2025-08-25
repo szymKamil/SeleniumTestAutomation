@@ -1,11 +1,14 @@
 package POM.WebTest.RahulAcademy.TestActionUtils;
 
+import Base.BaseTest.DriverFactoryV1;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -17,37 +20,39 @@ public class WebElementActions {
     Select select;
     WebElement element;
     List<WebElementActions> elements;
+    Logger logger = LoggerFactory.getLogger("Logger");
 
-
-    public WebElementActions(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
+    public void initiate(){
+        driver = DriverFactoryV1.getDriver();
+        wait = DriverFactoryV1.getWait();
+        logger = LoggerFactory.getLogger("Logger");
     }
 
+    public WebElementActions() {
+        initiate();
+    }
 
-    public WebElementActions(WebElement element, WebElementActions instance) {
+    public WebElementActions(WebElement element) {
         this.element = element;
-        this.driver = instance.driver;
-        this.wait = instance.wait;
+        initiate();
     }
 
 
     public WebElementActions(List<WebElementActions> elements, WebElementActions instance) {
         this.elements = elements;
-        this.driver = instance.driver;
-        this.wait = instance.wait;
+        initiate();
     }
 
 
     public WebElementActions find(By locator){
         WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        return new WebElementActions(el, this);
+        return new WebElementActions(el);
     }
 
     public List<WebElementActions> findAll(By locator){
         List<WebElement> webElements = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
         return webElements.stream()
-                .map(el -> new WebElementActions(el, this))
+                .map(el -> new WebElementActions(el))
                 .toList();
     }
 

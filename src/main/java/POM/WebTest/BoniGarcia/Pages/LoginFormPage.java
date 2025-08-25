@@ -25,8 +25,8 @@ public class LoginFormPage extends AbstractPage{
     FluentWait<WebDriver> fluentWait;
 
 
-    public LoginFormPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public LoginFormPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
         Collection<Class<? extends RuntimeException>> errorsCollection = new ArrayList<>(List.of(NoSuchElementException.class, TimeoutException.class));
         fluentWait = new FluentWait<>(this.driver).pollingEvery(Duration.ofSeconds(1))

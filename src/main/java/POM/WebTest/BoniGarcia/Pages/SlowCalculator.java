@@ -14,8 +14,8 @@ public class SlowCalculator extends AbstractPage{
 
 
 
-    public SlowCalculator(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public SlowCalculator(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

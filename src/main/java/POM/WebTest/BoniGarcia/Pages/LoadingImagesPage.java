@@ -21,8 +21,8 @@ public class LoadingImagesPage  extends AbstractPage{
     Actions actions;
     FluentWait<WebDriver> fluentWait;
 
-    public LoadingImagesPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public LoadingImagesPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
         fluentWait = new FluentWait<>(driver).pollingEvery(Duration.ofSeconds(2))

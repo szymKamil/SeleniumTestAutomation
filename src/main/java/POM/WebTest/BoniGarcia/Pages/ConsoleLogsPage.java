@@ -22,8 +22,8 @@ public class ConsoleLogsPage extends AbstractPage {
     CompletableFuture<ConsoleEvent> consoleEvent;
     CompletableFuture<JavascriptException> jsEvent;
 
-    public ConsoleLogsPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public ConsoleLogsPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
         devTools = ((HasDevTools) this.driver).getDevTools();
     }

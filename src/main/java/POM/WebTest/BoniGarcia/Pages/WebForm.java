@@ -67,8 +67,8 @@ public class WebForm extends AbstractPage {
     public WebElement FORM_SUBMITTED_CONFIRMATION;
     JavascriptExecutor js;
 
-    public WebForm(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public WebForm(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
         js = (JavascriptExecutor) this.driver;
     }

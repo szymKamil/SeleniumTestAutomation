@@ -19,8 +19,8 @@ import java.util.Objects;
 public class FileDownloadPage extends AbstractPage {
 
 
-    public FileDownloadPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public FileDownloadPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         PageFactory.initElements(this.driver, this);
     }
 

@@ -1,8 +1,0 @@
-<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="ParallelTestSuite" parallel="methods" thread-count="3">
-    <test name="ParallelTests">
-        <classes>
-            <class name="Parallel.ParallelTestExample"/>
-        </classes>
-    </test>
-</suite>

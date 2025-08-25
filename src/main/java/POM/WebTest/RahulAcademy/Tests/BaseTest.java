@@ -1,36 +1,35 @@
 package POM.WebTest.RahulAcademy.Tests;
 
 
+import static Base.BaseTest.DriverFactoryV1.getDriver;
+
 import Base.BaseTest.DriverFactoryV1;
-import POM.WebTest.RahulAcademy.Listener.Listener;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.events.EventFiringDecorator;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import io.github.bonigarcia.wdm.WebDriverManager;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.time.Instant;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 
 public class BaseTest {
 
-    WebDriver driver;
-    WebDriverWait wait;
-    private DriverFactoryV1 factory;
-    private Logger log;
-    WebElementActions actions;
 
-
-    protected final URI uri = URI.create("http://192.168.1.108:4444");
+    protected final URI uri = null; /*= URI.create("http://192.168.1.108:4444")*/;
     private final String formTestPage = "https://rahulshettyacademy.com/locatorspractice/";
-    private final String shopLoginPage = "https://rahulshettyacademy.com/loginpagePractise/\n";
+    private final String shopLoginPage = "https://rahulshettyacademy.com/loginpagePractise/";
+    Logger logger = LoggerFactory.getLogger("Logger Rahul Tests");
+
 
     //Klasy stron
     protected LoginFormPage loginPageTest;
@@ -39,56 +38,47 @@ public class BaseTest {
     CheckoutPage checkoutPage;
 
     @Parameters({"browser", "timeout"})
-    @BeforeClass()
-    public void config(@Optional("Chrome") String browser, @Optional("25") int timeout) throws MalformedURLException, InterruptedException {
-        DriverFactoryV1.initDriver(browser, timeout);
-        this.driver = DriverFactoryV1.getDriver();
-        this.wait = DriverFactoryV1.getWait();
-        this.log = DriverFactoryV1.getLogger();
-        driver = new EventFiringDecorator<>(new Listener()).decorate(driver);
-        loginPageTest = new LoginFormPage(driver, wait, log);
-        pageShopLoginForm = new ShopLoginPageForm(driver, wait, log);
-        shopPage = new ShopPage(driver, wait, log);
-        checkoutPage = new CheckoutPage(driver, wait, log);
+    @BeforeMethod(alwaysRun = true)
+    public void config(@Optional("chrome") String browser, @Optional("25") int timeout, Method method) throws InterruptedException {
+            // Inicjalizacja drivera (lokalnego lub zdalnego w zależności od potrzeb)
+            DriverFactoryV1.initDriver(browser, timeout);
+            logger.info("Rozpoczynam test: {}", method.getName());
+            Class<?> testClass = method.getDeclaringClass();
+            if (testClass.equals(LocatorsFormLoginTests.class)) {
+                DriverFactoryV1.getDriver().get(formTestPage);
+            } else if (testClass.equals(ShopPageTests.class)) {
+                DriverFactoryV1.getDriver().get(shopLoginPage);
+            } else {
+                logger.error("Błędnie podany adres URL, test nie został uruchomiony.");
+                throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
+            }
     }
 
-
-    @BeforeMethod()
-    public void config(Method method)  {
-        log.info("Rozpoczynam test: {}", method.getName());
-        Class<?> testClass = method.getDeclaringClass();
-        if (testClass.equals(LocatorsFormLoginTests.class)) {
-            driver.get(formTestPage);
-        } else if (testClass.equals(ShopPageTests.class)) {
-            driver.get(shopLoginPage);
-        } else {
-            log.error("Błędnie podany adres URL, test nie został uruchomiony.");
-            throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
-        }
-
-    }
-
-    @AfterMethod
-    public void testInfo(ITestResult test, Method method){
-        if (ITestResult.FAILURE == test.getStatus()){
-            log.error("Test się nie powiódł!: {}", method.getName());
-        } else if (ITestResult.SUCCESS == test.getStatus()) {
-            log.info("Test zakończony pomyślnie: {}", method.getName());
+    @AfterMethod(alwaysRun = true)
+    public void testInfo(ITestResult testResult, Method method) {
+        if (ITestResult.FAILURE == testResult.getStatus()) {
+            logger.error("Test się nie powiódł!: {}", method.getName());
+        } else if (ITestResult.SUCCESS == testResult.getStatus()) {
+            logger.info("Test zakończony pomyślnie: {}", method.getName());
         }
     }
 
-    @AfterClass
-    void shutDown(){
-       log.info("Testy zostały ukończone.");
-       if (driver != null) {
-           driver.quit();
-       }
+    @AfterMethod(alwaysRun = true)
+    void shutDown() {
+        logger.info("Testy zostały ukończone.");
+        DriverFactoryV1.quit();
     }
 
-
-
-
-
-
-
+    @AfterSuite
+    public void cleanUpUserDataDirs() {
+        // TODO: Usuń katalogi tymczasowe dla user-data-dir
+    }
 }
+
+
+
+
+
+
+
+

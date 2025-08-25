@@ -18,8 +18,8 @@ public class LongPage extends AbstractPage{
     private Actions actions;
 
 
-    public LongPage(WebDriver driver, WebDriverWait wait, Logger log) {
-        super(driver, wait, log);
+    public LongPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
         actions = new Actions(this.driver);
         PageFactory.initElements(this.driver, this);
     }
