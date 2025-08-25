@@ -28,13 +28,12 @@ public abstract class BaseTest  {
     /*-----------------*/
 
 
-
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout"})
     @BeforeMethod
     public void config(@Optional("Chrome") String browser, @Optional("55") int timeout) throws Exception {
         DriverFactoryV1.initDriver(browser, timeout/*, LOCAL_URL.toURL()*/);
-        this.log = LoggerFactory.getLogger("Logger");
+        log = LoggerFactory.getLogger("Logger");
         ap = new AbstractPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 

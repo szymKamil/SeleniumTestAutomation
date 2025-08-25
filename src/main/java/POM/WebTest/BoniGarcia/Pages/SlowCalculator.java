@@ -57,6 +57,5 @@ public class SlowCalculator extends AbstractPage{
         String result = wait.until(ExpectedConditions.visibilityOf(calculatorScreen)).getText();
         log.info("Wynik działania na kalkulatorze to: {}", result);
         return result;
-
     }
 }

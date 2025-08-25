@@ -31,17 +31,11 @@ public class BaseTest {
     Logger logger = LoggerFactory.getLogger("Logger Rahul Tests");
 
 
-    //Klasy stron
-    protected LoginFormPage loginPageTest;
-    ShopLoginPageForm pageShopLoginForm;
-    ShopPage shopPage;
-    CheckoutPage checkoutPage;
-
     @Parameters({"browser", "timeout"})
     @BeforeMethod(alwaysRun = true)
     public void config(@Optional("chrome") String browser, @Optional("25") int timeout, Method method) throws InterruptedException {
-            // Inicjalizacja drivera (lokalnego lub zdalnego w zależności od potrzeb)
             DriverFactoryV1.initDriver(browser, timeout);
+            logger.info(DriverFactoryV1.getWait().toString());
             logger.info("Rozpoczynam test: {}", method.getName());
             Class<?> testClass = method.getDeclaringClass();
             if (testClass.equals(LocatorsFormLoginTests.class)) {
@@ -55,19 +49,16 @@ public class BaseTest {
     }
 
     @AfterMethod(alwaysRun = true)
-    public void testInfo(ITestResult testResult, Method method) {
+    public void shutDown(ITestResult testResult, Method method) {
         if (ITestResult.FAILURE == testResult.getStatus()) {
             logger.error("Test się nie powiódł!: {}", method.getName());
         } else if (ITestResult.SUCCESS == testResult.getStatus()) {
             logger.info("Test zakończony pomyślnie: {}", method.getName());
         }
-    }
-
-    @AfterMethod(alwaysRun = true)
-    void shutDown() {
         logger.info("Testy zostały ukończone.");
         DriverFactoryV1.quit();
     }
+
 
     @AfterSuite
     public void cleanUpUserDataDirs() {

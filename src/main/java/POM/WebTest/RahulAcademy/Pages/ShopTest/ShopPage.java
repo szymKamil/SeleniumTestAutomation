@@ -18,20 +18,16 @@ import java.util.Map;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class ShopPage  {
+public class ShopPage extends ShopLoginPageForm {
 
     Logger log;
-    WebDriver driver;
-    WebDriverWait wait;
     WebElementActions actions;
     ShopLoginPageForm loginForm;
 
-    public ShopPage() {
-        this.driver = DriverFactoryV1.getDriver();
-        this.wait = DriverFactoryV1.getWait();
-        this.log = LoggerFactory.getLogger("Logger");
-        actions = new WebElementActions();
-        loginForm = new ShopLoginPageForm();
+    public ShopPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
+        actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        loginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
 
@@ -73,7 +69,6 @@ public class ShopPage  {
             actions.findAll(productCardAddBtn)
                     .get(productToPick).click();
             log.info("Wybieram produkt numer {}", i);
-
             switch (productToPick){
                 case 0 -> pickedProducts.merge("iphone X", 1, Integer::sum);
                 case 1 -> pickedProducts.merge("Samsung Note 8", 1, Integer::sum);
@@ -87,7 +82,7 @@ public class ShopPage  {
 
     public CheckoutPage goToCheckout(){
         actions.find(checkoutBtn).click();
-        return new CheckoutPage();
+        return new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
 }

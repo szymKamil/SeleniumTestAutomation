@@ -15,32 +15,25 @@ import java.util.List;
 
 public class WebElementActions {
 
-    public WebDriver driver;
-     WebDriverWait wait;
+    WebDriver driver;
+    WebDriverWait wait;
     Select select;
     WebElement element;
     List<WebElementActions> elements;
-    Logger logger = LoggerFactory.getLogger("Logger");
 
-    public void initiate(){
-        driver = DriverFactoryV1.getDriver();
-        wait = DriverFactoryV1.getWait();
-        logger = LoggerFactory.getLogger("Logger");
-    }
 
-    public WebElementActions() {
-        initiate();
+    public WebElementActions(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
     }
 
     public WebElementActions(WebElement element) {
         this.element = element;
-        initiate();
     }
 
 
     public WebElementActions(List<WebElementActions> elements, WebElementActions instance) {
         this.elements = elements;
-        initiate();
     }
 
 

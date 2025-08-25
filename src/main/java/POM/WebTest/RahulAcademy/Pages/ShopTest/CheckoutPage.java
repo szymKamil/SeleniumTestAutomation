@@ -14,21 +14,16 @@ import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-public class CheckoutPage {
+public class CheckoutPage extends ShopPage {
 
     Logger log = LoggerFactory.getLogger("Logger");
-    WebDriver driver;
-    WebDriverWait wait;
     WebElementActions actions;
     ShopPage shopPage;
 
-    public CheckoutPage( ) {
-        this.driver = DriverFactoryV1.getDriver();
-        this.wait = DriverFactoryV1.getWait();
-//        this.log = DriverFactoryV1.getLogger();
-        actions = new WebElementActions();
-        actions.initiate();
-        shopPage = new ShopPage();
+    public CheckoutPage(WebDriver driver, WebDriverWait wait) {
+        super(driver, wait);
+        actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
     //Elementy
@@ -44,7 +39,6 @@ public class CheckoutPage {
     By successInfoCloseBtn = By.cssSelector("div.alert a.close");
 
 
-
     //Metody
     public CheckoutPage verifyNumberOfProducts(CartPickResult cartPickResult) {
         cartPickResult.getNumOfProductPicked()
@@ -58,7 +52,6 @@ public class CheckoutPage {
                 .forEach(i -> {
                     String productName = products.get(i).getText();
                     String expectedQuantity = productsQuantity.get(i).getAttribute("value");
-                    // Pobieramy faktyczną ilość z mapy jako String
                     String actualQuantityInt = String.valueOf(cartPickResult.getNumOfProductPicked().get(productName));
                     log.info("Produkt {} znalazł się w koszyku w ilości {}", productName, actualQuantityInt);
                     assertThat(actualQuantityInt).isEqualTo(expectedQuantity);

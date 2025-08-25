@@ -32,16 +32,10 @@ public class LoginFormPage  {
     public LoginFormPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
+        actions = new WebElementActions(driver, wait);
         PageFactory.initElements(driver, this);
     }
 
-//    public void initiate(){
-//        driver = DriverFactoryV1.getDriver();
-//        wait = DriverFactoryV1.getWait();
-//        actions = new WebElementActions();
-//        actions.initiate();
-//        PageFactory.initElements(DriverFactoryV1.getDriver(), this);
-//    }
 
     //Dane
     private static final String login = "zZf2rJMkK2K7X70NR/nbIA==";
@@ -144,7 +138,7 @@ public class LoginFormPage  {
     }
 
     public LoginFormPage verifyTermsAreSelected(){
-        if (!actions.find(checkboxAgreeTerms).isSelected()) {
+        if (Boolean.FALSE.equals(actions.find(checkboxAgreeTerms).isSelected())) {
             actions.find(checkboxAgreeTerms).isSelected();
         }
         return this;

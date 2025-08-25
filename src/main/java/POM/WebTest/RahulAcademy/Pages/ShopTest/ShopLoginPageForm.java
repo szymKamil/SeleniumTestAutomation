@@ -20,11 +20,10 @@ public class ShopLoginPageForm  {
     WebElementActions actions;
 
 
-    public ShopLoginPageForm() {
-        this.driver = DriverFactoryV1.getDriver();
-        this.wait = DriverFactoryV1.getWait();
-        this.log = LoggerFactory.getLogger("Logger");
-        actions = new WebElementActions();
+    public ShopLoginPageForm(WebDriver driver, WebDriverWait wait) {
+        this.driver = driver;
+        this.wait = wait;
+        actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
     //Elementy
@@ -92,7 +91,7 @@ public class ShopLoginPageForm  {
 
     public ShopPage clickSignIn(){
         actions.find(signInBtn).click();
-        return new ShopPage();
+        return new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
 
