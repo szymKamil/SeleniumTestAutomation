@@ -46,12 +46,15 @@ public class ShopPageTests extends BaseTest {
     @Test
     public void verifySlider(){
         pageShopLoginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        pageShopLoginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
         shopPage.logInToAppAs("Admin", "Student").verifySlider();
     }
 
     @Test
     public void shoppingCartTest(){
         checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
         CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
         shopPage.goToCheckout();
         checkoutPage.verifyNumberOfProducts(result);
@@ -60,6 +63,7 @@ public class ShopPageTests extends BaseTest {
     @Test
     public void shoppingCartRemoveFromCartTest(){
         checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
         CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
         shopPage.goToCheckout();
         checkoutPage.verifyNumberOfProducts(result).removeProductsFromCart();
@@ -68,7 +72,9 @@ public class ShopPageTests extends BaseTest {
 
     @Test
     public void shoppingCartFinaliseOrderTest(){
-        CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
+        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        //TODO: poprawić usatwienia przeglądarki by ignorowac komunikat o wykradzionym haśle
+        CartPickResult result = shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
         shopPage.goToCheckout();
         checkoutPage.verifyNumberOfProducts(result).goToCheckout().finaliseOrder("Lublin");
     }

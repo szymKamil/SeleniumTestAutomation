@@ -24,6 +24,7 @@ public class ShopLoginPageForm  {
         this.driver = driver;
         this.wait = wait;
         actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        log = LoggerFactory.getLogger("Logger");
     }
 
     //Elementy

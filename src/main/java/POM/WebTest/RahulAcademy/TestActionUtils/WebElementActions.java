@@ -15,7 +15,7 @@ import java.util.List;
 
 public class WebElementActions {
 
-    WebDriver driver;
+    public WebDriver driver;
     WebDriverWait wait;
     Select select;
     WebElement element;
@@ -27,25 +27,30 @@ public class WebElementActions {
         this.wait = wait;
     }
 
-    public WebElementActions(WebElement element) {
+
+    public WebElementActions(WebElement element, WebElementActions instance) {
         this.element = element;
+        this.driver = instance.driver;
+        this.wait = instance.wait;
     }
 
 
     public WebElementActions(List<WebElementActions> elements, WebElementActions instance) {
         this.elements = elements;
+        this.driver = instance.driver;
+        this.wait = instance.wait;
     }
 
 
     public WebElementActions find(By locator){
         WebElement el = wait.until(ExpectedConditions.visibilityOfElementLocated(locator));
-        return new WebElementActions(el);
+        return new WebElementActions(el, this);
     }
 
     public List<WebElementActions> findAll(By locator){
         List<WebElement> webElements = wait.until(ExpectedConditions.visibilityOfAllElementsLocatedBy(locator));
         return webElements.stream()
-                .map(el -> new WebElementActions(el))
+                .map(el -> new WebElementActions(el, this))
                 .toList();
     }
 
@@ -54,7 +59,7 @@ public class WebElementActions {
     }
 
 
-     public WebElement enterText(String text){
+    public WebElement enterText(String text){
         element.clear();
         element.sendKeys(text);
         return element;
