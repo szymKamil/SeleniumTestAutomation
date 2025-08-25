@@ -19,7 +19,7 @@ import org.testng.annotations.Test;
 import java.time.Duration;
 
 
-@Listeners(TestNGListener.class)
+//@Listeners(TestNGListener.class)
 public class ShopPageTests extends BaseTest {
 
 

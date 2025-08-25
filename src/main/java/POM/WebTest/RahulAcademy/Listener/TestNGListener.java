@@ -20,8 +20,10 @@ public class TestNGListener implements ITestListener {
         logger.info("Test wykonał się z sukcesem ✅");
     }
 
+
     @Override
     public void onTestFailure(ITestResult result) {
         Screenshot.takeScreenshot(DriverFactoryV1.getDriver());
+        logger.info("Test nieukończony z powodu błędu. Błąd spowodowany: " + result.getThrowable());
     }
 }

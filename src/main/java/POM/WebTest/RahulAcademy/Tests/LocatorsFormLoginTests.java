@@ -10,7 +10,7 @@ public class LocatorsFormLoginTests extends BaseTest {
 
     LoginFormPage loginPageTest;
 
-    @Test
+    @Test(invocationCount = 5, singleThreaded = true, successPercentage = 70)
     public void testSuccessfullyLogin() throws Exception {
         loginPageTest = new LoginFormPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
         loginPageTest.elementShouldBeVisible(loginPageTest.formBdy)
