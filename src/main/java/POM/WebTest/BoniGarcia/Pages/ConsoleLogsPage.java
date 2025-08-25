@@ -24,8 +24,8 @@ public class ConsoleLogsPage extends AbstractPage {
 
     public ConsoleLogsPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
-        devTools = ((HasDevTools) this.driver).getDevTools();
+        PageFactory.initElements(driver, this);
+        devTools = ((HasDevTools) driver).getDevTools();
     }
 
     //Metody testowe

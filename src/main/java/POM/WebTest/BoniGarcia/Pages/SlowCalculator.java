@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 public class SlowCalculator extends AbstractPage{
 
@@ -16,46 +15,46 @@ public class SlowCalculator extends AbstractPage{
 
     public SlowCalculator(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
+        PageFactory.initElements(driver, this);
     }
 
     //Elementy na stronie
     @FindBy(id = "delay")
-    public WebElement DELAY_INPUT;
+    WebElement delayInput;
 
     @FindBy(id = "calculator")
-    public WebElement CALCULATOR_ELEMENT;
+    WebElement calculatorElement;
 
     @FindBy(css = "div.screen")
-    public WebElement CALCULATOR_SCREEN;
+    WebElement calculatorScreen;
 
     @FindBy(id = "spinner")
-    public WebElement SPINNER_ICON;
+    WebElement spinnerIcon;
 
 
     //Metody testowe
     public void setCalcDelay(int calcDelay){
-        wait.until(ExpectedConditions.visibilityOf(DELAY_INPUT)).clear();
-        DELAY_INPUT.sendKeys(Keys.BACK_SPACE, Integer.toString(calcDelay));
-        String delayModified = DELAY_INPUT.getAttribute("value");
+        wait.until(ExpectedConditions.visibilityOf(delayInput)).clear();
+        delayInput.sendKeys(Keys.BACK_SPACE, Integer.toString(calcDelay));
+        String delayModified = delayInput.getAttribute("value");
         log.info("Kalkulator ma delay ustawiony na {}", delayModified);
     }
 
     public void useCalculator(String inputs){
-        wait.until(ExpectedConditions.visibilityOf(CALCULATOR_ELEMENT));
+        wait.until(ExpectedConditions.visibilityOf(calculatorElement));
             for (char c : inputs.toCharArray()) {
                 useCalcBtn(String.valueOf(c));
             }
     }
 
     public void useCalcBtn(String x) {
-        CALCULATOR_ELEMENT.findElement(By.xpath(String.format("//*[text()='%s']", x)))
+        calculatorElement.findElement(By.xpath(String.format("//*[text()='%s']", x)))
                 .click();
     }
 
     public String getResultOfCalc(){
-        wait.until(ExpectedConditions.invisibilityOf(SPINNER_ICON));
-        String result = wait.until(ExpectedConditions.visibilityOf(CALCULATOR_SCREEN)).getText();
+        wait.until(ExpectedConditions.invisibilityOf(spinnerIcon));
+        String result = wait.until(ExpectedConditions.visibilityOf(calculatorScreen)).getText();
         log.info("Wynik działania na kalkulatorze to: {}", result);
         return result;
 

@@ -1,7 +1,5 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-import POM.WebTest.BoniGarcia.Utils.TimeStampGenerator;
-import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.*;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
@@ -10,11 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Path;
 
 public class UserMediaPage extends AbstractPage{
 
@@ -25,25 +18,25 @@ public class UserMediaPage extends AbstractPage{
     public UserMediaPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
         PageFactory.initElements(driver, this);
-        actions = new Actions(this.driver);
-        devTools = ((HasDevTools) this.driver).getDevTools();
-        js = (JavascriptExecutor) this.driver;
+        actions = new Actions(driver);
+        devTools = ((HasDevTools) driver).getDevTools();
+        js = (JavascriptExecutor) driver;
     }
 
     //Elementy na stronie
     @FindBy(id = "start")
-    WebElement START_BTN;
+    WebElement startBtn;
 
     @FindBy(id = "video-device")
-    WebElement VIDEO_DEVICE_INFO;
+    WebElement videoDeviceInfo;
 
     //Metody testowe
     public void runUserMedia(){
-        wait.until(ExpectedConditions.elementToBeClickable(START_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(startBtn)).click();
     }
 
-    public String getVIDEO_DEVICE_INFO(){
-        return wait.until(ExpectedConditions.visibilityOf(VIDEO_DEVICE_INFO)).getText();
+    public String getVideoDeviceInfo(){
+        return wait.until(ExpectedConditions.visibilityOf(videoDeviceInfo)).getText();
     }
 
 }

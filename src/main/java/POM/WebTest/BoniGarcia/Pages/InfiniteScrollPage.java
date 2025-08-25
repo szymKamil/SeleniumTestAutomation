@@ -16,8 +16,8 @@ public class InfiniteScrollPage extends AbstractPage {
 
     public InfiniteScrollPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        actions = new Actions(this.driver);
-        js = (JavascriptExecutor) this.driver;
+        actions = new Actions(driver);
+        js = (JavascriptExecutor) driver;
     }
 
     public Long getPageHeight(){

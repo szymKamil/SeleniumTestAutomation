@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 public class CanvasPage extends AbstractPage{
 
@@ -16,19 +15,19 @@ public class CanvasPage extends AbstractPage{
 
     public CanvasPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
-        actions = new Actions(this.driver);
+        PageFactory.initElements(driver, this);
+        actions = new Actions(driver);
     }
 
     //Elementy strony
     @FindBy(id = "my-canvas")
-    public WebElement CANVAS_ELEMENT;
+    public WebElement canvasElement;
 
 
     //Metody testowe
     public void paintInCanvas(PointForCanvas... points){
-        wait.until(ExpectedConditions.visibilityOf(CANVAS_ELEMENT));
-        actions.moveToElement(CANVAS_ELEMENT).clickAndHold().perform();
+        wait.until(ExpectedConditions.visibilityOf(canvasElement));
+        actions.moveToElement(canvasElement).clickAndHold().perform();
         for(PointForCanvas point : points) {
             actions.moveByOffset(point.x(), point.y()).perform();
         }

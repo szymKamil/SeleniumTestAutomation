@@ -6,7 +6,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -21,40 +20,40 @@ public class RandomCalculatorPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "percent")
-    WebElement PERCENT_INPUT;
+    WebElement percentInput;
 
     @FindBy(id = "correct")
-    WebElement CORRECT_INPUT;
+    WebElement correctInput;
 
     @FindBy(xpath = "//span[contains(@class, 'btn')]")
-    List<WebElement> ABSTRACT_CALC_BTNS;
+    List<WebElement> abstractCalcBtns;
 
     @FindBy(css = "div.screen")
-    WebElement CALC_SCREEN_ELEMENT;
+    WebElement calcScreenElement;
 
 
     //Metody testowe
     public void setPercentOfCorrectResults(String setPercent){
-        wait.until(ExpectedConditions.elementToBeClickable(PERCENT_INPUT)).clear();
-        PERCENT_INPUT.sendKeys(setPercent);
+        wait.until(ExpectedConditions.elementToBeClickable(percentInput)).clear();
+        percentInput.sendKeys(setPercent);
     }
     public void setCorrectTimesToRun(String setCorrect){
-        wait.until(ExpectedConditions.elementToBeClickable(CORRECT_INPUT)).clear();
-        CORRECT_INPUT.sendKeys(setCorrect);
+        wait.until(ExpectedConditions.elementToBeClickable(correctInput)).clear();
+        correctInput.sendKeys(setCorrect);
     }
 
     public String calculate(String calculation){
         char[] charArray = calculation.toCharArray();
-        ABSTRACT_CALC_BTNS.stream().filter(e -> e.getText().contains("C")).findAny().ifPresent(WebElement::click);
+        abstractCalcBtns.stream().filter(e -> e.getText().contains("C")).findAny().ifPresent(WebElement::click);
         for (char ch : charArray){
             WebElement btn =
-                ABSTRACT_CALC_BTNS.stream()
+                abstractCalcBtns.stream()
                         .filter(e -> e.getText()
                                 .contains(Character.toString(ch)))
                         .findFirst()
                         .get();
                 btn.click();
         }
-        return CALC_SCREEN_ELEMENT.getText();
+        return calcScreenElement.getText();
     }
 }

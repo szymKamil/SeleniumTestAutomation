@@ -9,7 +9,6 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -23,18 +22,18 @@ public class NotificationPage extends AbstractPage{
     public NotificationPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
         PageFactory.initElements(driver, this);
-        actions = new Actions(this.driver);
-        devTools = ((HasDevTools) this.driver).getDevTools();
-        js = (JavascriptExecutor) this.driver;
+        actions = new Actions(driver);
+        devTools = ((HasDevTools) driver).getDevTools();
+        js = (JavascriptExecutor) driver;
     }
 
     //Elementy na stronie
     @FindBy(id = "notify-me")
-    WebElement NOTIFY_ME_BTN;
+    WebElement notifyMeBtn;
 
     //Metody testowe
     public void sendMeNotification(){
-        NOTIFY_ME_BTN.click();
+        notifyMeBtn.click();
     }
 
 

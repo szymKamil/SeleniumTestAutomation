@@ -7,7 +7,6 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -36,33 +35,33 @@ public class LoginFormPage extends AbstractPage{
 
     //Elementy na stronie
     @FindBy(id = "username")
-    WebElement INPUT_USERNAME;
+    WebElement inputUsername;
 
     @FindBy(id = "password")
-    WebElement INPUT_PASSWORD;
+    WebElement inputPassword;
 
     @FindBy(css = "button.btn")
-    WebElement SUBMIT_BTN;
+    WebElement submitBtn;
 
     @FindBy(id = "success")
-    WebElement LOGIN_SUCESS_DIV;
+    WebElement loginSucessDiv;
 
     @FindBy(id = "spinner")
-    WebElement SPINNER_ICON;
+    WebElement spinnerIcon;
 
 
     //Metody testowe
     public void logIn(){
-        wait.until(ExpectedConditions.elementToBeClickable(INPUT_USERNAME)).sendKeys(LOGIN);
-        wait.until(ExpectedConditions.elementToBeClickable(INPUT_PASSWORD)).sendKeys(PASSWORD);
-        assertThat(INPUT_USERNAME.getDomProperty("value")).isEqualTo(LOGIN);
-        assertThat(INPUT_PASSWORD.getDomProperty("value")).isEqualTo(PASSWORD);
+        wait.until(ExpectedConditions.elementToBeClickable(inputUsername)).sendKeys(LOGIN);
+        wait.until(ExpectedConditions.elementToBeClickable(inputPassword)).sendKeys(PASSWORD);
+        assertThat(inputUsername.getDomProperty("value")).isEqualTo(LOGIN);
+        assertThat(inputPassword.getDomProperty("value")).isEqualTo(PASSWORD);
     }
 
     public void clickSubmitBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(SUBMIT_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(submitBtn)).click();
         fluentWait.until(ExpectedConditions.or(
-                ExpectedConditions.invisibilityOf(SPINNER_ICON),
+                ExpectedConditions.invisibilityOf(spinnerIcon),
                 ExpectedConditions.numberOfElementsToBe(By.id("spinner"), 0)
         ));
 
@@ -70,7 +69,7 @@ public class LoginFormPage extends AbstractPage{
     public void verifySuccessLogin(){
         wait.until(PageLoadedVerification.pageIsLoaded());
         assertThat(driver.getCurrentUrl()).contains(LOGGED_SUCESS_URL);
-        assertThat(LOGIN_SUCESS_DIV.getText()).isEqualTo("Login successful");
+        assertThat(loginSucessDiv.getText()).isEqualTo("Login successful");
     }
 
 }

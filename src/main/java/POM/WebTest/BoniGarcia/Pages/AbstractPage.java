@@ -19,13 +19,12 @@ public class AbstractPage {
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
-    protected final Logger log = LoggerFactory.getLogger("Logger");;
+    protected final Logger log = LoggerFactory.getLogger("Logger");
 
 
     public AbstractPage(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-//        this.log = log;
     }
 
     //Elementy

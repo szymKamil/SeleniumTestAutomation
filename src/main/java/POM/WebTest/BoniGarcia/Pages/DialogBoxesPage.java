@@ -5,46 +5,45 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 public class DialogBoxesPage extends AbstractPage {
 
 
     public DialogBoxesPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
+        PageFactory.initElements(driver, this);
     }
 
     //Elementy na stronie
     @FindBy(id = "my-alert")
-    WebElement LAUNCH_ALERT_BTN;
+    WebElement launchAlertBtn;
 
     @FindBy(id = "my-confirm")
-    WebElement LAUNCH_CONFIRM_BTN;
+    WebElement launchConfirmBtn;
 
     @FindBy(id = "my-prompt")
-    WebElement PROMPT_ALERT_BTN;
+    WebElement promptAlertBtn;
 
     @FindBy(id = "my-modal")
-    WebElement MODAL_ALERT_BTN;
+    WebElement modalAlertBtn;
 
     @FindBy(id = "confirm-text")
-    WebElement CONFIRM_TEXT_PARAGRAPH;
+    WebElement confirmTextParagraph;
 
     @FindBy(id = "prompt-text")
-    WebElement PROMPT_TEXT_PARAGRAPH;
+    WebElement promptTextParagraph;
 
     @FindBy(id = "modal-text")
-    WebElement MODAL_TEXT_PARAGRAPH;
+    WebElement modalTextParagraph;
 
     @FindBy(id = "example-modal")
-    WebElement MODAL_ALERT_BODY;
+    WebElement modalAlertBody;
 
     @FindBy(css = "button.btn-primary")
-    WebElement MODAL_ALERT_SAVE_BTN;
+    WebElement modalAlertSaveBtn;
 
     @FindBy(css = "button.btn-secondary")
-    WebElement MODAL_ALERT_CANCEL_BTN;
+    WebElement modalAlertCancelBtn;
 
     //Metody testowe
     public void launchAlertAndChoseBtn(WebElement btn){
@@ -52,16 +51,16 @@ public class DialogBoxesPage extends AbstractPage {
     }
 
     public void launchAlert(){
-        launchAlertAndChoseBtn(LAUNCH_ALERT_BTN);
+        launchAlertAndChoseBtn(launchAlertBtn);
     }
     public void launchConfirm(){
-        launchAlertAndChoseBtn(LAUNCH_CONFIRM_BTN);
+        launchAlertAndChoseBtn(launchConfirmBtn);
     }
     public void launchPrompt(){
-        launchAlertAndChoseBtn(PROMPT_ALERT_BTN);
+        launchAlertAndChoseBtn(promptAlertBtn);
     }
     public void launchModal(){
-        launchAlertAndChoseBtn(MODAL_ALERT_BTN);
+        launchAlertAndChoseBtn(modalAlertBtn);
     }
 
     public String getTextFromAlert(){
@@ -104,7 +103,7 @@ public class DialogBoxesPage extends AbstractPage {
     }
 
     public String getTextFromPrompt(){
-        return wait.until(ExpectedConditions.visibilityOf(PROMPT_TEXT_PARAGRAPH)).getText();
+        return wait.until(ExpectedConditions.visibilityOf(promptTextParagraph)).getText();
     }
 
     public void setTextToPromptAlert(String promptAlertInput){
@@ -122,17 +121,17 @@ public class DialogBoxesPage extends AbstractPage {
 
     public String handleModalWindow(String saveOrClose){
         String modalBodyText;
-        if(MODAL_ALERT_BODY.isDisplayed()){
-            modalBodyText = MODAL_ALERT_BODY.findElement(By.cssSelector("div.modal-body")).getText();
+        if(modalAlertBody.isDisplayed()){
+            modalBodyText = modalAlertBody.findElement(By.cssSelector("div.modal-body")).getText();
         } else {
             launchModal();
-            wait.until(ExpectedConditions.visibilityOf(MODAL_ALERT_BODY));
+            wait.until(ExpectedConditions.visibilityOf(modalAlertBody));
             modalBodyText = wait.until(ExpectedConditions.presenceOfElementLocated(By.cssSelector("div.modal-body"))).getText();
         }
         if (saveOrClose.equalsIgnoreCase("save")){
-            MODAL_ALERT_SAVE_BTN.click();
+            modalAlertSaveBtn.click();
         } else if (saveOrClose.equalsIgnoreCase("close")){
-            MODAL_ALERT_CANCEL_BTN.click();
+            modalAlertCancelBtn.click();
         } else {
             throw  new RuntimeException("Błędna komenda do wykonania w oknie modalnym");
         }
@@ -140,11 +139,11 @@ public class DialogBoxesPage extends AbstractPage {
     }
 
     public String getTextFromModal(){
-        return wait.until(ExpectedConditions.visibilityOf(MODAL_TEXT_PARAGRAPH)).getText();
+        return wait.until(ExpectedConditions.visibilityOf(modalTextParagraph)).getText();
     }
 
     public String getTextFromConfirmParagraph(){
-        return wait.until(ExpectedConditions.visibilityOf(CONFIRM_TEXT_PARAGRAPH)).getText();
+        return wait.until(ExpectedConditions.visibilityOf(confirmTextParagraph)).getText();
     }
 
 }

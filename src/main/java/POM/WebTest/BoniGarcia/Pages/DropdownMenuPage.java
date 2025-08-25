@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 public class DropdownMenuPage extends AbstractPage {
 
@@ -23,40 +22,40 @@ public class DropdownMenuPage extends AbstractPage {
 
     //Elementy na stronie
     @FindBy(id = "my-dropdown-1")
-    public WebElement DROPDOWN_BTN_LEFT_CLICK;
+    public WebElement dropdownBtnLeftClick;
 
     @FindBy(id = "my-dropdown-2")
-    public WebElement DROPDOWN_BTN_CONTEXT_CLICK;
+    public WebElement dropdownBtnContextClick;
 
     @FindBy(id = "my-dropdown-3")
-    public WebElement DROPDOWN_BTN_DOUBLE_CLICK;
+    public WebElement dropdownBtnDoubleClick;
 
     @FindBy(css = "ul.dropdown-menu:not([style*='none'])")
-    public WebElement DROPDOWN_MENU_VISIBLE;
+    public WebElement dropdownMenuVisible;
 
 
     //Metody testowe
     public void openDropOneAndPick(int index){
-        wait.until(ExpectedConditions.elementToBeClickable(DROPDOWN_BTN_LEFT_CLICK)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownBtnLeftClick)).click();
         pickDropdownElement(index);
     }
 
     public void openDropTwoAndPick(int index){
-        wait.until(ExpectedConditions.elementToBeClickable(DROPDOWN_BTN_CONTEXT_CLICK));
-        actions.contextClick(DROPDOWN_BTN_CONTEXT_CLICK).perform();
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownBtnContextClick));
+        actions.contextClick(dropdownBtnContextClick).perform();
         pickDropdownElement(index);
     }
 
     public void openDropThreeAndPick(int index){
-        wait.until(ExpectedConditions.elementToBeClickable(DROPDOWN_BTN_LEFT_CLICK));
-        actions.doubleClick(DROPDOWN_BTN_DOUBLE_CLICK).perform();
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownBtnLeftClick));
+        actions.doubleClick(dropdownBtnDoubleClick).perform();
         pickDropdownElement(index);
     }
 
     public void pickDropdownElement(int index){
-        wait.until(ExpectedConditions.elementToBeClickable(DROPDOWN_MENU_VISIBLE));
-        DROPDOWN_MENU_VISIBLE.findElement(By.xpath(".//li[ " + index + " ]/a[@class='dropdown-item']")).click();
-        wait.until(ExpectedConditions.invisibilityOf(DROPDOWN_MENU_VISIBLE));
+        wait.until(ExpectedConditions.elementToBeClickable(dropdownMenuVisible));
+        dropdownMenuVisible.findElement(By.xpath(".//li[ " + index + " ]/a[@class='dropdown-item']")).click();
+        wait.until(ExpectedConditions.invisibilityOf(dropdownMenuVisible));
     }
 
 }

@@ -16,7 +16,7 @@ public class NavigationPage extends AbstractPage{
 
     public NavigationPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
+        PageFactory.initElements(driver, this);
     }
 
     //Elementy na stronie

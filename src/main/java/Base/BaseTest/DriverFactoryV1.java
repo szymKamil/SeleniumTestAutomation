@@ -4,7 +4,6 @@ import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
@@ -15,9 +14,7 @@ import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.net.URL;
@@ -29,7 +26,6 @@ import java.util.Map;
 public final class DriverFactoryV1 {
     private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
     private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
-//    private static final ThreadLocal<Logger> THREAD_LOCAL = new ThreadLocal<>();
     private static final Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
 
     private DriverFactoryV1() {
@@ -38,11 +34,6 @@ public final class DriverFactoryV1 {
     public static void initDriver(String browser, int time) throws InterruptedException {
         initDriver(browser, time, null);
 
-//        synchronized (DriverFactoryV1.class) {
-//            logger.info("Czekam na inicjalizację drivera dla wątku: {}", Thread.currentThread()
-//                    .getId());
-//            Thread.sleep(1000); // Opóźnienie 1 sekunda między instancjami
-//        }
     }
 
     public static void initDriver(String browser, int time, URL url) throws InterruptedException {
@@ -63,7 +54,6 @@ public final class DriverFactoryV1 {
         }
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
-//        THREAD_LOCAL.set(LoggerFactory.getLogger(DriverFactoryV1.class));
         logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
         } catch (Exception e) {
             logger.error("Błąd podczas inicjalizacji drivera: ", e);
@@ -90,7 +80,7 @@ public final class DriverFactoryV1 {
                 if (optionSplit.length == 2){
                     String key = optionSplit[0].trim();
                     String value = optionSplit[1].trim();
-                    if (!flag == true && !key.contains("local")){
+                    if (!flag && !key.contains("local")){
                         addOptionsToDriver(options, key, value);
                     }
                 }
@@ -155,19 +145,12 @@ public final class DriverFactoryV1 {
                    }
                }
             }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
          System.out.println("Dodane zostaną następujące ustawienia eksperymentalne: " + prefs);
         return prefs;
     }
-
-
-//    public static Logger getLogger() {
-//        return THREAD_LOCAL.get();
-//    }
 
     public static WebDriver getDriver() {
         WebDriver driver = DRIVER_THREAD.get();

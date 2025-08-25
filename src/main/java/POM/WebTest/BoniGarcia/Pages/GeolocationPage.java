@@ -23,9 +23,9 @@ public class GeolocationPage extends AbstractPage {
 
     public GeolocationPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
-        actions = new Actions(this.driver);
-        devTools = ((HasDevTools) this.driver).getDevTools();
+        PageFactory.initElements(driver, this);
+        actions = new Actions(driver);
+        devTools = ((HasDevTools) driver).getDevTools();
     }
 
     //Elementy strony

@@ -1,6 +1,5 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -8,7 +7,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 public class IFramePage extends AbstractPage{
 
@@ -17,21 +15,21 @@ public class IFramePage extends AbstractPage{
 
     public IFramePage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
-        js = (JavascriptExecutor) this.driver;
+        PageFactory.initElements(driver, this);
+        js = (JavascriptExecutor) driver;
     }
 
     //Elementy na stronie
     @FindBy(id = "my-iframe")
-    WebElement iFRAME;
+    WebElement iFrame;
 
     @FindBy(xpath = "//p[last()]")
-    WebElement LAST_PARAGRAPH;
+    WebElement lastParagraph;
 
 
     //Metody testowe
     public void switchToiFrame(){
-        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iFRAME));
+        wait.until(ExpectedConditions.frameToBeAvailableAndSwitchToIt(iFrame));
     }
 
     public void scrollPage(){
@@ -43,7 +41,7 @@ public class IFramePage extends AbstractPage{
     }
 
     public String getTextFromLastParagraph(){
-       return wait.until(ExpectedConditions.visibilityOf(LAST_PARAGRAPH)).getText();
+       return wait.until(ExpectedConditions.visibilityOf(lastParagraph)).getText();
     }
 
 

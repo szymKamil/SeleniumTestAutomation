@@ -8,7 +8,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import java.util.List;
 
@@ -32,7 +31,7 @@ public class MouseOverPage extends AbstractPage {
 
     private static final String IMG_CAPTION_XPATH = "//*[text()='%s']";
     private static final String CAPTION_TEXT_XPATH = "(//div[@class='caption']/p)[%d]";
-    String[] IMG_CAPTIONS = {"Compass", "Calendar", "Award", "Landscape"};
+    String[] imgCaptions = {"Compass", "Calendar", "Award", "Landscape"};
 
 
     //Metody testowe
@@ -54,11 +53,11 @@ public class MouseOverPage extends AbstractPage {
     }
 
     public void verifyImgCaptions() {
-        for (int i = 0; i < IMG_CAPTIONS.length; i++) {
+        for (int i = 0; i < imgCaptions.length; i++) {
             hoverOverImg(i);
             String imgCaption = getCaptionElementByIndex(i)
                     .getText();
-            assertThat(imgCaption).isEqualTo(IMG_CAPTIONS[i]);
+            assertThat(imgCaption).isEqualTo(imgCaptions[i]);
             log.info("Element numer {} ma podpis: {}", (i + 1), imgCaption);
 
         }

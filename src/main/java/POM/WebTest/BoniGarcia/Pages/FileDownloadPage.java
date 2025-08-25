@@ -7,7 +7,7 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Arrays;
@@ -26,16 +26,16 @@ public class FileDownloadPage extends AbstractPage {
 
     //Elementy na stronie
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.png']")
-    WebElement DOWNLOAD_WEBDRIVER_LOGO_BTN;
+    WebElement downloadWebdriverLogoBtn;
 
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.pdf']")
-    WebElement DOWNLOAD_WEBDRIVER_LOGO_PDF_BTN;
+    WebElement downloadWebdriverLogoPdfBtn;
 
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='selenium-jupiter.png']")
-    WebElement DOWNLOAD_SELENIUM_LOGO_BTN;
+    WebElement downloadSeleniumLogoBtn;
 
     @FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='selenium-jupiter.pdf']")
-    WebElement DOWNLOAD_WSELENIUM_LOGO_PDF_BTN;
+    WebElement downloadWseleniumLogoPdfBtn;
 
     //Metody testowe
     public void downloadFile(int choseFileToDownload) throws FileNotFoundException {
@@ -44,7 +44,7 @@ public class FileDownloadPage extends AbstractPage {
         File downloadFolder = new File("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\DownloadFolder");
 
         if (choseFileToDownload >= 0 && choseFileToDownload <= 4){
-            List<WebElement> btns = List.of(DOWNLOAD_WEBDRIVER_LOGO_BTN, DOWNLOAD_WEBDRIVER_LOGO_PDF_BTN, DOWNLOAD_SELENIUM_LOGO_BTN, DOWNLOAD_WSELENIUM_LOGO_PDF_BTN);
+            List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
             WebElement btn = btns.get(choseFileToDownload);
             wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
         } else {
@@ -57,9 +57,7 @@ public class FileDownloadPage extends AbstractPage {
         } catch (InterruptedException | FileNotFoundException e) {
             throw new FileNotFoundException(e.getMessage());
         }
-
         log.info("Znaleziono pobrany plik: {}", downloadedFile.getName());
-
     }
 
     public void downloadFile() throws FileNotFoundException {

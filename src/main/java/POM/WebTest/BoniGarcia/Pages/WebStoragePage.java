@@ -10,7 +10,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 import java.util.Objects;
 
@@ -22,31 +21,31 @@ public class WebStoragePage extends AbstractPage{
 
     public WebStoragePage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        devTools = ((HasDevTools) this.driver).getDevTools();
-        PageFactory.initElements(this.driver, this);
-        js = (JavascriptExecutor) this.driver;
+        devTools = ((HasDevTools) driver).getDevTools();
+        PageFactory.initElements(driver, this);
+        js = (JavascriptExecutor) driver;
     }
 
     //Elementy na stronie
     @FindBy(id = "display-local")
-    WebElement LOCAL_STORAGE_BTN;
+    WebElement localStorageBtn;
 
     @FindBy(id = "display-session")
-    WebElement LOCAL_SESSION_BTN;
+    WebElement localSessionBtn;
 
     @FindBy(id = "local-storage")
-    WebElement LOCAL_STORAGE_PARAGRAPH;
+    WebElement localStorageParagraph;
 
     @FindBy(id = "session-storage")
-    WebElement LOCAL_SESSION_PARAGRAPH;
+    WebElement localSessionParagraph;
 
     //Metody testowe
     public void clickLocalStorageBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(LOCAL_STORAGE_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(localStorageBtn)).click();
     }
 
     public void clickLocalSessionBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(LOCAL_SESSION_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(localSessionBtn)).click();
     }
 
     public void clearLocalStorage(){
@@ -68,11 +67,11 @@ public class WebStoragePage extends AbstractPage{
     }
 
     public String getTextFormStorageParagraph(){
-        return wait.until(ExpectedConditions.visibilityOf(LOCAL_STORAGE_PARAGRAPH)).getText();
+        return wait.until(ExpectedConditions.visibilityOf(localStorageParagraph)).getText();
     }
 
     public String getTextFormSessionParagraph(){
-        return wait.until(ExpectedConditions.visibilityOf(LOCAL_SESSION_PARAGRAPH)).getText();
+        return wait.until(ExpectedConditions.visibilityOf(localSessionParagraph)).getText();
     }
 
 }

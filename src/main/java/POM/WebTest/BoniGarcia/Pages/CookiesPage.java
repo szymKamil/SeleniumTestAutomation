@@ -9,7 +9,6 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
 public class CookiesPage extends AbstractPage{
 
@@ -17,16 +16,16 @@ public class CookiesPage extends AbstractPage{
 
     public CookiesPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        PageFactory.initElements(this.driver, this);
-        actions = new Actions(this.driver);
+        PageFactory.initElements(driver, this);
+        actions = new Actions(driver);
     }
 
     //Główne elementy strony
     @FindBy(id = "refresh-cookies")
-    WebElement REFRESH_COOKIES_BTN;
+    WebElement refreshCookiesBtn;
 
     @FindBy(id = "cookies-list")
-    WebElement COOKIES_PARAGRAPH;
+    WebElement cookiesParagraph;
 
     //Metody testowe
     public void deleteAllCookies(){
@@ -50,12 +49,12 @@ public class CookiesPage extends AbstractPage{
     }
 
     public void refreshCookiesBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(REFRESH_COOKIES_BTN)).click();
+        wait.until(ExpectedConditions.elementToBeClickable(refreshCookiesBtn)).click();
     }
 
     public String getCookiesText(){
-        wait.until(ExpectedConditions.visibilityOf(COOKIES_PARAGRAPH));
-        String cookiesParagraphText = COOKIES_PARAGRAPH.getText();
+        wait.until(ExpectedConditions.visibilityOf(cookiesParagraph));
+        String cookiesParagraphText = cookiesParagraph.getText();
         log.info("Ciasteczka są następujące: {}", cookiesParagraphText);
         return cookiesParagraphText;
     }
