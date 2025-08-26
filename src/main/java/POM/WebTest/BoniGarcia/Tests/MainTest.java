@@ -345,7 +345,7 @@ public class MainTest extends BaseTest {
 		assertThat(dialogBoxesPage.getTextFromModal()).isEqualTo("You chose: Save changes");
 	}
 
-	@Test()
+	@Test(groups = {"devTools"})
 	public void webStoragePageTests() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -371,7 +371,7 @@ public class MainTest extends BaseTest {
 		log.info("Session storage posiada wartości: {}", webStoragePage.getTextFormSessionParagraph());
 	}
 
-	@Test()
+	@Test(groups = {"devTools"})
 	public void geolocationTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -393,7 +393,7 @@ public class MainTest extends BaseTest {
 				.contains("4.323")).isTrue();
 	}
 
-	@Test()
+	@Test(groups = {"devTools"})
 	public void notificationPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -410,7 +410,7 @@ public class MainTest extends BaseTest {
 		notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
 	}
 
-	@Test()
+	@Test(groups = {"devTools"})
 	public void userMediaPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -446,7 +446,7 @@ public class MainTest extends BaseTest {
 		log.info("Paragrafy posiadają następujące wartości: {}", multilanguagePage.getParagraphsInfo());
 	}
 
-	@Test()
+	@Test(groups = {"devTools"})
 	public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki i uruchomienie nasłuchiwania logów, przejście do głównej strony,
