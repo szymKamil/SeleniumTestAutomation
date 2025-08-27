@@ -38,11 +38,12 @@ public class MainPageShop {
 	By productQuantity = By.cssSelector("input.quantity");
 	By addToCartBtn = By.cssSelector("button[type='button']");
 
+	By cart = By.cssSelector("div.cart-preview");
 	By cartItems = By.cssSelector("div.cart-preview div div ul.cart-items");
 	By cartProducts = By.cssSelector("li.cart-item");
 	By cartProductsNames = By.xpath("//div[@class='cart-preview active']/div/div/ul/li[@class='cart-item']/..//p[@class='product-name']");
 	By cartProductsQuantity = By.xpath("//div[@class='cart-preview active']/div/div/ul/li[@class='cart-item']/..//p[@class='quantity']");
-	By cartCheckoutBtn = By.xpath("div.cart div.action-block button[type='button']");
+	By cartCheckoutBtn = By.cssSelector("div.cart div.action-block button[type='button']");
 
 
 
@@ -133,6 +134,16 @@ public class MainPageShop {
 					}
 				});
 	}
+
+	public void goToCheckout(){
+		if (!driver.findElement(cart).isDisplayed()){
+			wait.until(ExpectedConditions.elementToBeClickable(cartIcon)).click();
+		}
+		wait.until(ExpectedConditions.elementToBeClickable(cartCheckoutBtn));
+
+	}
+
+
 
 
 

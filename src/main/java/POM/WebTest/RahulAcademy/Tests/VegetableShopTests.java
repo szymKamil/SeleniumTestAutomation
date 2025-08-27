@@ -29,14 +29,6 @@ public class VegetableShopTests extends BaseTest{
 		shopPage.pickAmountOfProducts("Carrot", 10);
 	}
 
-	@DataProvider
-	public Object[][] cartData(){
-		return new Object[][]{
-				{Map.of("Carrot", 4, "Apple", 6, "Grapes", 10)},
-				{Map.of("Orange", 4, "Almonds", 3, "Water Melon", 3)}
-		};
-	}
-
 
 	public void checkCartItems(){
 		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
@@ -47,6 +39,13 @@ public class VegetableShopTests extends BaseTest{
 		shopPage.getCartItems().forEach((k, v) -> logger.info("W koszyku znajduje się: {}, w ilości {}", k , v));
 	}
 
+	@DataProvider
+	public Object[][] cartData(){
+		return new Object[][]{
+				{Map.of("Carrot", 4, "Apple", 6, "Grapes", 10)},
+				{Map.of("Orange", 4, "Almonds", 3, "Water Melon", 3)}
+		};
+	}
 
 
 	@Test(dataProvider = "cartData")
@@ -57,5 +56,16 @@ public class VegetableShopTests extends BaseTest{
 		shopPage.verifyCart(cartItems, products);
 
 	}
+
+	@Test
+	public void checkoutVerification() {
+		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		shopPage.pickAmountOfProducts("Carrot", 10);
+		shopPage.pickAmountOfProducts("Tomato", 5);
+		shopPage.pickAmountOfProducts("Pumpkin", 1);
+		shopPage.goToCheckout();
+
+	}
+
 
 }
