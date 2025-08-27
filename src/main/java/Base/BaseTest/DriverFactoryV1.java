@@ -51,6 +51,7 @@ public final class DriverFactoryV1 {
                 case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser, false));
                 default -> logger.info("Błędnie wybrana przeglądarka!!!");
             }
+            driver.manage().window().maximize();
         }
         DRIVER_THREAD.set(driver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));

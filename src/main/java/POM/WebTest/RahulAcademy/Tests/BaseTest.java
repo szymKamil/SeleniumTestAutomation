@@ -1,33 +1,22 @@
 package POM.WebTest.RahulAcademy.Tests;
 
 
-import static Base.BaseTest.DriverFactoryV1.getDriver;
-
 import Base.BaseTest.DriverFactoryV1;
-import POM.WebTest.RahulAcademy.Pages.ShopTest.CheckoutPage;
-import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
-import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
-import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
-import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 
 import java.lang.reflect.Method;
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.time.Instant;
-import java.time.LocalDateTime;
-import java.time.ZoneId;
 
 public class BaseTest {
 
 
     protected final URI uri = null; /*= URI.create("http://192.168.1.108:4444")*/;
-    private final String formTestPage = "https://rahulshettyacademy.com/locatorspractice/";
-    private final String shopLoginPage = "https://rahulshettyacademy.com/loginpagePractise/";
+    private final String FORM_TEST_PAGE = "https://rahulshettyacademy.com/locatorspractice/";
+    private final String SHOP_LOGIN_PAGE = "https://rahulshettyacademy.com/loginpagePractise/";
+    private final String VEGETABLE_SHOP_PAGE = "https://rahulshettyacademy.com/seleniumPractise/#/";
     Logger logger = LoggerFactory.getLogger("Logger Rahul Tests");
 
 
@@ -39,9 +28,11 @@ public class BaseTest {
             logger.info("Rozpoczynam test: {}", method.getName());
             Class<?> testClass = method.getDeclaringClass();
             if (testClass.equals(LocatorsFormLoginTests.class)) {
-                DriverFactoryV1.getDriver().get(formTestPage);
+                DriverFactoryV1.getDriver().get(FORM_TEST_PAGE);
             } else if (testClass.equals(ShopPageTests.class)) {
-                DriverFactoryV1.getDriver().get(shopLoginPage);
+                DriverFactoryV1.getDriver().get(SHOP_LOGIN_PAGE);
+            } else if (testClass.equals(VegetableShopTests.class)) {
+                DriverFactoryV1.getDriver().get(VEGETABLE_SHOP_PAGE);
             } else {
                 logger.error("Błędnie podany adres URL, test nie został uruchomiony.");
                 throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
