@@ -7,14 +7,14 @@ import org.openqa.selenium.WebElement;
 
 public abstract class JavaScriptUtils extends Utils{
 
-    public static void scrollToElementJS(WebElement element){
-        String jsScroll = "arguments[0].scrollIntoView();";
+    public static void scrollToElementJS(WebDriver driver, WebElement element){
+        String jsScroll = "arguments[0].scrollIntoView(false);";
         ((JavascriptExecutor) driver).executeScript(jsScroll, element);
     }
 
-    public static void scrollToElementByJS(By locator){
+    public static void scrollToElementByJS(WebDriver driver, By locator){
         WebElement element = driver.findElement(locator);
-        String jsScroll = "arguments[0].scrollIntoView();";
+        String jsScroll = "arguments[0].scrollIntoView(false);";
         ((JavascriptExecutor) driver).executeScript(jsScroll, element);
     }
 

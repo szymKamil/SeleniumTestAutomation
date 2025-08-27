@@ -1,6 +1,8 @@
 package POM.WebTest.RahulAcademy.Pages.VegetablesShop;
 
 
+import Base.BaseTest.DriverFactoryV1;
+import Base.Utils.JavaScriptUtils;
 import Base.Utils.PageLoadedVerification;
 import Base.Utils.Utils;
 import io.cucumber.java.sl.In;
@@ -65,12 +67,16 @@ public class MainPageShop {
 						.getAttribute("value")));
 				if (currentValue < amount) {
 					while (currentValue != amount) {
-						filteredProduct.get().findElement(incrementProduct).click();
+						var incrementBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get().findElement(incrementProduct)));
+						JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), incrementBtn);
+						incrementBtn.click();
 						currentValue++;
 					}
 				} else if (currentValue > amount) {
 					while (currentValue != amount) {
-						filteredProduct.get().findElement(decrementProduct).click();
+						var decrementtBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get().findElement(decrementProduct)));
+						JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), decrementtBtn);
+						decrementtBtn.click();
 						currentValue--;
 					}
 				}  else if (currentValue == amount) {
@@ -86,6 +92,7 @@ public class MainPageShop {
 
 	public void pickAmountOfProducts(Map<String, Integer> map) {
 		for(Map.Entry<String, Integer> entry : map.entrySet()){
+			logger.info("Wybieram produkt {} ilość {}", entry.getKey(), entry.getValue());
 			pickAmountOfProducts(entry.getKey(), entry.getValue());
 		}
 	}
@@ -103,16 +110,30 @@ public class MainPageShop {
 		element.findElement(addToCartBtn).click();
 	}
 
-	public Map<String, String> verifyCart(){
+	public Map<String, Integer> getCartItems(){
 		wait.until(ExpectedConditions.elementToBeClickable(cartIcon)).click();
 		List<String> cartItemsNames = driver.findElements(cartProductsNames).stream().map(e -> e.getText().split(" - ")[0]).toList();
 		List<String> cartItemsQuantity = driver.findElements(cartProductsQuantity).stream().map(e -> e.getText().split(" ")[0]).toList();
-		Map<String, String> cartItems = new HashMap<>();
+		Map<String, Integer> cartItems = new HashMap<>();
 		for (int i = 0; i < cartItemsNames.size(); i++){
-			cartItems.put(cartItemsNames.get(i), cartItemsQuantity.get(i));
+			cartItems.put(cartItemsNames.get(i), Integer.parseInt(cartItemsQuantity.get(i)));
 		}
 		return cartItems;
 	}
+
+	public boolean verifyCart(Map<String, Integer> cartItems, Map<String, Integer> testData){
+		return testData.entrySet().stream()
+				.allMatch(e -> {
+					var actualQtyStr = cartItems.get(e.getValue());
+					if (actualQtyStr == null) return false;
+					try {
+						return actualQtyStr == e.getValue();
+					} catch (NumberFormatException ex) {
+						return false;
+					}
+				});
+	}
+
 
 
 }
