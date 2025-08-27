@@ -139,7 +139,7 @@ public class MainPageShop {
 		if (!driver.findElement(cart).isDisplayed()){
 			wait.until(ExpectedConditions.elementToBeClickable(cartIcon)).click();
 		}
-		wait.until(ExpectedConditions.elementToBeClickable(cartCheckoutBtn));
+		wait.until(ExpectedConditions.elementToBeClickable(cartCheckoutBtn)).click();
 
 	}
 

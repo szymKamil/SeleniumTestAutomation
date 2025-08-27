@@ -1,10 +1,18 @@
 package POM.WebTest.RahulAcademy.Pages.VegetablesShop;
 
+import io.cucumber.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class CheckoutPage {
 
@@ -30,6 +38,18 @@ public class CheckoutPage {
 	By placeOrderBtn = By.xpath("//button[text() = 'Place Order']");
 
 
+	public List<String> getItemsFromCheckout(){
+		return driver.findElements(productNames).stream().map(e -> e.getText().split(" - ")[0]).toList();
+	}
+
+	public Map<String, Integer> getItemsQuantity(){
+		List<Integer> productQuantity = driver.findElements(productQuantities).stream().map(e -> Integer.parseInt(e.getText())).toList();
+		List<String> productNames = getItemsFromCheckout();
+		return  IntStream.range(0, productNames.size()).boxed().collect(Collectors.toMap(
+				productNames::get,
+				productQuantity::get
+		));
+	}
 
 
 

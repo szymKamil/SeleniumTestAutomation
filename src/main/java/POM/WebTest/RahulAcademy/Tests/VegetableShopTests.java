@@ -1,6 +1,7 @@
 package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
+import POM.WebTest.RahulAcademy.Pages.VegetablesShop.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.MainPageShop;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Optional;
@@ -60,11 +61,12 @@ public class VegetableShopTests extends BaseTest{
 	@Test
 	public void checkoutVerification() {
 		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
 		shopPage.pickAmountOfProducts("Carrot", 10);
 		shopPage.pickAmountOfProducts("Tomato", 5);
 		shopPage.pickAmountOfProducts("Pumpkin", 1);
 		shopPage.goToCheckout();
-
+		checkoutPage.getItemsQuantity().forEach((k, v) -> logger.info("W koszyku znajduje się produkt {} w ilości {}", k, v));
 	}
 
 
