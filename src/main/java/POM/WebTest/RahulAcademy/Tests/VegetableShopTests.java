@@ -66,7 +66,11 @@ public class VegetableShopTests extends BaseTest{
 		shopPage.pickAmountOfProducts("Tomato", 5);
 		shopPage.pickAmountOfProducts("Pumpkin", 1);
 		shopPage.goToCheckout();
-		checkoutPage.getItemsQuantity().forEach((k, v) -> logger.info("W koszyku znajduje się produkt {} w ilości {}", k, v));
+		checkoutPage.checker();
+		checkoutPage.getItemsNamesAndQuantity().forEach((k, v) -> logger.info("W koszyku znajduje się produkt {} w ilości {}", k, v));
+		checkoutPage.verifyTotalPrices();
+
+
 	}
 
 
