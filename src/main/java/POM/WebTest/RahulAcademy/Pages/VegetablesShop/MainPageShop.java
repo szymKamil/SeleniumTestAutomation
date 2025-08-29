@@ -63,29 +63,36 @@ public class MainPageShop {
 							.getText().isBlank()).filter(e -> e.findElement(productName).getText().contains(product))
 					.findFirst();
 			if (filteredProduct.isPresent()) {
-				int currentValue = Integer.parseInt(Objects.requireNonNull(filteredProduct.get()
-						.findElement(productQuantity)
-						.getAttribute("value")));
-				if (currentValue < amount) {
-					while (currentValue != amount) {
-						var incrementBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get().findElement(incrementProduct)));
-						JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), incrementBtn);
-						incrementBtn.click();
-						currentValue++;
+				if (amount > 4){
+					WebElement el = filteredProduct.get().findElement(productQuantity);
+					el.clear();
+					el.sendKeys(String.valueOf(amount));
+				} else {
+					int currentValue = Integer.parseInt(Objects.requireNonNull(filteredProduct.get()
+							.findElement(productQuantity)
+							.getAttribute("value")));
+					if (currentValue < amount) {
+						while (currentValue != amount) {
+							var incrementBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get()
+									.findElement(incrementProduct)));
+							JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), incrementBtn);
+							incrementBtn.click();
+							currentValue++;
+						}
+					} else if (currentValue > amount) {
+						while (currentValue != amount) {
+							var decrementtBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get()
+									.findElement(decrementProduct)));
+							JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), decrementtBtn);
+							decrementtBtn.click();
+							currentValue--;
+						}
+					} else if (currentValue == amount) {
+						// pusto
+					} else {
+						logger.error("Błąd podczas wybierania produktu {}", filteredProduct.get()
+								.getText());
 					}
-				} else if (currentValue > amount) {
-					while (currentValue != amount) {
-						var decrementtBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get().findElement(decrementProduct)));
-						JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), decrementtBtn);
-						decrementtBtn.click();
-						currentValue--;
-					}
-				}  else if (currentValue == amount) {
-					// pusto
-				}
-				else {
-					logger.error("Błąd podczas wybierania produktu {}", filteredProduct.get()
-							.getText());
 				}
 			}
 			filteredProduct.ifPresent(this::addElementToCart);
@@ -142,8 +149,6 @@ public class MainPageShop {
 		wait.until(ExpectedConditions.elementToBeClickable(cartCheckoutBtn)).click();
 
 	}
-
-
 
 
 

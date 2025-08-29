@@ -1,18 +1,18 @@
 package POM.WebTest.RahulAcademy.Pages.VegetablesShop;
 
-import io.cucumber.java.sl.In;
+
+import io.cucumber.java.it.Ma;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Collections;
-import java.util.HashMap;
+import org.testng.Assert;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Supplier;
+import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -41,31 +41,31 @@ public class CheckoutPage {
 	By promoBtnSpinner = By.cssSelector("span.promo-btn-loader");
 	By placeOrderBtn = By.xpath("//button[text() = 'Place Order']");
 
+	By numberOfItemsInCart = By.xpath("//b[text()='No. of Items     : ']/parent::*");
+	By totalPriceInCart = By.cssSelector("span.totAmt");
+	By totalPriceInCartAfterDiscount = By.xpath("//*[@id='root']/div/div/div/div/span[@class='discountAmt']");
 
-	public void checker(){
-		wait.until(ExpectedConditions.elementToBeClickable(promoInput));
-		var list = driver.findElements(productNames).stream().map(e -> e.getText().split(" - ")[0]).toList();
-		logger.info(String.valueOf(list));
-
-
-	}
 
 
 	List<String> getProductsNamesFromCheckout(){
-		return driver.findElements(productNames).stream().map(e -> e.getText().split(" - ")[0]).toList();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(productNames));
+		return	driver.findElements(productNames).stream().map(e -> e.getText().split(" - ")[0]).toList();
 	}
 
 	List<Integer> getProductsQuantityFromCheckout(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(productQuantities));
 		return driver.findElements(productQuantities).stream().map(e -> Integer.parseInt(e.getText())).toList();
 
 	}
 
 	List<Integer> getProductsPriceFromCheckout(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(productPrice));
 		return driver.findElements(productPrice).stream().map(e -> Integer.parseInt(e.getText())).toList();
 
 	}
 
 	List<Integer> getProductsTotalPriceFromCheckout(){
+		wait.until(ExpectedConditions.visibilityOfElementLocated(totalPrices));
 		return driver.findElements(totalPrices).stream().map(e -> Integer.parseInt(e.getText())).toList();
 	}
 
@@ -83,21 +83,45 @@ public class CheckoutPage {
 	public void verifyTotalPrices() {
 		var productQuantity = getProductsQuantityFromCheckout();
 		var productPrices = getProductsPriceFromCheckout();
-		System.out.println(productQuantity);
-		System.out.println(productPrices);
-
-
 		List<Integer> calculatedPrices = IntStream.range(0, productPrices.size()).mapToObj(i -> productPrices.get(i) * productQuantity.get(i)).toList();
-		calculatedPrices.forEach(e -> logger.info("Cena produktu wynosi {}", e));
+		var productNamesList = getProductsNamesFromCheckout();
 		if (calculatedPrices.equals(getProductsTotalPriceFromCheckout())){
 			logger.info("Ceny się zgadzają.");
 		} else {
 			logger.info("Błędy w naliczaniu cen na podstawie ilości i ceny produktu.");
 			calculatedPrices.forEach(e -> logger.error(e.toString()));
 		}
-		calculatedPrices.forEach(e -> logger.info("Cena produktu wynosi {}", e));
-
+		for (int i = 0; i < productNamesList.size(); i++){
+			logger.info("W koszyku znajduje się produkt {} w ilości {}. Cena za sztukę wynosi {}, a całkowita cena wynosi {}", productNamesList.get(i), productQuantity.get(i), productPrices.get(i), calculatedPrices.get(i));
+		}
 	}
+
+	public void verifyDiscount(){
+		WebElement promoIn = wait.until(ExpectedConditions.elementToBeClickable(promoInput));
+		promoIn.clear();
+		promoIn.sendKeys(PROMO_CODE);
+		wait.until(ExpectedConditions.elementToBeClickable(applyPromoBtn)).click();
+		wait.until(ExpectedConditions.visibilityOfElementLocated(promoBtnSpinner));
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(promoBtnSpinner));
+		String discountPercentage = driver.findElement(discountInfo).getText();
+		Assert.assertEquals(discountPercentage, "10%", "W koszyku nie został naliczony poprawnie rabat po użyciu kodu rabatowego!");
+	}
+
+	public boolean verifyFullPriceAfterDiscount(){
+		var productPrices = getProductsTotalPriceFromCheckout();
+		int productSize = productPrices.size();
+		String totalPrice =  productPrices.stream().reduce( Integer::sum).map(Objects::toString).orElse("Błąd");
+		wait.until(ExpectedConditions.visibilityOfElementLocated(numberOfItemsInCart)).getText().trim().split(" : ")[1].contains(Integer.toString(productSize));
+		wait.until(ExpectedConditions.textToBePresentInElementLocated(totalPriceInCart, totalPrice));
+		verifyDiscount();
+		String priceAfterDiscount = String.valueOf((Double.parseDouble(totalPrice) * 0.9));
+		return driver.findElement(totalPriceInCartAfterDiscount).getText().contains(priceAfterDiscount);
+	}
+
+	public void placeOrder(){
+		wait.until(ExpectedConditions.elementToBeClickable(placeOrderBtn)).click();
+	}
+
 
 
 }
