@@ -1,4 +1,4 @@
-package POM.WebTest.RahulAcademy.DataPrividers;
+package POM.WebTest.RahulAcademy.DataProviders;
 
 import org.testng.annotations.DataProvider;
 

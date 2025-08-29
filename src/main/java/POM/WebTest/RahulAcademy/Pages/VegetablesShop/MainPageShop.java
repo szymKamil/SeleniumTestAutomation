@@ -13,6 +13,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 
 import java.util.*;
 
@@ -30,7 +31,7 @@ public class MainPageShop {
 
 	//Elementy
 	By cartIcon = By.cssSelector("a.cart-icon");
-	By productCard = By.cssSelector("div.product");
+	By productCard = By.cssSelector("div.products div.product");
 	By productName = By.cssSelector("h4.product-name");
 	By decrementProduct = By.cssSelector("a.decrement");
 	By incrementProduct = By.cssSelector("a.increment");
@@ -54,6 +55,11 @@ public class MainPageShop {
 		searchInputField.clear();
 		searchInputField.sendKeys(product);
 		wait.until(ExpectedConditions.textToBePresentInElementLocated(productName, product));
+	}
+
+	public void numOfProdVerification(){
+		wait.until(ExpectedConditions.numberOfElementsToBe(productCard, 1));
+		Assert.assertEquals(driver.findElements(productCard).size(), 1);
 	}
 
 	public void pickAmountOfProducts(String product, int amount) {

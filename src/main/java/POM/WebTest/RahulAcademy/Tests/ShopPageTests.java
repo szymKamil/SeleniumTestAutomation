@@ -1,22 +1,14 @@
 package POM.WebTest.RahulAcademy.Tests;
 
 import Base.BaseTest.DriverFactoryV1;
-import POM.WebTest.RahulAcademy.DataPrividers.DataProviderLoginFormTest;
+import POM.WebTest.RahulAcademy.DataProviders.DataProviderLoginFormTest;
 import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
-import POM.WebTest.RahulAcademy.Listener.TestNGListener;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
-import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.testng.ITestResult;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
-
-import java.time.Duration;
 
 
 //@Listeners(TestNGListener.class)
