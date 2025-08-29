@@ -111,4 +111,16 @@ public class VegetableShopTests extends BaseTest{
 		orderConfirmationPage.applyOrder();
 	}
 
+	@Test(groups = "business")
+	public void verificationOfTermsAndConditions() {
+		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		shopPage.pickAmountOfProducts("Carrot", 10);
+		shopPage.goToCheckout();
+		checkoutPage.placeOrder();
+		orderConfirmationPage.selectCounty();
+		orderConfirmationPage.verifyTermsAndConditionsInfo();
+	}
+
 }
