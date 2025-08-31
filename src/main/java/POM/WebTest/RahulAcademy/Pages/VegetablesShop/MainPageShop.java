@@ -10,11 +10,13 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
+import java.time.Duration;
 import java.util.*;
 
 public class MainPageShop {
@@ -30,7 +32,7 @@ public class MainPageShop {
 	}
 
 	//Elementy
-	By cartIcon = By.cssSelector("a.cart-icon");
+	By cartIcon = By.cssSelector("img[alt=Cart]");
 	By productCard = By.cssSelector("div.products div.product");
 	By productName = By.cssSelector("h4.product-name");
 	By decrementProduct = By.cssSelector("a.decrement");
@@ -38,6 +40,7 @@ public class MainPageShop {
 	By searchInput = By.cssSelector("input[type='search']");
 	By productQuantity = By.cssSelector("input.quantity");
 	By addToCartBtn = By.cssSelector("button[type='button']");
+	By btnAddedInfo = By.xpath("//button[text()='✔ ADDED']");
 
 	By cart = By.cssSelector("div.cart-preview");
 	By cartItems = By.cssSelector("div.cart-preview div div ul.cart-items");
@@ -47,14 +50,14 @@ public class MainPageShop {
 	By cartCheckoutBtn = By.cssSelector("div.cart div.action-block button[type='button']");
 
 
-
-
 	//Metody
-	public void searchForProduct(String product) {
-		WebElement searchInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(searchInput));
-		searchInputField.clear();
-		searchInputField.sendKeys(product);
-		wait.until(ExpectedConditions.textToBePresentInElementLocated(productName, product));
+	public void searchForProduct(String... products) {
+		for (String prod : products) {
+			WebElement searchInputField = wait.until(ExpectedConditions.visibilityOfElementLocated(searchInput));
+			searchInputField.clear();
+			searchInputField.sendKeys(prod);
+			wait.until(ExpectedConditions.textToBePresentInElementLocated(productName, prod));
+		}
 	}
 
 	public void numOfProdVerification(){
@@ -124,8 +127,31 @@ public class MainPageShop {
 		element.findElement(addToCartBtn).click();
 	}
 
+	public void openCart() {
+		wait.until(ExpectedConditions.invisibilityOfElementLocated(btnAddedInfo));
+		driver.findElement(cartIcon)
+				.click();
+		var cartElement = new FluentWait<>(driver)
+				.withTimeout(Duration.ofSeconds(20))
+				.pollingEvery(Duration.ofSeconds(1))
+				.ignoring(NoSuchElementException.class)
+				.until(driver1 -> {
+					WebElement cartDisplayed = driver1.findElement(cart);
+					if (cartDisplayed.isDisplayed()) {
+						return true;
+					} else {
+						try {
+							driver1.findElement(cartIcon).click();
+						} catch (Exception ignored) {
+						}
+						return null;
+					}
+				});
+	}
+
+
 	public Map<String, Integer> getCartItems(){
-		wait.until(ExpectedConditions.elementToBeClickable(cartIcon)).click();
+		openCart();
 		List<String> cartItemsNames = driver.findElements(cartProductsNames).stream().map(e -> e.getText().split(" - ")[0]).toList();
 		List<String> cartItemsQuantity = driver.findElements(cartProductsQuantity).stream().map(e -> e.getText().split(" ")[0]).toList();
 		Map<String, Integer> cartItems = new HashMap<>();
@@ -138,13 +164,9 @@ public class MainPageShop {
 	public boolean verifyCart(Map<String, Integer> cartItems, Map<String, Integer> testData){
 		return testData.entrySet().stream()
 				.allMatch(e -> {
-					var actualQtyStr = cartItems.get(e.getValue());
+					Integer actualQtyStr = cartItems.get(e.getKey());
 					if (actualQtyStr == null) return false;
-					try {
-						return actualQtyStr == e.getValue();
-					} catch (NumberFormatException ex) {
-						return false;
-					}
+					return actualQtyStr.equals(e.getValue()); // porównujemy wartości
 				});
 	}
 
