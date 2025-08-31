@@ -5,6 +5,7 @@ import Base.BaseTest.DriverFactoryV1;
 import Base.Utils.JavaScriptUtils;
 import Base.Utils.PageLoadedVerification;
 import Base.Utils.Utils;
+import io.cucumber.core.runtime.CucumberExecutionContext;
 import io.cucumber.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
@@ -18,6 +19,7 @@ import org.testng.Assert;
 
 import java.time.Duration;
 import java.util.*;
+import java.util.function.Supplier;
 
 public class MainPageShop {
 
@@ -128,25 +130,25 @@ public class MainPageShop {
 	}
 
 	public void openCart() {
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(btnAddedInfo));
-		driver.findElement(cartIcon)
-				.click();
-		var cartElement = new FluentWait<>(driver)
+		FluentWait<WebDriver> fluentWait = new FluentWait<>(driver)
 				.withTimeout(Duration.ofSeconds(20))
 				.pollingEvery(Duration.ofSeconds(1))
-				.ignoring(NoSuchElementException.class)
-				.until(driver1 -> {
+				.ignoring(NoSuchElementException.class);
+
+		fluentWait.until(ExpectedConditions.elementToBeClickable(cartIcon));
+
+		WebElement e = fluentWait.until(driver1 -> {
+				try {
 					WebElement cartDisplayed = driver1.findElement(cart);
 					if (cartDisplayed.isDisplayed()) {
-						return true;
+						return cartDisplayed;
 					} else {
-						try {
-							driver1.findElement(cartIcon).click();
-						} catch (Exception ignored) {
-						}
-						return null;
+						driver1.findElement(cartIcon)
+								.click();
 					}
-				});
+				} catch (Exception ignored) {}
+				return null;
+			});
 	}
 
 
