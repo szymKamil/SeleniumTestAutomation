@@ -28,25 +28,33 @@ Potrzeba biznesowa: Przetestowanie sklepu warzywnego
   Scenariusz: Dodanie produktu i wyświetlenie go w koszyku
     # Test ma na celu sprawdzenie, czy wybranie ilości produktów i dodanie produktu do koszyka poprawnie go w nim wyświetli
     Zakładając, że użytkownik dodał do koszyka następujące produkty:
-      | Orange       | 4     |
-      | Water Melon      | 3     |
-      | Brocolli  | 10     |
-      | Almonds     | 3    |
+      | Orange      | 4  |
+      | Water Melon | 3  |
+      | Brocolli    | 10 |
+      | Almonds     | 3  |
     Kiedy użytkownik otwiera koszyk
     Wtedy widoczne są w nim dodane produkty
 
 
   Scenariusz: Użytkownik korzysta z kodu rabatowego w celu obniżenia kosztu zakupów
-    Zakładając, że użytkownik wybiera produkty w sklepie i dodaje je do koszyka
-    Kiedy użytkownik wyświetla koszyk
+    Zakładając, że użytkownik dodał do koszyka następujące produkty:
+      | Tomato      | 3  |
+      | Grapes | 4  |
+      | Onion    | 2 |
+      | Pomegranate     | 1  |
+    Kiedy użytkownik otwiera koszyk
     I użytkownik przechodzi do podsumowania zamówienia
-    I użytkownik korzysta z kodu rabatowego, który obniża cenę jego zamówienia
-    Wtedy cena zamówienia zostaje obniżona zgodnie z kodem rabatowym
+    I użytkownik korzysta z kodu rabatowego "rahulshettyacademy", który obniża cenę jego zamówienia
+    Wtedy cena zamówienia zostaje obniżona o "10%"
 
   Scenariusz: Użytkownik dokonuje zakupu w sklepie
-  Given Użytkownik wybiera produkty w sklepie i dodaje je do koszyka
-  When Użytkownik otwiera koszyk
-  And Użytkownik przechodzi do podsumowania zamówienia
-  And Użytkownik składa zamówienie
-  And Użytkownik wybiera kraj dostawy oraz akceptuje Politykę prywatności i Warunki sklepu
-  Then Użytkownik widzi poprawny komunikat o złożeniu zamówienia
+  Zakładając, że  użytkownik dodał do koszyka następujące produkty:
+    | Orange      | 4  |
+    | Water Melon | 3  |
+    | Brocolli    | 10 |
+    | Almonds     | 3  |
+  Kiedy Użytkownik otwiera koszyk
+  I Użytkownik przechodzi do podsumowania zamówienia
+  I Użytkownik składa zamówienie
+  I Użytkownik wybiera kraj dostawy oraz akceptuje Politykę prywatności i Warunki sklepu
+  Wtedy Użytkownik widzi poprawny komunikat o złożeniu zamówienia

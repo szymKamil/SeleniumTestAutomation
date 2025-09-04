@@ -96,16 +96,28 @@ public class CheckoutPage {
 		}
 	}
 
-	public void verifyDiscount(){
+	public void verifyDiscount(String discountCode){
 		WebElement promoIn = wait.until(ExpectedConditions.elementToBeClickable(promoInput));
 		promoIn.clear();
-		promoIn.sendKeys(PROMO_CODE);
+		promoIn.sendKeys(discountCode);
 		wait.until(ExpectedConditions.elementToBeClickable(applyPromoBtn)).click();
 		wait.until(ExpectedConditions.visibilityOfElementLocated(promoBtnSpinner));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(promoBtnSpinner));
-		String discountPercentage = driver.findElement(discountInfo).getText();
-		Assert.assertEquals(discountPercentage, "10%", "W koszyku nie został naliczony poprawnie rabat po użyciu kodu rabatowego!");
+		verifyDiscountInfo("10%");
 	}
+
+	public void verifyDiscountInfo(String expectedDiscount){
+		String discountPercentage = driver.findElement(discountInfo).getText();
+		Assert.assertEquals(discountPercentage, expectedDiscount, "W koszyku nie został naliczony poprawnie rabat po użyciu kodu rabatowego!");
+	}
+
+
+
+
+	public void verifyDiscount(){
+		verifyDiscount(PROMO_CODE);
+	}
+
 
 	public boolean verifyFullPriceAfterDiscount(){
 		var productPrices = getProductsTotalPriceFromCheckout();
