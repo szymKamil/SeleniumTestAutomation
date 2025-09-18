@@ -24,7 +24,6 @@ public class BaseTest {
     @BeforeMethod(alwaysRun = true)
     public void config(@Optional("chrome") String browser, @Optional("25") int timeout, Method method) throws InterruptedException {
             DriverFactoryV1.initDriver(browser, timeout);
-            logger.info(DriverFactoryV1.getWait().toString());
             logger.info("Rozpoczynam test: {}", method.getName());
             Class<?> testClass = method.getDeclaringClass();
             if (testClass.equals(LocatorsFormLoginTests.class)) {
