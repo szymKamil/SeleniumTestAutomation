@@ -25,7 +25,6 @@ public class Tests extends BaseTest{
 		logger.info("Poprawnie zalogowałem się do aplikacji");
 	}
 
-
 	@Test
 	void openBurgerMenu(){
 		loginTest();

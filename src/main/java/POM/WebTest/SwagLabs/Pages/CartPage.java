@@ -34,7 +34,16 @@ public class CartPage {
 	List<WebElement> inventoryProduct;
 
 	@FindBy(css = "div.inventory_item_name")
-	WebElement inventoryProductName;
+	List<WebElement> inventoryProductName;
+
+	@FindBy(name = "back-to-products")
+	WebElement backToProductsBtnCard;
+
+	@FindBy(id = "add-to-cart")
+	WebElement addToCartInCardBtn;
+
+	@FindBy(id = "remove")
+	WebElement removeFromCartInCardBtn;
 
 	@FindBy(css = "button.btn_inventory")
 	WebElement addToCartBtn;
@@ -62,9 +71,7 @@ public class CartPage {
 		wait.until(ExpectedConditions.visibilityOfAllElements(inventoryProduct));
 		inventoryProduct.stream().filter(e -> e.getText().contains(product))
 				.findFirst()
-				.get()
-				.findElement(By.cssSelector("button.btn_inventory"))
-				.click();
+				.ifPresent(_ -> driver.findElement(By.cssSelector("button.btn_inventory")).click());
 	}
 
 	public void pickCartElementsAndAddToCart(String... products){
@@ -73,6 +80,20 @@ public class CartPage {
 		}
 	}
 
+	public void openProductCard(String product){
+		inventoryProductName.stream().filter(e -> e.getText().contains(product)).findFirst().ifPresent(WebElement::click);
+	}
 
+	public void closeProductCard(){
+		wait.until(ExpectedConditions.visibilityOf(backToProductsBtnCard)).click();
+	}
+
+	public void addProductInCard(){
+		wait.until(ExpectedConditions.visibilityOf(addToCartInCardBtn)).click();
+	}
+
+	public void removeProductFromCard(){
+		wait.until(ExpectedConditions.visibilityOf(removeFromCartInCardBtn)).click();
+	}
 
 }
