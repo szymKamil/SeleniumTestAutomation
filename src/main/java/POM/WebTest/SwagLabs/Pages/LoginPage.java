@@ -1,18 +1,14 @@
 package POM.WebTest.SwagLabs.Pages;
 
 import Base.BaseTest.DriverFactoryV1;
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.testng.TestNG;
 
 import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class LoginPage {
@@ -57,18 +53,18 @@ public class LoginPage {
         return passwordList.get(random.nextInt(passwordList.size()));
     }
 
-    public CartPage logInToApp(){
+    public InventoryPage logInToAppOnRandomCredentials(){
         wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(getLogin());
         wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(getPass());
         wait.until(ExpectedConditions.elementToBeClickable(loginBtn));
-        return new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        return new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
-    public CartPage logInToApp(String login, String password){
+    public InventoryPage logInToApp(String login, String password){
         wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(login);
         wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(password);
         wait.until(ExpectedConditions.elementToBeClickable(loginBtn)).click();
-        return new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        return new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
 }
