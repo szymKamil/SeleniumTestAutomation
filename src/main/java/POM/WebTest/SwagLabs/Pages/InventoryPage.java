@@ -1,12 +1,14 @@
 package POM.WebTest.SwagLabs.Pages;
 
 import Base.BaseTest.DriverFactoryV1;
+import POM.WebTest.SwagLabs.Utils.InventoryFilter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.List;
@@ -52,6 +54,9 @@ public class InventoryPage {
 	@FindBy(css = "select.product_sort_container")
 	WebElement selectFilterBtn;
 
+	@FindBy(css = "span.active_option")
+	WebElement activeFilter;
+
 	@FindBy(css = "a.shopping_cart_link")
 	WebElement shoppingCartIcon;
 
@@ -75,6 +80,19 @@ public class InventoryPage {
 		wait.until(ExpectedConditions.visibilityOfAllElements(burgerMenuElements));
 		burgerMenuElements.stream().filter(e -> e.getText().contains(burgerMenuElementName)).findFirst().get().click();
 	}
+
+	public void changeFilter(InventoryFilter filter){
+		wait.until(ExpectedConditions.visibilityOf(selectFilterBtn));
+		Select select = new Select(selectFilterBtn);
+		select.selectByVisibleText(filter.getValue());
+	}
+
+	public String getFilterValue(){
+		wait.until(ExpectedConditions.visibilityOf(activeFilter));
+		return activeFilter.getText();
+	}
+
+
 
 	public void pickCartElementAndAddToCart(String product){
 		wait.until(ExpectedConditions.visibilityOfAllElements(inventoryProduct));
@@ -114,6 +132,7 @@ public class InventoryPage {
 		wait.until(ExpectedConditions.visibilityOf(shoppingCartIcon)).click();
 		return new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
 	}
+
 
 
 

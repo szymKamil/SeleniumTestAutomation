@@ -4,6 +4,7 @@ import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.SwagLabs.Pages.CartPage;
 import POM.WebTest.SwagLabs.Pages.InventoryPage;
 import POM.WebTest.SwagLabs.Pages.LoginPage;
+import POM.WebTest.SwagLabs.Utils.InventoryFilter;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -29,6 +30,21 @@ public class Tests extends BaseTest{
 		inventoryPage.openHamburgerMenu();
 		inventoryPage.pickMenuElement("Reset App State");
 		logger.info("Zresetowany został stan aplikacji.");
+	}
+
+	@Test
+	void filterTest(){
+		loginTest();
+		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		inventoryPage.changeFilter(InventoryFilter.LowToHigh);
+		var activerFilter = inventoryPage.getFilterValue();
+		logger.info("Aktywny filtr to {}", activerFilter);
+		Assert.assertEquals(activerFilter, InventoryFilter.LowToHigh.getValue());
+		inventoryPage.changeFilter(InventoryFilter.ZtoA);
+		activerFilter = inventoryPage.getFilterValue();
+		logger.info("Aktywny filtr to {}", activerFilter);
+		Assert.assertEquals(activerFilter, InventoryFilter.ZtoA.getValue());
+
 	}
 
 	@Test
