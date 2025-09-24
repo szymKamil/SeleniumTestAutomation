@@ -71,11 +71,32 @@ public class Tests extends BaseTest{
 		Assert.assertEquals(numOfProds, numOfProdsInInventory);
 		cartPage.verifyProductsInCart("Sauce Labs Bike Light", "Sauce Labs Onesie", "Sauce Labs Bolt T-Shirt", "Fleece Jacket" , "Backpack");
 		logger.info("Wszystkie produkty znajdują się w koszyku.");
-
 	}
 
 
-
+	@Test
+	void buyingProductPathTest(){
+		loginTest();
+		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		inventoryPage.pickCartElementsAndAddToCart("Sauce Labs Onesie", "Sauce Labs Fleece Jacket", "Sauce Labs Bolt T-Shirt");
+		int numOfProdsInInventory = 3;
+		inventoryPage.verifyNumberOfProductsAddedToCartInTag(numOfProdsInInventory);
+		inventoryPage.openShoppingCart();
+		cartPage = new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		var numOfProds = cartPage.verifyNumberOfCartProducts();
+		logger.info("W koszyku znajduje się {} produktów.", numOfProds);
+		Assert.assertEquals(numOfProds, numOfProdsInInventory);
+		cartPage.verifyProductsInCart("Sauce Labs Onesie", "Sauce Labs Fleece Jacket", "Sauce Labs Bolt T-Shirt");
+		logger.info("Wszystkie produkty znajdują się w koszyku.");
+		cartPage.goToCheckout();
+		cartPage.fillForm("Jan", "Nowak", "00-001");
+		cartPage.clickContinueBtn();
+		cartPage.finishOrderBtn();
+		cartPage.verifySuccessOrderInfo();
+		cartPage.backToProdsBtnClick();
+		Assert.assertEquals(DriverFactoryV1.getDriver().getCurrentUrl() //TODO: Przenieść pobranie URL do jakiejś uniwersalnej akcji.
+				, "https://www.saucedemo.com/inventory.html");
+	}
 
 
 
