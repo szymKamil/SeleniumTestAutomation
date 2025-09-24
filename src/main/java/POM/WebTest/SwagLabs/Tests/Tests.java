@@ -40,11 +40,16 @@ public class Tests extends BaseTest{
 		var activerFilter = inventoryPage.getFilterValue();
 		logger.info("Aktywny filtr to {}", activerFilter);
 		Assert.assertEquals(activerFilter, InventoryFilter.LowToHigh.getValue());
+		inventoryPage.verifyProductPrices(true);
 		inventoryPage.changeFilter(InventoryFilter.ZtoA);
 		activerFilter = inventoryPage.getFilterValue();
 		logger.info("Aktywny filtr to {}", activerFilter);
 		Assert.assertEquals(activerFilter, InventoryFilter.ZtoA.getValue());
-
+		inventoryPage.changeFilter(InventoryFilter.HighToLow);
+		activerFilter = inventoryPage.getFilterValue();
+		logger.info("Aktywny filtr to {}", activerFilter);
+		Assert.assertEquals(activerFilter, InventoryFilter.HighToLow.getValue());
+		inventoryPage.verifyProductPrices(false);
 	}
 
 	@Test

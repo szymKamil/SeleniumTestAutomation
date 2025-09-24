@@ -10,7 +10,10 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class InventoryPage {
@@ -38,6 +41,9 @@ public class InventoryPage {
 
 	@FindBy(css = "div.inventory_item_name")
 	List<WebElement> inventoryProductName;
+
+	@FindBy(css = "div.inventory_item_price")
+	List<WebElement> inventoryProductPrice;
 
 	@FindBy(name = "back-to-products")
 	WebElement backToProductsBtnCard;
@@ -92,6 +98,25 @@ public class InventoryPage {
 		return activeFilter.getText();
 	}
 
+
+	public void verifyProductPrices(boolean asc){
+		wait.until(ExpectedConditions.visibilityOfAllElements(inventoryProductPrice));
+		List<Double> prices = inventoryProductPrice.stream().map(WebElement::getText)
+				.map(text -> text.replace("$", ""))
+				.map(Double::parseDouble)
+				.toList();
+
+		if (asc) {
+			List<Double> sortedPricesAsc = new ArrayList<>(prices);
+			sortedPricesAsc.sort(Double::compareTo);
+			Assert.assertEquals(prices, sortedPricesAsc, "Ceny nie są posortowane!");
+		} else {
+			List<Double> sortedPricesDesc = new ArrayList<>(prices);
+			sortedPricesDesc.sort(Comparator.reverseOrder());
+			Assert.assertEquals(prices, sortedPricesDesc, "Ceny nie są posortowane!");
+		}
+
+	}
 
 
 	public void pickCartElementAndAddToCart(String product){
