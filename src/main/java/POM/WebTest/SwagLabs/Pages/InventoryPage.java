@@ -15,8 +15,18 @@ import org.testng.Assert;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Set;
 
 public class InventoryPage {
+
+	/***
+	 * Sklep z produktami strony Swag Labs. Inicjowana w teście poprzez konstruktor, parametryzowane driverem, waitem, a także dodatkowo uruchamiający PageFactory.
+	 * Zawiera ona lokatory głównych elementów strony jak produkty, odwołania do hamburger menu, elementy przycisku filtrowania, elementy niezbędne w procesie zakupu
+	 * (dodanie do koszyka, przejście do zamówienia), a także otwarcie karty produktu.
+	 * Interakcje na tych elementach są obsługiwane poprzez metody, takie jak: otwarcie hamburger menu, wybranie jednego z przycisków menu, dodanie produktu do koszyka, otwarcie karty,
+	 * dodanie/usunięcie produktu, czy metody związane z filtrowaniem (ustawienie filtra, weryfikacja zmiany kolejności elementów).
+	 */
+
 
 	WebDriver driver;
 	WebDriverWait wait;
@@ -71,8 +81,8 @@ public class InventoryPage {
 
 
 
-
 	//Metody
+	//BurgerMenu
 	public void openHamburgerMenu(){
 		wait.until(ExpectedConditions.elementToBeClickable(burgerMenuIcon)).click();
 		wait.until(ExpectedConditions.visibilityOf(burgerMenuDiv));
@@ -87,6 +97,7 @@ public class InventoryPage {
 		burgerMenuElements.stream().filter(e -> e.getText().contains(burgerMenuElementName)).findFirst().get().click();
 	}
 
+	//Filtrowanie
 	public void changeFilter(InventoryFilter filter){
 		wait.until(ExpectedConditions.visibilityOf(selectFilterBtn));
 		Select select = new Select(selectFilterBtn);
@@ -98,14 +109,12 @@ public class InventoryPage {
 		return activeFilter.getText();
 	}
 
-
 	public void verifyProductPrices(boolean asc){
 		wait.until(ExpectedConditions.visibilityOfAllElements(inventoryProductPrice));
 		List<Double> prices = inventoryProductPrice.stream().map(WebElement::getText)
 				.map(text -> text.replace("$", ""))
 				.map(Double::parseDouble)
 				.toList();
-
 		if (asc) {
 			List<Double> sortedPricesAsc = new ArrayList<>(prices);
 			sortedPricesAsc.sort(Double::compareTo);
@@ -115,10 +124,9 @@ public class InventoryPage {
 			sortedPricesDesc.sort(Comparator.reverseOrder());
 			Assert.assertEquals(prices, sortedPricesDesc, "Ceny nie są posortowane!");
 		}
-
 	}
 
-
+	//Proces zakupowy produktów
 	public void pickCartElementAndAddToCart(String product){
 		wait.until(ExpectedConditions.visibilityOfAllElements(inventoryProduct));
 		var filteredProduct = inventoryProduct.stream().filter(e -> e.getText().contains(product))
@@ -128,6 +136,12 @@ public class InventoryPage {
 
 	public void pickCartElementsAndAddToCart(String... products){
 		for (String product : products){
+			pickCartElementAndAddToCart(product);
+		}
+	}
+
+	public void pickCartElementsAndAddToCart(Set<String> productsSet){
+		for (String product : productsSet){
 			pickCartElementAndAddToCart(product);
 		}
 	}
@@ -153,9 +167,8 @@ public class InventoryPage {
 
 	}
 
-	public CartPage openShoppingCart(){
+	public void openShoppingCart(){
 		wait.until(ExpectedConditions.visibilityOf(shoppingCartIcon)).click();
-		return new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
 	}
 
 

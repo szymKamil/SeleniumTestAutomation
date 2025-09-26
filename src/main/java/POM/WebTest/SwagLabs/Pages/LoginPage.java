@@ -13,6 +13,15 @@ import java.util.Random;
 
 public class LoginPage {
 
+    /***
+     * Strona logowania do Swag Labs. Inicjowana w teście poprzez konstruktor, parametryzowane driverem, waitem, a także dodatkowo uruchamiający PageFactory.
+     * Zawiera ona lokatory głównych elementów strony logowania, jak inputy loginu, hasła, czy odwołania do przycisku logowania.
+     * Interakcje na tych elementach są obsługiwane poprzez metodę logowania.
+     * Dodatkowo utworzone są metody pobierające losowe dane użytkownika ze strony logowania, by logować się na różnych wariantach testowych aplikacji.
+     * Problematyczne warianty aplikacji nie zostały jednak obsłużone w dalszych krokach testów.
+     */
+
+
     WebDriver driver;
     WebDriverWait wait;
 

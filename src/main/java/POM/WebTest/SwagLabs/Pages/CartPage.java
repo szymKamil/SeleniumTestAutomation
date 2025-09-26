@@ -11,11 +11,17 @@ import org.testng.Assert;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+
 
 public class CartPage {
 
+	/***
+	 * Koszyk z produktami strony Swag Labs. Inicjowana w teście poprzez konstruktor, parametryzowane driverem, waitem, a także dodatkowo uruchamiający PageFactory.
+	 * Zawiera ona lokatory głównych elementów, takich jak elementy koszyka, elementy formularza zakupu czy komunikatu o finalizacji zamówienia.
+	 * Dodatkowo posiada stringi komunikatów o sukcesie zakupu produktu, które weryfikują w teście, czy komunikaty są poprawne.
+	 * Interakcje na tych elementach są obsługiwane poprzez metody, takie jak: weryfikacja produktów w koszyku, wypełnienie formularza zakupu,
+	 * czy weryfikacja powiadomienia o pozytywnym procesie zakupu.
+	 */
 
 	WebDriver driver;
 	WebDriverWait wait;
@@ -95,21 +101,15 @@ public class CartPage {
 		wait.until(ExpectedConditions.elementToBeClickable(finishOrderBtn)).click();
 	}
 
-
 	public void verifySuccessOrderInfo(){
 		var header = wait.until(ExpectedConditions.visibilityOf(successInfoHeader)).getText();
 		var paragraph = wait.until(ExpectedConditions.visibilityOf(successInfoParagraph)).getText();
 		Assert.assertEquals(header, SUCCESS_HEADER_INFO, "Test w headerze z informacją o pomyślnym zamówieniu nie zgadza się!");
 		Assert.assertEquals(paragraph, SUCCESS_PARAGRAPH_INFO, "Test w paragrafie z informacją o pomyślnym zamówieniu nie zgadza się!");
-
 	}
 
 	public void backToProdsBtnClick(){
 		wait.until(ExpectedConditions.elementToBeClickable(backToProdsBtn)).click();
 	}
-
-
-
-
 
 }

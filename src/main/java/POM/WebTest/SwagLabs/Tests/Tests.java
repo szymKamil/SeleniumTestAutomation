@@ -5,6 +5,7 @@ import POM.WebTest.SwagLabs.Pages.CartPage;
 import POM.WebTest.SwagLabs.Pages.InventoryPage;
 import POM.WebTest.SwagLabs.Pages.LoginPage;
 import POM.WebTest.SwagLabs.Utils.InventoryFilter;
+import POM.WebTest.SwagLabs.Utils.PickRandomProducts;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
@@ -56,7 +57,7 @@ public class Tests extends BaseTest{
 	void addChosenProductsToCartAndVerifyCart(){
 		loginTest();
 		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		inventoryPage.pickCartElementsAndAddToCart("Sauce Labs Bike Light", "Sauce Labs Onesie", "Sauce Labs Bolt T-Shirt");
+		inventoryPage.pickCartElementsAndAddToCart(PickRandomProducts.pickRandomProducts(4));
 		inventoryPage.pickCartElementAndAddToCart("Fleece Jacket");
 		inventoryPage.openProductCard("Backpack");
 		inventoryPage.addProductInCard();
