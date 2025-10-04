@@ -12,3 +12,4 @@ Feature: Logowanie do aplikacji za pomocą formularza
     Examples:
       | login    | hasło     |
       | Janusz | rahulshettyacademy  |
+
