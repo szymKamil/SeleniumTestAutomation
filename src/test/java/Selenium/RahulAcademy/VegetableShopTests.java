@@ -1,21 +1,19 @@
-package POM.WebTest.RahulAcademy.Tests;
+package Selenium.RahulAcademy;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.MainPageShop;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.OrderConfirmationPage;
+import Selenium.RahulAcademy.Base.BaseTest;
 import org.testng.annotations.DataProvider;
-import org.testng.annotations.Optional;
 import org.testng.annotations.Test;
 
-import java.util.Arrays;
 import java.util.Map;
-import java.util.function.Predicate;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 
-public class VegetableShopTests extends BaseTest{
+public class VegetableShopTests extends BaseTest {
 
 
 	@Test(groups = {"regresion", "interface"})

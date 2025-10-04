@@ -25,7 +25,7 @@ public class LoginPageCucumberSteps {
 	}
 
 	@When("Użytkownik wpisuje {string} oraz {string} w pola i loguje się do aplikacji")
-	public void logIn(String login, String password) throws Exception {
+	public void logIn(String login, String password)  {
 		loginPageTest = new LoginFormPage(driver, wait);
 		loginPageTest.elementShouldBeVisible(loginPageTest.formBdy)
 				.verifyElementText(loginPageTest.submitBtn, "SIGN IN")
@@ -41,7 +41,6 @@ public class LoginPageCucumberSteps {
 				.shouldHaveSuccessMessageColor()
 				.logoutVerification();
 	}
-
 
 	@After
 	public void tearDown() {

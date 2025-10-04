@@ -1,0 +1,26 @@
+pipeline {
+    agent any
+
+    stages {
+        stage('Build'){
+            steps {
+                echo 'Building...'
+            }
+        }
+        stage('Test') {
+            echo 'Testing...'
+        }
+    }
+    post {
+        always {
+            echo 'Always post'
+        }
+        failure {
+            mail to: 'kamszymil@gmail.com', subject: 'Błędy w teście',
+            body: 'Test nie wykonał się poprawnie'
+        }
+
+    }
+
+
+}

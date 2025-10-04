@@ -1,16 +1,17 @@
-package POM.WebTest.SwagLabs.Tests;
+package Selenium.SwagLabs;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.SwagLabs.Pages.CartPage;
 import POM.WebTest.SwagLabs.Pages.InventoryPage;
 import POM.WebTest.SwagLabs.Pages.LoginPage;
+import POM.WebTest.SwagLabs.Base.BaseTest;
 import POM.WebTest.SwagLabs.Utils.InventoryFilter;
 import POM.WebTest.SwagLabs.Utils.PickRandomProducts;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 
 
-public class Tests extends BaseTest{
+public class Tests extends BaseTest {
 
 
 	LoginPage loginPage;
@@ -98,11 +99,5 @@ public class Tests extends BaseTest{
 		Assert.assertEquals(DriverFactoryV1.getDriver().getCurrentUrl() //TODO: Przenieść pobranie URL do jakiejś uniwersalnej akcji.
 				, "https://www.saucedemo.com/inventory.html");
 	}
-
-
-
-
-
-
 
 }

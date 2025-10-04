@@ -1,8 +1,9 @@
-package POM.WebTest.RahulAcademy.Tests;
+package Selenium.RahulAcademy;
 
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
+import Selenium.RahulAcademy.Base.BaseTest;
 import org.testng.annotations.Test;
 
 

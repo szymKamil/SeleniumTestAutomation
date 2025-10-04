@@ -33,7 +33,6 @@ public final class DriverFactoryV1 {
 
     public static void initDriver(String browser, int time) throws InterruptedException {
         initDriver(browser, time, null);
-
     }
 
     public static void initDriver(String browser, int time, URL url) throws InterruptedException {

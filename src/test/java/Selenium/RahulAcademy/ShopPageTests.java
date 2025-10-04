@@ -1,4 +1,4 @@
-package POM.WebTest.RahulAcademy.Tests;
+package Selenium.RahulAcademy;
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.DataProviders.DataProviderLoginFormTest;
@@ -6,6 +6,7 @@ import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopLoginPageForm;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.ShopPage;
+import Selenium.RahulAcademy.Base.BaseTest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.Test;

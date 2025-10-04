@@ -1,8 +1,9 @@
-package POM.WebTest.BoniGarcia.Tests;
+package Selenium.BoniGarcia;
 
 import Base.BaseTest.DriverFactoryV1;
 import Base.Utils.Screenshot;
 import POM.WebTest.BoniGarcia.Pages.*;
+import POM.WebTest.BoniGarcia.BaseTest.BaseTest;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import POM.WebTest.BoniGarcia.Utils.PointForCanvas;
 import org.openqa.selenium.support.Color;

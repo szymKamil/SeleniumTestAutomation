@@ -1,18 +1,15 @@
-package POM.WebTest.SwagLabs.Tests;
+package POM.WebTest.SwagLabs.Base;
 
 import Base.BaseTest.DriverFactoryV1;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.annotations.*;
 
-import java.lang.reflect.Method;
-
 public class BaseTest  {
 
     WebDriver driver;
-    Logger logger = LoggerFactory.getLogger("SwagLabs Test Logger");
+   public Logger logger = LoggerFactory.getLogger("SwagLabs Test Logger");
 
 
 

@@ -1,19 +1,14 @@
-package POM.WebTest.BoniGarcia.Tests;
+package POM.WebTest.BoniGarcia.BaseTest;
 
 
 import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.BoniGarcia.Pages.*;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org. slf4j. Logger;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 public abstract class BaseTest  {
 

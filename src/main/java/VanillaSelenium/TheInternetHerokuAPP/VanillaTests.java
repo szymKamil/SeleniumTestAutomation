@@ -63,7 +63,6 @@ public class VanillaTests {
         String title = driver.getTitle();
         log.info("Strona ma tytuł: {}", title);
 
-
     }
 
     @AfterTest

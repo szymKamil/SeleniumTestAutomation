@@ -1,7 +1,10 @@
-package POM.WebTest.RahulAcademy.Tests;
+package Selenium.RahulAcademy.Base;
 
 
 import Base.BaseTest.DriverFactoryV1;
+import Selenium.RahulAcademy.LocatorsFormLoginTests;
+import Selenium.RahulAcademy.ShopPageTests;
+import Selenium.RahulAcademy.VegetableShopTests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
@@ -17,7 +20,7 @@ public class BaseTest {
     private final String FORM_TEST_PAGE = "https://rahulshettyacademy.com/locatorspractice/";
     private final String SHOP_LOGIN_PAGE = "https://rahulshettyacademy.com/loginpagePractise/";
     private final String VEGETABLE_SHOP_PAGE = "https://rahulshettyacademy.com/seleniumPractise/#/";
-    Logger logger = LoggerFactory.getLogger("Logger Rahul Tests");
+    public Logger logger = LoggerFactory.getLogger("Logger Rahul Tests");
 
 
     @Parameters({"browser", "timeout"})
