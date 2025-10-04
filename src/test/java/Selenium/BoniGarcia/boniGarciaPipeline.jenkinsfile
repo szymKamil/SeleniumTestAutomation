@@ -8,7 +8,9 @@ pipeline {
             }
         }
         stage('Test') {
-            echo 'Testing...'
+            steps {
+                echo 'Testing...'
+            }
         }
     }
     post {
@@ -19,8 +21,5 @@ pipeline {
             mail to: 'kamszymil@gmail.com', subject: 'Błędy w teście',
             body: 'Test nie wykonał się poprawnie'
         }
-
     }
-
-
 }
