@@ -14,8 +14,6 @@
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <selenium.version>4.35.0</selenium.version>
-        <suiteXmlFile>src/test/java/Selenium/BoniGarcia/BGtestng.xml
-        </suiteXmlFile>
     </properties>
     <dependencies>
         <!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
@@ -93,9 +91,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>3.2.5</version>
                 <configuration>
-                    <!-- Odczyt pliku XML z parametru, jeśli podany -->
                     <suiteXmlFiles>
-                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                        <suiteXmlFile>src/test/java/Selenium/BoniGarcia/BGtestng.xml</suiteXmlFile>
                     </suiteXmlFiles>
                 </configuration>
             </plugin>
