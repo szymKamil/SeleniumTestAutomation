@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite" thread-count="2" parallel="methods">
+    <test verbose="1" preserve-order="true" name="Packed 1">
+        <parameter name="browser" value="firefox"/>
+        <parameter name="timeout" value="30"/>
+        <classes >
+            <class name="Selenium.BoniGarcia.MainTest">
+                <methods>
+                    <include name="mainPageTestElementsVerification"/>
+                    <include name="webFormTest"/>
+                    <include name="dropdownMenuTest"/>
+                    <include name="navigationPageTest"/>
+                    <include name="mouseOverTest"/>
+                    <include name="dragAndDropTest"/>
+                    <include name="canvas"/>
+                    <include name="loadingImages"/>
+                    <include name="slowCalculatorTest"/>
+                    <include name="longPageTest"/>
+                    <include name="infiniteScroll"/>
+                    <include name="shadowRootTest"/>
+                    <include name="cookiesPageTest"/>
+                    <include name="framesPageTest"/>
+                    <include name="iFramesPageTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test verbose="5" preserve-order="true" name="Firefox BoniGarcia Test">
+        <parameter name="browser" value="firefox"/>
+        <parameter name="timeout" value="55"/>
+        <groups>
+            <run>
+                <exclude name="devTools"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="Selenium.BoniGarcia.MainTest"/>
+        </classes>
+    </test>
+    <test verbose="3" preserve-order="true" name="Run Group">
+        <groups>
+            <run>
+                <include name="regression"/>
+            </run>
+        </groups>
+    </test>
+</suite>

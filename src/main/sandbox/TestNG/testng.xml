@@ -1,0 +1,11 @@
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
+<suite name="FactoryTestSuite">
+    <listeners>
+        <listener class-name="TestNG.AllureListenerTest"></listener>
+    </listeners>
+    <test name="FactoryTest">
+        <classes>
+            <class name="TestNG.FactoryTest"/>
+        </classes>
+    </test>
+</suite>
