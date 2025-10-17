@@ -2,24 +2,39 @@ pipeline {
     agent any
 
     stages {
-        stage('Build'){
+        stage('Checkout') {
             steps {
-                echo 'Building...'
+                // Jeśli masz repo na GitHubie:
+                git branch: 'jenkins-integration', url: 'https://github.com/szymKamil/SeleniumTestAutomation.git'
+                echo 'Używam lokalnych plików, brak klonowania repo'
             }
         }
-        stage('Test') {
+
+        stage('Build and Run Tests') {
             steps {
-                echo 'Testing...'
+                echo 'Uruchamianie testów TestNG...'
+                // ścieżka do pliku testng.xml
+                sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
+            }
+        }
+
+        stage('Report') {
+            steps {
+                echo 'Zbieranie raportów testów...'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
     }
+
     post {
         always {
-            echo 'Always post'
+            echo 'Pipeline zakończony — czyszczenie'
+        }
+        success {
+            echo '✅ Testy przeszły pomyślnie!'
         }
         failure {
-            mail to: 'kamszymil@gmail.com', subject: 'Błędy w teście',
-            body: 'Test nie wykonał się poprawnie'
+            echo '❌ Błąd testów!'
         }
     }
 }
