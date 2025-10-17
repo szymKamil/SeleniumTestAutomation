@@ -14,7 +14,7 @@
         <maven.compiler.target>23</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <selenium.version>4.35.0</selenium.version>
-        <suiteXmlFile>-DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml
+        <suiteXmlFile>src/test/java/Selenium/BoniGarcia/BGtestng.xml
         </suiteXmlFile>
     </properties>
     <dependencies>
