@@ -6,6 +6,7 @@ pipeline {
             steps {
                 // Jeśli masz repo na GitHubie:
                 git branch: 'jenkins-integration', url: 'https://github.com/szymKamil/SeleniumTestAutomation.git'
+                credentialsId: 'github-token'
                 echo 'Używam lokalnych plików, brak klonowania repo'
             }
         }
@@ -15,6 +16,7 @@ pipeline {
                 echo 'Uruchamianie testów TestNG...'
                 // ścieżka do pliku testng.xml
                 sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
+
             }
         }
 
