@@ -17,7 +17,7 @@ pipeline {
             steps {
                 echo 'Uruchamianie testów TestNG...'
                 // ścieżka do pliku testng.xml
-                 sh 'mvn clean test "-DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml"'
+                 sh 'mvn clean test "-DsuiteXmlFile=BGtestng.xml"'
             }
         }
 
