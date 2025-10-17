@@ -2,7 +2,7 @@ pipeline {
     agent any
         tools {
                 maven 'Maven'  // nazwa Mavena w Manage Jenkins → Tools
-              //  jdk 'JDK_17'         // jeśli masz zdefiniowaną wersję JDK
+                jdk 'JDK'         // jeśli masz zdefiniowaną wersję JDK
             }
      stages {
          stage('Checkout') {
