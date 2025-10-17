@@ -13,6 +13,13 @@ pipeline {
              }
          }
 
+         stage('Check XML') {
+             steps {
+                 sh 'pwd'
+                 sh 'ls -R src/test/java/Selenium/BoniGarcia/'
+             }
+         }
+
         stage('Build and Run Tests') {
             steps {
                 echo 'Uruchamianie testów TestNG...'
