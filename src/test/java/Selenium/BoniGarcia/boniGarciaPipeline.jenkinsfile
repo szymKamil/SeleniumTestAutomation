@@ -17,9 +17,7 @@ pipeline {
             steps {
                 echo 'Uruchamianie testów TestNG...'
                 // ścieżka do pliku testng.xml
-                 withMaven(maven: 'Maven') {
-                        sh 'mvn clean test "-DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml"'
-                    }
+                 sh 'mvn clean test "-DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml"'
             }
         }
 
