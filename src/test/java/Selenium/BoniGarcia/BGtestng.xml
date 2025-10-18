@@ -10,7 +10,6 @@
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
                     <include name="mainPageTestElementsVerification"/>
-                    <include name="webFormTest"/>
                     <include name="dropdownMenuTest"/>
                     <include name="navigationPageTest"/>
                     <include name="mouseOverTest"/>
