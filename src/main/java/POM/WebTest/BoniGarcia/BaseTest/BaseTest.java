@@ -9,6 +9,7 @@ import org.testng.annotations.*;
 import org. slf4j. Logger;
 
 import java.net.URI;
+import java.net.URL;
 
 public abstract class BaseTest  {
 
@@ -24,10 +25,10 @@ public abstract class BaseTest  {
 
 
     //    @Listeners(TestListener.class)
-    @Parameters({"browser", "timeout"})
+    @Parameters({"browser", "timeout", "url"})
     @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout) throws Exception {
-        DriverFactoryV1.initDriver(browser, timeout/*, LOCAL_URL.toURL()*/);
+    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, String url) throws Exception {
+        DriverFactoryV1.initDriver(browser, timeout, URI.create(url).toURL());
         log = LoggerFactory.getLogger("Logger");
         ap = new AbstractPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
