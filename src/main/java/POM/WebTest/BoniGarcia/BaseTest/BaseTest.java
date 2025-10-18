@@ -12,27 +12,32 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 
-public abstract class BaseTest  {
+public abstract class BaseTest {
 
 
-    /*-----------------*/
-    final static URI LOCAL_URL =  URI.create("http://localhost:4444/");
-    final static URI DOCKER_URL = URI.create("http://192.168.1.105:5555/");
-    /*-----------------*/
-    Logger log;
-    /*------Klasy stron-----------*/
-    AbstractPage ap;
-    /*-----------------*/
+	/*-----------------*/
+	final static URI LOCAL_URL = URI.create("http://localhost:4444/");
+	final static URI DOCKER_URL = URI.create("http://192.168.1.105:5555/");
+	/*-----------------*/
+	Logger log;
+	/*------Klasy stron-----------*/
+	AbstractPage ap;
+	/*-----------------*/
 
 
-    //    @Listeners(TestListener.class)
-    @Parameters({"browser", "timeout", "url"})
-    @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
-        DriverFactoryV1.initDriver(browser, timeout, new URL(url));
-        log = LoggerFactory.getLogger("Logger");
-        ap = new AbstractPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-    }
+	@BeforeClass
+	public void runLogger() {
+		log = LoggerFactory.getLogger(BaseTest.class);
+	}
+
+
+	//    @Listeners(TestListener.class)
+	@Parameters({"browser", "timeout", "url"})
+	@BeforeMethod
+	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
+		DriverFactoryV1.initDriver(browser, timeout, new URL(url));
+	}
+
 
     @AfterMethod(alwaysRun = true)
     public void shutDown(ITestResult testResult, Method method) {

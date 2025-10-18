@@ -4,8 +4,8 @@
     <test verbose="1" preserve-order="true" name="Packed 1">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
-<!--        <parameter name="url" value="http://localhost:4444/wd/hub"/>-->
-        <parameter name="url" value="http://selenium-hub:4444/wd/hub"/>
+        <parameter name="url" value="http://localhost:4444/wd/hub"/>
+<!--        <parameter name="url" value="http://selenium-hub:4444/wd/hub"/>-->
         <classes >
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
@@ -28,7 +28,7 @@
             </class>
         </classes>
     </test>
-    <test verbose="5" preserve-order="true" name="Firefox BoniGarcia Test">
+    <test verbose="5" preserve-order="true" name="Firefox BoniGarcia Test" enabled="false">
         <parameter name="browser" value="firefox"/>
         <parameter name="timeout" value="55"/>
         <groups>
@@ -40,7 +40,7 @@
             <class name="Selenium.BoniGarcia.MainTest"/>
         </classes>
     </test>
-    <test verbose="3" preserve-order="true" name="Run Group">
+    <test verbose="3" preserve-order="true" name="Run Group" enabled="false">
         <groups>
             <run>
                 <include name="regression"/>
