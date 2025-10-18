@@ -26,7 +26,7 @@ public abstract class BaseTest  {
 
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout", "url"})
-    @BeforeMethod
+    @BeforeTest
     public void config(@Optional("Chrome") String browser, @Optional("55") int timeout,  @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
         DriverFactoryV1.initDriver(browser, timeout, new URL(url));
         log = LoggerFactory.getLogger("Logger");
@@ -34,7 +34,7 @@ public abstract class BaseTest  {
     }
 
 
-     @AfterMethod
+     @AfterTest
         void tearDown(ITestResult result){
         log.info("Test {} zakończony.", result.getMethod().getMethodName());
         DriverFactoryV1.quit();

@@ -41,7 +41,7 @@ public class MainTest extends BaseTest {
 
 
 	@Parameters("path")
-	@Test(priority = 1, groups = {"functional", "regression"})
+	@Test(priority = 2, groups = {"functional", "regression"})
 	public void webFormTest(@Optional("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf") String path) {
 		/***
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -87,7 +87,7 @@ public class MainTest extends BaseTest {
 	}
 
 
-	@Test(priority = 1, groups = "interface")
+	@Test(priority = 2, groups = "interface")
 	public void dropdownMenuTest() {
 		/***
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
