@@ -4,8 +4,8 @@
     <test verbose="1" preserve-order="true" name="Packed 1">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
-        <parameter name="url" value="http://localhost:4444/wd/hub"/>
-<!--        <parameter name="url" value="http://localhost:4444/"/>-->
+<!--        <parameter name="url" value="http://localhost:4444/wd/hub"/>-->
+        <parameter name="url" value="http://selenium-hub:4444/"/>
         <classes >
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
