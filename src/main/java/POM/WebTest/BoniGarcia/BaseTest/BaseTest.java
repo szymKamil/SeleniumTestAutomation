@@ -16,7 +16,7 @@ public abstract class BaseTest  {
 
     /*-----------------*/
     final static URI LOCAL_URL =  URI.create("http://localhost:4444/");
-    final static URI DOCKER_URL = URI.create("http://192.168.1.104:5555/");
+    final static URI DOCKER_URL = URI.create("http://192.168.1.105:5555/");
     /*-----------------*/
     Logger log;
     /*------Klasy stron-----------*/
@@ -27,9 +27,9 @@ public abstract class BaseTest  {
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout", "url"})
     @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, String url) throws Exception {
-        URI DOCKER =  URI.create(url);
-        DriverFactoryV1.initDriver(browser, timeout, DOCKER.toURL());
+    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout,  @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
+
+        DriverFactoryV1.initDriver(browser, timeout, new URL(url));
         log = LoggerFactory.getLogger("Logger");
         ap = new AbstractPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
