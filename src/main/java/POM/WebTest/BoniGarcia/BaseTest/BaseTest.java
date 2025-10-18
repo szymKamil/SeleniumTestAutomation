@@ -28,8 +28,8 @@ public abstract class BaseTest  {
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout", "url"})
     @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional() String url) throws Exception {
-        DriverFactoryV1.initDriver(browser, timeout /*new URL(url)*/);
+    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
+        DriverFactoryV1.initDriver(browser, timeout, new URL(url));
         log = LoggerFactory.getLogger("Logger");
         ap = new AbstractPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
