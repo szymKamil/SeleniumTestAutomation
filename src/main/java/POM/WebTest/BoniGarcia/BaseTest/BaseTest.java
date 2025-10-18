@@ -8,6 +8,7 @@ import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org. slf4j. Logger;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
 
@@ -27,16 +28,21 @@ public abstract class BaseTest  {
     //    @Listeners(TestListener.class)
     @Parameters({"browser", "timeout", "url"})
     @BeforeMethod
-    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout,  @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
-        DriverFactoryV1.initDriver(browser, timeout, new URL(url));
+    public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional() String url) throws Exception {
+        DriverFactoryV1.initDriver(browser, timeout /*new URL(url)*/);
         log = LoggerFactory.getLogger("Logger");
         ap = new AbstractPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
     }
 
-
-     @AfterMethod
-        void tearDown(ITestResult result){
-        log.info("Test {} zakończony.", result.getMethod().getMethodName());
+    @AfterMethod(alwaysRun = true)
+    public void shutDown(ITestResult testResult, Method method) {
+        if (ITestResult.FAILURE == testResult.getStatus()) {
+            log.error("Test się nie powiódł!: {}", method.getName());
+        } else if (ITestResult.SUCCESS == testResult.getStatus()) {
+            log.info("Test zakończony pomyślnie: {}", method.getName());
+        }
+        log.info("Testy zostały ukończone.");
         DriverFactoryV1.quit();
     }
+
 }
