@@ -74,7 +74,7 @@ post {
         echo '❌ Błąd testów!'
     }
 }
-
+}
 
 // --------------------------------------------------
 // Funkcje pomocnicze (muszą być poniżej lub powyżej, ale w tym samym pliku)
@@ -102,4 +102,5 @@ def startSeleniumGrid() {
     } catch (Exception e) {
         error "Nie udało się uruchomić Selenium Grid: ${e.message}"
     }
+
 }
