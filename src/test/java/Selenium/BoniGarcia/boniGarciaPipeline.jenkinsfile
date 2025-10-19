@@ -7,74 +7,74 @@ pipeline {
     }
 
     stages {
-        stage('Run Selenium grid and nodes') {
+        stage('Check Selenium Grid') {
             steps {
                 script {
-                    def gridStatus = checkGridStatus('http://selenium-hub:4444/wd/hub')
-                    if (!gridStatus) {
-                        echo "Selenium Grid nie działa. Uruchamiam Grid i nody..."
-                        startSeleniumGrid()
+                    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub:4444/wd/hub/status", returnStdout: true).trim()
+                    if (response != '200') {
+                        error "Selenium Grid nie działa! Uruchom go osobno w Dockerze."
                     } else {
-                        echo "Selenium Grid działa poprawnie."
+                        echo "Grid OK — kontynuuję testy."
                     }
                 }
             }
         }
+    }
 
-        stage('Checkout') {
-            steps {
-                git branch: 'jenkins-integration',
-                        url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
-                        credentialsId: 'github-token'
-            }
-        }
-
-        stage('Compile Maven') {
-            steps {
-                sh 'mvn clean compile'
-            }
-        }
-
-        stage('Build and Run Tests') {
-            steps {
-                echo 'Uruchamianie testów TestNG...'
-                sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
-            }
-        }
-
-        stage('Report') {
-            steps {
-                echo 'Zbieranie raportów testów...'
-                junit '**/target/surefire-reports/*.xml'
-            }
+    stage('Checkout') {
+        steps {
+            git branch: 'jenkins-integration',
+                    url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
+                    credentialsId: 'github-token'
         }
     }
 
-    post {
-        always {
-            echo 'Pipeline zakończony — czyszczenie'
-            script {
-                try {
-                    sh '''
+    stage('Compile Maven') {
+        steps {
+            sh 'mvn clean compile'
+        }
+    }
+
+    stage('Build and Run Tests') {
+        steps {
+            echo 'Uruchamianie testów TestNG...'
+            sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
+        }
+    }
+
+    stage('Report') {
+        steps {
+            echo 'Zbieranie raportów testów...'
+            junit '**/target/surefire-reports/*.xml'
+        }
+    }
+}
+
+post {
+    always {
+        echo 'Pipeline zakończony — czyszczenie'
+        script {
+            try {
+                sh '''
                         docker stop selenium-hub 
                         docker stop chrome-node 
                         docker stop chrome-node-2 
                         docker stop firefox-node 
                         docker stop edge-node 
                     '''
-                } catch (Exception e) {
-                    echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
-                }
+            } catch (Exception e) {
+                echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
             }
         }
-        success {
-            echo '✅ Testy przeszły pomyślnie!'
-        }
-        failure {
-            echo '❌ Błąd testów!'
-        }
+    }
+    success {
+        echo '✅ Testy przeszły pomyślnie!'
+    }
+    failure {
+        echo '❌ Błąd testów!'
     }
 }
+
 
 // --------------------------------------------------
 // Funkcje pomocnicze (muszą być poniżej lub powyżej, ale w tym samym pliku)
