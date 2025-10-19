@@ -1,42 +1,42 @@
 pipeline {
     agent any
-        tools {
-                maven 'Maven'  // nazwa Mavena w Manage Jenkins → Tools
-                jdk 'JDK'         // jeśli masz zdefiniowaną wersję JDK
+    tools {
+        maven 'Maven'  // nazwa Mavena w Manage Jenkins → Tools
+        jdk 'JDK'         // jeśli masz zdefiniowaną wersję JDK
+    }
+    stages {
+        stage('Run Selenium grid and nodes') {
+            steps {
+                def gridStatus = checkGridStatus('http://localhost:4444/wd/hub/status')
+                if (!gridStatus) {
+                    echo "Selenium Grid nie działa. Uruchamiam Grid i nody..."
+                    startSeleniumGrid()
+                } else {
+                    echo "Selenium Grid działa poprawnie."
+                }
             }
-     stages {
-      stage('Run Selenium grid and nodes') {
-                  steps {
-                      def gridStatus = checkGridStatus('http://localhost:4444/wd/hub/status')
-                                          if (!gridStatus) {
-                                              echo "Selenium Grid nie działa. Uruchamiam Grid i nody..."
-                                              startSeleniumGrid()
-                                          } else {
-                                              echo "Selenium Grid działa poprawnie."
-                                          }
-                  }
-              }
+        }
 
 
-         stage('Checkout') {
-             steps {
-                 git branch: 'jenkins-integration',
-                     url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
-                     credentialsId: 'github-token'
-             }
-         }
-            stage('Compile Maven') {
-                  steps {
-                     sh
-                  }
-              }
+        stage('Checkout') {
+            steps {
+                git branch: 'jenkins-integration',
+                        url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
+                        credentialsId: 'github-token'
+            }
+        }
+        stage('Compile Maven') {
+            steps {
+                sh
+            }
+        }
 
 
         stage('Build and Run Tests') {
             steps {
                 echo 'Uruchamianie testów TestNG...'
                 // ścieżka do pliku testng.xml
-                 sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
+                sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
             }
         }
 
@@ -66,7 +66,7 @@ pipeline {
             echo '❌ Błąd testów!'
         }
     }
-
+}
     // Funkcja do sprawdzania statusu Selenium Grid
     def checkGridStatus(String gridUrl) {
         try {
@@ -95,5 +95,4 @@ pipeline {
         } catch (Exception e) {
             error "Nie udało się uruchomić Selenium Grid: ${e.message}"
         }
-}
-}
+    }
