@@ -51,6 +51,13 @@ pipeline {
     post {
         always {
             echo 'Pipeline zakończony — czyszczenie'
+            sh '''
+                docker stop selenium-hub
+                docker stop chrome-node
+                docker stop chrome-node-2
+                docker stop firefox-node
+                docker stop edge-node
+            '''
         }
         success {
             echo '✅ Testy przeszły pomyślnie!'
