@@ -1,79 +1,79 @@
 pipeline {
-    agent any
+        agent any
 
-    tools {
-        maven 'Maven' // nazwa z Manage Jenkins → Global Tool Configuration
-        jdk 'JDK'
-    }
+        tools {
+            maven 'Maven' // nazwa z Manage Jenkins → Global Tool Configuration
+            jdk 'JDK'
+        }
 
-    stages {
-        stage('Check Selenium Grid') {
-            steps {
-                script {
-                    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub:4444/wd/hub/status", returnStdout: true).trim()
-                    if (response != '200') {
-                        error "Selenium Grid nie działa! Uruchom go osobno w Dockerze."
-                    } else {
-                        echo "Grid OK — kontynuuję testy."
+        stages {
+            stage('Check Selenium Grid') {
+                steps {
+                    script {
+                        def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub:4444/wd/hub/status", returnStdout: true).trim()
+                        if (response != '200') {
+                            error "Selenium Grid nie działa! Uruchom go osobno w Dockerze."
+                        } else {
+                            echo "Grid OK — kontynuuję testy."
+                        }
                     }
                 }
             }
         }
-    }
 
-    stage('Checkout') {
-        steps {
-            git branch: 'jenkins-integration',
-                    url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
-                    credentialsId: 'github-token'
+        stage('Checkout') {
+            steps {
+                git branch: 'jenkins-integration',
+                        url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
+                        credentialsId: 'github-token'
+            }
         }
-    }
 
-    stage('Compile Maven') {
-        steps {
-            sh 'mvn clean compile'
+        stage('Compile Maven') {
+            steps {
+                sh 'mvn clean compile'
+            }
         }
-    }
 
-    stage('Build and Run Tests') {
-        steps {
-            echo 'Uruchamianie testów TestNG...'
-            sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
+        stage('Build and Run Tests') {
+            steps {
+                echo 'Uruchamianie testów TestNG...'
+                sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
+            }
         }
-    }
 
-    stage('Report') {
-        steps {
-            echo 'Zbieranie raportów testów...'
-            junit '**/target/surefire-reports/*.xml'
-        }
-    }
-}
-
-post {
-    always {
-        echo 'Pipeline zakończony — czyszczenie'
-        script {
-            try {
-                sh '''
-                        docker stop selenium-hub 
-                        docker stop chrome-node 
-                        docker stop chrome-node-2 
-                        docker stop firefox-node 
-                        docker stop edge-node 
-                    '''
-            } catch (Exception e) {
-                echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
+        stage('Report') {
+            steps {
+                echo 'Zbieranie raportów testów...'
+                junit '**/target/surefire-reports/*.xml'
             }
         }
     }
-    success {
-        echo '✅ Testy przeszły pomyślnie!'
+
+    post {
+        always {
+            echo 'Pipeline zakończony — czyszczenie'
+            script {
+                try {
+                    sh '''
+                            docker stop selenium-hub 
+                            docker stop chrome-node 
+                            docker stop chrome-node-2 
+                            docker stop firefox-node 
+                            docker stop edge-node 
+                        '''
+                } catch (Exception e) {
+                    echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
+                }
+            }
+        }
+        success {
+            echo '✅ Testy przeszły pomyślnie!'
+        }
+        failure {
+            echo '❌ Błąd testów!'
+        }
     }
-    failure {
-        echo '❌ Błąd testów!'
-    }
-}
 }
 
 // --------------------------------------------------
