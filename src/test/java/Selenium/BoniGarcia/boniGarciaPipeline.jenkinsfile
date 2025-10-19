@@ -1,12 +1,22 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+    }
+
     tools {
         maven 'Maven' // nazwa z Manage Jenkins → Global Tool Configuration
         jdk 'JDK'
     }
 
+
     stages {
+        stage('Docker test') {
+            steps {
+                sh 'docker ps'
+            }
+        }
         stage('Check Selenium Grid') {
             steps {
                 script {
@@ -75,3 +85,6 @@ pipeline {
         }
     }
 }
+
+
+
