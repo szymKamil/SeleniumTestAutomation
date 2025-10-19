@@ -1,22 +1,25 @@
 pipeline {
     agent any
+
     tools {
-        maven 'Maven'  // nazwa Mavena w Manage Jenkins → Tools
-        jdk 'JDK'         // jeśli masz zdefiniowaną wersję JDK
+        maven 'Maven' // nazwa z Manage Jenkins → Global Tool Configuration
+        jdk 'JDK'
     }
+
     stages {
         stage('Run Selenium grid and nodes') {
             steps {
-                def gridStatus = checkGridStatus('http://localhost:4444/wd/hub/status')
-                if (!gridStatus) {
-                    echo "Selenium Grid nie działa. Uruchamiam Grid i nody..."
-                    startSeleniumGrid()
-                } else {
-                    echo "Selenium Grid działa poprawnie."
+                script {
+                    def gridStatus = checkGridStatus('http://localhost:4444/wd/hub/status')
+                    if (!gridStatus) {
+                        echo "Selenium Grid nie działa. Uruchamiam Grid i nody..."
+                        startSeleniumGrid()
+                    } else {
+                        echo "Selenium Grid działa poprawnie."
+                    }
                 }
             }
         }
-
 
         stage('Checkout') {
             steps {
@@ -25,17 +28,16 @@ pipeline {
                         credentialsId: 'github-token'
             }
         }
+
         stage('Compile Maven') {
             steps {
-                sh
+                sh 'mvn clean compile'
             }
         }
-
 
         stage('Build and Run Tests') {
             steps {
                 echo 'Uruchamianie testów TestNG...'
-                // ścieżka do pliku testng.xml
                 sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
             }
         }
@@ -51,13 +53,19 @@ pipeline {
     post {
         always {
             echo 'Pipeline zakończony — czyszczenie'
-            sh '''
-                docker stop selenium-hub
-                docker stop chrome-node
-                docker stop chrome-node-2
-                docker stop firefox-node
-                docker stop edge-node
-            '''
+            script {
+                try {
+                    sh '''
+                        docker stop selenium-hub || true
+                        docker stop chrome-node || true
+                        docker stop chrome-node-2 || true
+                        docker stop firefox-node || true
+                        docker stop edge-node || true
+                    '''
+                } catch (Exception e) {
+                    echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
+                }
+            }
         }
         success {
             echo '✅ Testy przeszły pomyślnie!'
@@ -67,32 +75,31 @@ pipeline {
         }
     }
 }
-    // Funkcja do sprawdzania statusu Selenium Grid
-    def checkGridStatus(String gridUrl) {
-        try {
-            def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${gridUrl}", returnStdout: true).trim()
-            return response == '200'
-        } catch (Exception e) {
-            echo "Błąd podczas sprawdzania statusu Grid: ${e.message}"
-            return false
-        }
-    }
 
-    // Funkcja do uruchamiania Selenium Grid
-    def startSeleniumGrid() {
-        try {
-            // Przykład dla Docker Compose
-            sh '''
-                docker start selenium-hub
-                docker start chrome-node
-                docker start chrome-node-2
-                docker start firefox-node
-                docker start edge-node
-            '''
-            // Oczekiwanie na uruchomienie Grid
-            sleep(time: 10, unit: 'SECONDS')
-            echo "Selenium Grid uruchomiony."
-        } catch (Exception e) {
-            error "Nie udało się uruchomić Selenium Grid: ${e.message}"
-        }
+// --------------------------------------------------
+// Funkcje pomocnicze (muszą być poniżej lub powyżej, ale w tym samym pliku)
+def checkGridStatus(String gridUrl) {
+    try {
+        def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' ${gridUrl}", returnStdout: true).trim()
+        return response == '200'
+    } catch (Exception e) {
+        echo "Błąd podczas sprawdzania statusu Grid: ${e.message}"
+        return false
     }
+}
+
+def startSeleniumGrid() {
+    try {
+        sh '''
+            docker start selenium-hub || docker run -d -p 4444:4444 --name selenium-hub selenium/hub:latest
+            docker start chrome-node || docker run -d --name chrome-node --link selenium-hub:hub selenium/node-chrome:latest
+            docker start chrome-node-2 || docker run -d --name chrome-node-2 --link selenium-hub:hub selenium/node-chrome:latest
+            docker start firefox-node || docker run -d --name firefox-node --link selenium-hub:hub selenium/node-firefox:latest
+            docker start edge-node || docker run -d --name edge-node --link selenium-hub:hub selenium/node-edge:latest
+        '''
+        sleep(time: 10, unit: 'SECONDS')
+        echo "Selenium Grid uruchomiony."
+    } catch (Exception e) {
+        error "Nie udało się uruchomić Selenium Grid: ${e.message}"
+    }
+}
