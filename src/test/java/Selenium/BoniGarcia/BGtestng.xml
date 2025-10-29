@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
 <suite name="All Test Suite" thread-count="1" parallel="false">
+    <listeners>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"></listener>
+    </listeners>
     <test verbose="1" preserve-order="true" name="Packed 1">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
-<!--        <parameter name="url" value="http://localhost:4444/wd/hub"/>-->
-        <parameter name="url" value="http://selenium-hub:4444/wd/hub"/>
+<!--        <parameter name="url" value="http://selenium-hub:4444/wd/hub"/>-->
         <classes >
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>

@@ -3,11 +3,11 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.devtools.DevTools;
-import org.openqa.selenium.devtools.v137.domstorage.DOMStorage;
-import org.openqa.selenium.devtools.v137.domstorage.model.Item;
-import org.openqa.selenium.devtools.v137.domstorage.model.StorageId;
-import org.openqa.selenium.devtools.v137.target.Target;
-import org.openqa.selenium.devtools.v137.target.model.TargetID;
+import org.openqa.selenium.devtools.v142.domstorage.DOMStorage;
+import org.openqa.selenium.devtools.v142.domstorage.model.Item;
+import org.openqa.selenium.devtools.v142.domstorage.model.StorageId;
+import org.openqa.selenium.devtools.v142.target.Target;
+import org.openqa.selenium.devtools.v142.target.model.TargetID;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -155,7 +155,7 @@ public class DevToolsTouturial {
             System.out.println("-------------------------------------\n");
 
             // --- Krok 5: Znajdź interesujący nas target (zakładkę z dokumentacją Selenium) ---
-            Optional<org.openqa.selenium.devtools.v137.target.model.TargetInfo> seleniumDocTargetInfo = allTargets.stream()
+            Optional<org.openqa.selenium.devtools.v142.target.model.TargetInfo> seleniumDocTargetInfo = allTargets.stream()
                     .filter(info -> info.getTitle()
                             .contains("Selenium") && info.getType()
                             .equals("page"))
@@ -163,7 +163,7 @@ public class DevToolsTouturial {
 
             // --- Krok 6: Wykonaj operacje na znalezionym targecie ---
             if (seleniumDocTargetInfo.isPresent()) {
-                org.openqa.selenium.devtools.v137.target.model.TargetInfo targetToActivate = seleniumDocTargetInfo.get();
+                org.openqa.selenium.devtools.v142.target.model.TargetInfo targetToActivate = seleniumDocTargetInfo.get();
                 System.out.println("Znaleziono target do aktywacji: " + targetToActivate.getTitle());
 
                 // --- ROZWIĄZANIE PROBLEMU: Konwersja z `idealized` na `vXXX` ---
@@ -171,8 +171,8 @@ public class DevToolsTouturial {
                 TargetID idealizedId = targetToActivate.getTargetId();
 
                 // 2. Utwórz nowy obiekt `vXXX.TargetID` używając wartości string z poprzedniego
-                org.openqa.selenium.devtools.v137.target.model.TargetID versionedId =
-                        new org.openqa.selenium.devtools.v137.target.model.TargetID(idealizedId.toString());
+                org.openqa.selenium.devtools.v142.target.model.TargetID versionedId =
+                        new org.openqa.selenium.devtools.v142.target.model.TargetID(idealizedId.toString());
 
                 // 3. Użyj WERSJONOWANEGO ID do wykonania komend
                 System.out.println("\nAktywowanie targetu za pomocą ID: " + versionedId);
