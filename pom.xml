@@ -101,6 +101,11 @@
                     <suiteXmlFiles>
                         <suiteXmlFile>src/test/java/Selenium/BoniGarcia/BGtestng.xml</suiteXmlFile>
                     </suiteXmlFiles>
+                    <systemPropertyVariables>
+                        <allure.results.directory>
+                            ${project.build.directory}/allure-results
+                        </allure.results.directory>
+                    </systemPropertyVariables>
                     <properties>
                         <property>
                             <name>listener</name>
@@ -116,7 +121,6 @@
                 <configuration>
                     <resultsDirectory>${project.build.directory}/allure-results</resultsDirectory>
                 </configuration>
-
             </plugin>
         </plugins>
     </build>

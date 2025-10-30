@@ -1,5 +1,7 @@
 package Base.BaseTest;
 
+import Base.Listeners.Listener;
+import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
@@ -11,6 +13,7 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,6 +38,8 @@ public final class DriverFactoryV1 {
         initDriver(browser, time, null);
     }
 
+
+
     public static void initDriver(String browser, int time, URL url) throws InterruptedException {
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
@@ -52,7 +57,8 @@ public final class DriverFactoryV1 {
             }
             driver.manage().window().maximize();
         }
-        DRIVER_THREAD.set(driver);
+        WebDriver decoratedDriver = decorate(driver, new Listener());
+        DRIVER_THREAD.set(decoratedDriver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
         logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
         } catch (Exception e) {
@@ -61,6 +67,14 @@ public final class DriverFactoryV1 {
             throw new RuntimeException("Nie udało się uruchomić drivera", e);
         }
         logger.info("Uruchomiony został thread {}", Thread.currentThread().getName());
+    }
+
+    private static WebDriver decorate(WebDriver rawDriver, WebDriverListener... listeners){
+        WebDriver decorated = rawDriver;
+        for (WebDriverListener listener : listeners) {
+            decorated = new EventFiringDecorator(listener).decorate(decorated);
+        }
+        return decorated;
     }
 
 

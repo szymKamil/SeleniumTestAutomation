@@ -6,6 +6,7 @@ import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.BaseTest.BaseTest;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import POM.WebTest.BoniGarcia.Utils.PointForCanvas;
+import io.qameta.allure.testng.AllureTestNg;
 import org.openqa.selenium.support.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +19,11 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
+import Base.Listeners.Listener;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-
+@Listeners({AllureTestNg.class})
 public class MainTest extends BaseTest {
 
 
