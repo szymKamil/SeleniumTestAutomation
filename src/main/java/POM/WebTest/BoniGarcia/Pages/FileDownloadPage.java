@@ -44,7 +44,7 @@ public class FileDownloadPage extends AbstractPage {
     public void downloadFile(int choseFileToDownload) throws IOException {
         Path downloadFolder = GetDownloadDir.getDownloadDir();
         System.out.println("Ścieżka do przeszukania to: " + downloadFolder);
-
+        int baseNumberOfFiles = Objects.requireNonNull(downloadFolder.toFile().listFiles()).length;
         if (choseFileToDownload >= 0 && choseFileToDownload <= 4){
             List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
             WebElement btn = btns.get(choseFileToDownload);
@@ -55,7 +55,7 @@ public class FileDownloadPage extends AbstractPage {
         }
         File downloadedFile;
         try {
-             downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30);
+             downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
         } catch (InterruptedException | FileNotFoundException e) {
             throw new FileNotFoundException(e.getMessage());
         }
@@ -66,8 +66,7 @@ public class FileDownloadPage extends AbstractPage {
         downloadFile(0);
     }
 
-    public File waitForDownloadedFile(File downloadFolder, int timeoutSeconds) throws FileNotFoundException, InterruptedException {
-        int baseNumberOfFiles = Objects.requireNonNull(downloadFolder.listFiles()).length;
+    public File waitForDownloadedFile(File downloadFolder, int timeoutSeconds, int baseNumberOfFiles) throws FileNotFoundException, InterruptedException {
         int waited = 0;
         while (waited < timeoutSeconds) {
             File[] files = downloadFolder.listFiles((_, name) ->
