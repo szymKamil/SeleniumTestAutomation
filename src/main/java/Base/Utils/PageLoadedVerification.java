@@ -13,8 +13,16 @@ public class PageLoadedVerification extends Utils{
     private static final Logger log = LoggerFactory.getLogger(PageLoadedVerification.class);
 
     public static ExpectedCondition<Boolean> pageIsLoaded() {
-        return driver -> ((JavascriptExecutor) driver)
-                .executeScript("return document.readyState").equals("complete");
+        return driver -> {
+            boolean pageReady = ((JavascriptExecutor) driver)
+                    .executeScript("return document.readyState")
+                    .equals("complete");
+
+            if (pageReady) {
+                log.info("Strona załadowana");
+            }
+            return pageReady;
+        };
     }
 
 }

@@ -1,6 +1,7 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 
+import Base.Utils.GetDownloadDir;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,6 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -38,10 +41,9 @@ public class FileDownloadPage extends AbstractPage {
     WebElement downloadWseleniumLogoPdfBtn;
 
     //Metody testowe
-    public void downloadFile(int choseFileToDownload) throws FileNotFoundException {
-        //Hardcodowana ścieżka do folderu z testami
-        //TODO: Gdy przejdę na Jenkinsa i dockera, trzeba poprawić ścieżkę
-        File downloadFolder = new File("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\DownloadFolder");
+    public void downloadFile(int choseFileToDownload) throws IOException {
+        Path downloadFolder = GetDownloadDir.getDownloadDir();
+        System.out.println("Ścieżka do przeszukania to: " + downloadFolder);
 
         if (choseFileToDownload >= 0 && choseFileToDownload <= 4){
             List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
@@ -53,15 +55,14 @@ public class FileDownloadPage extends AbstractPage {
         }
         File downloadedFile;
         try {
-             downloadedFile = waitForDownloadedFile(downloadFolder, 30);
+             downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30);
         } catch (InterruptedException | FileNotFoundException e) {
             throw new FileNotFoundException(e.getMessage());
         }
         log.info("Znaleziono pobrany plik: {}", downloadedFile.getName());
     }
 
-    public void downloadFile() throws FileNotFoundException {
-        //Metoda standardowa, pobiera pierwszy plik
+    public void downloadFile() throws IOException {
         downloadFile(0);
     }
 

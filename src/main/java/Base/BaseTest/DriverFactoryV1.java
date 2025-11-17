@@ -1,6 +1,7 @@
 package Base.BaseTest;
 
 import Base.Listeners.Listener;
+import Base.Utils.GetDownloadDir;
 import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.Capabilities;
@@ -39,8 +40,7 @@ public final class DriverFactoryV1 {
     }
 
 
-
-    public static void initDriver(String browser, int time, URL url) throws InterruptedException {
+    public static void initDriver(String browser, int time, URL url)  {
         logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
         WebDriverManager.getInstance(browser).setup();
         WebDriver driver = null;
@@ -87,6 +87,7 @@ public final class DriverFactoryV1 {
             default -> throw new IllegalArgumentException("Błędna nazwa przeglądarki %s. Użyj jednej z następujących: chrome, firefox, edge.".formatted(browser));
         }
         Path optionPath = Path.of("src/main/resources/options.properties");
+
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(optionPath.toFile()))){
             String optionsLine;
             while((optionsLine = bufferedReader.readLine()) != null){
@@ -102,12 +103,12 @@ public final class DriverFactoryV1 {
         } catch (IOException e){
             System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
         }
-        System.out.println("Opcje zostały poprawnie dodane do drivera");
+		 System.out.println("Opcje zostały poprawnie dodane do drivera");
 
         return options;
     }
 
-    private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value){
+    private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value) throws IOException {
         if (options instanceof ChromeOptions chromeOptions) {
             if (value.equalsIgnoreCase("true")) {
                 chromeOptions.addArguments("--" + key);
@@ -141,13 +142,18 @@ public final class DriverFactoryV1 {
         }
     }
 
-     static Map<String, Object> addExperimentalOptions(){
+     static Map<String, Object> addExperimentalOptions() throws IOException {
         Map<String, Object> prefs = new HashMap<>();
         Path path = Path.of("src/main/resources/experimentalOptions.properties");
-        try {
+		 var downloadPath = GetDownloadDir.getDownloadDir();
+
+		 try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
             String optionLine;
             while ((optionLine = bufferedReader.readLine()) != null){
+				if(optionLine.contains("${DownloadPath}")){
+                    optionLine = optionLine.replace("${DownloadPath}", downloadPath.toString());
+				}
                String[] optionSplit = optionLine.split("=");
                if(optionSplit[1] != null){
                    try {
@@ -162,8 +168,8 @@ public final class DriverFactoryV1 {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-         System.out.println("Dodane zostaną następujące ustawienia eksperymentalne: " + prefs);
-        return prefs;
+		 System.out.println("Dodane zostaną następujące ustawienia eksperymentalne: " + prefs);
+		 return prefs;
     }
 
     public static WebDriver getDriver() {

@@ -1,6 +1,7 @@
 package Selenium.BoniGarcia;
 
 import Base.BaseTest.DriverFactoryV1;
+import Base.Utils.GetDownloadDir;
 import Base.Utils.Screenshot;
 import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.BaseTest.BaseTest;
@@ -14,6 +15,7 @@ import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -529,7 +531,7 @@ public class MainTest extends BaseTest {
 	}
 
 	@Test()
-	public void downloadFileTest() throws FileNotFoundException {
+	public void downloadFileTest() throws IOException {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Download files,
@@ -542,10 +544,13 @@ public class MainTest extends BaseTest {
 		FileDownloadPage fileDownloadPage = new FileDownloadPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
 		fileDownloadPage.verifyAbstractPage();
 		try {
-			fileDownloadPage.downloadFile(1);
+			fileDownloadPage.downloadFile();
 		} catch (FileNotFoundException e) {
 			throw new FileNotFoundException(e.getMessage());
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
+		GetDownloadDir.clearDownloadFolder();
 	}
 
 	@Test()
