@@ -1,4 +1,4 @@
-package Base.BaseTest;
+package Base.Drivers;
 
 import Base.Listeners.Listener;
 import Base.Utils.GetDownloadDir;
@@ -27,12 +27,13 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
-public final class DriverFactoryV1 {
+public final class DriverFactory {
     private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
     private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
-    private static final Logger logger = LoggerFactory.getLogger(DriverFactoryV1.class);
+    private static final Logger logger = LoggerFactory.getLogger(DriverFactory.class);
+    private static URL urlVerification;
 
-    private DriverFactoryV1() {
+    private DriverFactory() {
     }
 
     public static void initDriver(String browser, int time) throws InterruptedException {
@@ -46,8 +47,9 @@ public final class DriverFactoryV1 {
         WebDriver driver = null;
         try {
         if (url != null) {
-//             driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
-            driver = new RemoteWebDriver(url,loadOptionsFromFile(browser, true));
+            driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
+         //   driver = new RemoteWebDriver(url,loadOptionsFromFile(browser, true));
+            urlVerification = url;
         } else {
             switch(browser.toLowerCase()) {
                 case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser, false));
@@ -55,9 +57,12 @@ public final class DriverFactoryV1 {
                 case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser, false));
                 default -> logger.info("Błędnie wybrana przeglądarka!!!");
             }
-            driver.manage().window().maximize();
+
         }
+
+        driver.manage().window().maximize();
         WebDriver decoratedDriver = decorate(driver, new Listener());
+        decoratedDriver.manage().window().maximize();
         DRIVER_THREAD.set(decoratedDriver);
         WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
         logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
@@ -201,5 +206,9 @@ public final class DriverFactoryV1 {
                 WAIT_THREAD.remove();
             }
         }
+    }
+
+    public static URL getUrl() {
+        return urlVerification;
     }
 }

@@ -66,7 +66,13 @@ public class FileDownloadPage extends AbstractPage {
         downloadFile(0);
     }
 
-    public File waitForDownloadedFile(File downloadFolder, int timeoutSeconds, int baseNumberOfFiles) throws FileNotFoundException, InterruptedException {
+
+    /***
+     * Metoda weryfikuje, czy w trakcie testu plik został pobrany. W parametrze @baseNumOfFiles przekazywana jest liczba plików znajdująca się w katalogu w danej chwili.
+     * Po pobraniu wykonywana jest pętla zliczająca pliki i sprawdzająca, czy liczba plików wynosi +1. Wówczas weryfikacja zakończy się pozytywnie.
+     *
+     */
+    public File waitForDownloadedFile(File downloadFolder, int timeoutSeconds, int baseNumOfFiles) throws FileNotFoundException, InterruptedException {
         int waited = 0;
         while (waited < timeoutSeconds) {
             File[] files = downloadFolder.listFiles((_, name) ->
@@ -75,7 +81,7 @@ public class FileDownloadPage extends AbstractPage {
                     !name.endsWith(".part")
             );
 
-            if (files != null && files.length > baseNumberOfFiles) {
+            if (files != null && files.length > baseNumOfFiles) {
                 File lastFile = Arrays.stream(files)
                         .max(Comparator.comparingLong(File::lastModified))
                         .orElse(null);

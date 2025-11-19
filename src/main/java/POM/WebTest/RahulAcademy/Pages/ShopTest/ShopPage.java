@@ -1,17 +1,12 @@
 package POM.WebTest.RahulAcademy.Pages.ShopTest;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import Base.Utils.RandomUtils;
-import Base.Utils.Utils;
 import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,8 +20,8 @@ public class ShopPage extends ShopLoginPageForm {
 
     public ShopPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        loginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        actions = new WebElementActions(DriverFactory.getDriver(), DriverFactory.getWait());
+        loginForm = new ShopLoginPageForm(DriverFactory.getDriver(), DriverFactory.getWait());
     }
 
 
@@ -81,7 +76,7 @@ public class ShopPage extends ShopLoginPageForm {
 
     public CheckoutPage goToCheckout(){
         actions.find(checkoutBtn).click();
-        return new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        return new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
     }
 
 }

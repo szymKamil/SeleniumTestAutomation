@@ -1,7 +1,7 @@
 package POM.WebTest.BoniGarcia.BaseTest;
 
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.BoniGarcia.Pages.*;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
@@ -16,8 +16,8 @@ public abstract class BaseTest {
 
 
 	/*-----------------*/
-	final static URI LOCAL_URL = URI.create("http://localhost:4444/");
-	final static URI DOCKER_URL = URI.create("http://192.168.1.105:5555/");
+	public static final String LOCAL_URL = "http://localhost:4444/wd/hub";
+	static final URI DOCKER_URL = URI.create("http://192.168.1.105:5555/");
 	/*-----------------*/
 	Logger log;
 	/*------Klasy stron-----------*/
@@ -34,8 +34,8 @@ public abstract class BaseTest {
 	//    @Listeners(TestListener.class)
 	@Parameters({"browser", "timeout", "url"})
 	@BeforeMethod
-	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("http://localhost:4444/wd/hub") String url) throws Exception {
-		DriverFactoryV1.initDriver(browser, timeout /*new URL(url)*/);
+	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional(LOCAL_URL) String url) throws Exception {
+		DriverFactory.initDriver(browser, 30, new URL(url));
 	}
 
 
@@ -47,7 +47,7 @@ public abstract class BaseTest {
             log.info("Test zakończony pomyślnie: {}", method.getName());
         }
         log.info("Testy zostały ukończone.");
-        DriverFactoryV1.quit();
+        DriverFactory.quit();
     }
 
 }

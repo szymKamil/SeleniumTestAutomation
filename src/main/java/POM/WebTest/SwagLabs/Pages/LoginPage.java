@@ -1,6 +1,6 @@
 package POM.WebTest.SwagLabs.Pages;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -66,14 +66,14 @@ public class LoginPage {
         wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(getLogin());
         wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(getPass());
         wait.until(ExpectedConditions.elementToBeClickable(loginBtn));
-        return new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        return new InventoryPage(DriverFactory.getDriver(), DriverFactory.getWait());
     }
 
     public InventoryPage logInToApp(String login, String password){
         wait.until(ExpectedConditions.visibilityOf(usernameInput)).sendKeys(login);
         wait.until(ExpectedConditions.visibilityOf(passwordInput)).sendKeys(password);
         wait.until(ExpectedConditions.elementToBeClickable(loginBtn)).click();
-        return new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        return new InventoryPage(DriverFactory.getDriver(), DriverFactory.getWait());
     }
 
 }

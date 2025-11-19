@@ -1,6 +1,6 @@
 package Selenium.SwagLabs;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.SwagLabs.Pages.CartPage;
 import POM.WebTest.SwagLabs.Pages.InventoryPage;
 import POM.WebTest.SwagLabs.Pages.LoginPage;
@@ -20,7 +20,7 @@ public class Tests extends BaseTest {
 
 	@Test
 	void loginTest(){
-		loginPage = new LoginPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		loginPage = new LoginPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		loginPage.logInToApp("standard_user", "secret_sauce");
 		logger.info("Poprawnie zalogowałem się do aplikacji");
 	}
@@ -28,7 +28,7 @@ public class Tests extends BaseTest {
 	@Test
 	void openBurgerMenu(){
 		loginTest();
-		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		inventoryPage = new InventoryPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		inventoryPage.openHamburgerMenu();
 		inventoryPage.pickMenuElement("Reset App State");
 		logger.info("Zresetowany został stan aplikacji.");
@@ -37,7 +37,7 @@ public class Tests extends BaseTest {
 	@Test
 	void filterTest(){
 		loginTest();
-		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		inventoryPage = new InventoryPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		inventoryPage.changeFilter(InventoryFilter.LowToHigh);
 		var activerFilter = inventoryPage.getFilterValue();
 		logger.info("Aktywny filtr to {}", activerFilter);
@@ -57,7 +57,7 @@ public class Tests extends BaseTest {
 	@Test
 	void addChosenProductsToCartAndVerifyCart(){
 		loginTest();
-		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		inventoryPage = new InventoryPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		inventoryPage.pickCartElementsAndAddToCart(PickRandomProducts.pickRandomProducts(4));
 		inventoryPage.pickCartElementAndAddToCart("Fleece Jacket");
 		inventoryPage.openProductCard("Backpack");
@@ -67,7 +67,7 @@ public class Tests extends BaseTest {
 		int numOfProdsInInventory = 5;
 		logger.info("Dodanych zostało w sumie {} produktów do koszyka", numOfProdsInInventory);
 		inventoryPage.verifyNumberOfProductsAddedToCartInTag(numOfProdsInInventory);
-		cartPage = new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		cartPage = new CartPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		var numOfProds = cartPage.verifyNumberOfCartProducts();
 		logger.info("W koszyku znajduje się {} produktów.", numOfProds);
 		Assert.assertEquals(numOfProds, numOfProdsInInventory);
@@ -79,12 +79,12 @@ public class Tests extends BaseTest {
 	@Test
 	void buyingProductPathTest(){
 		loginTest();
-		inventoryPage = new InventoryPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		inventoryPage = new InventoryPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		inventoryPage.pickCartElementsAndAddToCart("Sauce Labs Onesie", "Sauce Labs Fleece Jacket", "Sauce Labs Bolt T-Shirt");
 		int numOfProdsInInventory = 3;
 		inventoryPage.verifyNumberOfProductsAddedToCartInTag(numOfProdsInInventory);
 		inventoryPage.openShoppingCart();
-		cartPage = new CartPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		cartPage = new CartPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		var numOfProds = cartPage.verifyNumberOfCartProducts();
 		logger.info("W koszyku znajduje się {} produktów.", numOfProds);
 		Assert.assertEquals(numOfProds, numOfProdsInInventory);
@@ -96,7 +96,7 @@ public class Tests extends BaseTest {
 		cartPage.finishOrderBtn();
 		cartPage.verifySuccessOrderInfo();
 		cartPage.backToProdsBtnClick();
-		Assert.assertEquals(DriverFactoryV1.getDriver().getCurrentUrl() //TODO: Przenieść pobranie URL do jakiejś uniwersalnej akcji.
+		Assert.assertEquals(DriverFactory.getDriver().getCurrentUrl() //TODO: Przenieść pobranie URL do jakiejś uniwersalnej akcji.
 				, "https://www.saucedemo.com/inventory.html");
 	}
 

@@ -1,7 +1,7 @@
 package Selenium.RahulAcademy;
 
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
 import Selenium.RahulAcademy.Base.BaseTest;
 import org.testng.annotations.Test;
@@ -13,7 +13,7 @@ public class LocatorsFormLoginTests extends BaseTest {
 
     @Test(invocationCount = 5, singleThreaded = true, successPercentage = 70)
     public void testSuccessfullyLogin() throws Exception {
-        loginPageTest = new LoginFormPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        loginPageTest = new LoginFormPage(DriverFactory.getDriver(), DriverFactory.getWait());
         loginPageTest.elementShouldBeVisible(loginPageTest.formBdy)
                 .verifyElementText(loginPageTest.submitBtn, "SIGN IN")
                 .logInTo()
@@ -28,7 +28,7 @@ public class LocatorsFormLoginTests extends BaseTest {
     @Test
     public void testFailedLogin()  {
         //Błędny login
-        loginPageTest = new LoginFormPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        loginPageTest = new LoginFormPage(DriverFactory.getDriver(), DriverFactory.getWait());
         loginPageTest.elementShouldBeVisible(loginPageTest.formBdy)
         .verifyElementText(loginPageTest.submitBtn, "SIGN IN")
         .logInTo("Login", "Haslo").clickSignIn().shouldSeeErrorLoginMsg();
@@ -36,7 +36,7 @@ public class LocatorsFormLoginTests extends BaseTest {
 
     @Test
     public void testVisitUsButton()  {
-        loginPageTest = new LoginFormPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        loginPageTest = new LoginFormPage(DriverFactory.getDriver(), DriverFactory.getWait());
         loginPageTest.useBtnVisitUs();
     }
 

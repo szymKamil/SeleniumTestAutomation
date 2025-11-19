@@ -1,6 +1,6 @@
 package Selenium.RahulAcademy;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.MainPageShop;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.OrderConfirmationPage;
@@ -18,20 +18,20 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(groups = {"regresion", "interface"})
 	public void searchTest(){
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.searchForProduct("Beans");
 		assertThat(shopPage.getVisibleProducts().contains("Beans")).isTrue();
 	}
 
 	@Test(groups = {"interface"})
 	public void pickNumberOfProduct(){
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts("Carrot", 10);
 	}
 
 	@Test(groups = {"business", "regression"})
 	public void checkCartItems(){
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts("Carrot", 10);
 		shopPage.pickAmountOfProducts("Tomato", 5);
 		shopPage.pickAmountOfProducts("Pumpkin", 1);
@@ -53,7 +53,7 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(dataProvider = "cartData")
 	public void verifyCartDataProvider(Map<String,Integer> products) {
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts(products);
 		var cartItems = shopPage.getCartItems();
 		shopPage.verifyCart(cartItems, products);
@@ -62,8 +62,8 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(dataProvider = "cartData", groups = "regression")
 	public void checkoutVerification(Map<String,Integer> products) {
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts(products);
 		shopPage.goToCheckout();
 		checkoutPage.verifyTotalPrices();
@@ -72,8 +72,8 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(groups = {"business", "regression"})
 	public void discountVerificationTest(){
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts("Carrot", 10);
 		shopPage.goToCheckout();
 		checkoutPage.verifyDiscount();
@@ -81,8 +81,8 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(groups = {"business"}, dataProvider = "cartData")
 	public void priceAfterDiscountVerification(Map<String,Integer> products){
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts(products);
 		shopPage.goToCheckout();
 		checkoutPage.verifyFullPriceAfterDiscount();
@@ -90,8 +90,8 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(dataProvider = "cartData")
 	public void placeOrderTest(Map<String,Integer> products) {
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts(products);
 		shopPage.goToCheckout();
 		checkoutPage.placeOrder();
@@ -99,9 +99,9 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(groups = "regression")
 	public void shoppingProcessTest() {
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts("Carrot", 10);
 		shopPage.goToCheckout();
 		checkoutPage.placeOrder();
@@ -111,9 +111,9 @@ public class VegetableShopTests extends BaseTest {
 
 	@Test(groups = "business")
 	public void verificationOfTermsAndConditions() {
-		MainPageShop shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		CheckoutPage checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPageShop shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		CheckoutPage checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		OrderConfirmationPage orderConfirmationPage = new OrderConfirmationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shopPage.pickAmountOfProducts("Carrot", 10);
 		shopPage.goToCheckout();
 		checkoutPage.placeOrder();

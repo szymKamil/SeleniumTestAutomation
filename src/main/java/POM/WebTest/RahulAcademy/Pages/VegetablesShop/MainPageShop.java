@@ -1,12 +1,8 @@
 package POM.WebTest.RahulAcademy.Pages.VegetablesShop;
 
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import Base.Utils.JavaScriptUtils;
-import Base.Utils.PageLoadedVerification;
-import Base.Utils.Utils;
-import io.cucumber.core.runtime.CucumberExecutionContext;
-import io.cucumber.java.sl.In;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,7 +15,6 @@ import org.testng.Assert;
 
 import java.time.Duration;
 import java.util.*;
-import java.util.function.Supplier;
 
 public class MainPageShop {
 
@@ -86,7 +81,7 @@ public class MainPageShop {
 						while (currentValue != amount) {
 							var incrementBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get()
 									.findElement(incrementProduct)));
-							JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), incrementBtn);
+							JavaScriptUtils.scrollToElementJS(DriverFactory.getDriver(), incrementBtn);
 							incrementBtn.click();
 							currentValue++;
 						}
@@ -94,7 +89,7 @@ public class MainPageShop {
 						while (currentValue != amount) {
 							var decrementtBtn = wait.until(ExpectedConditions.elementToBeClickable(filteredProduct.get()
 									.findElement(decrementProduct)));
-							JavaScriptUtils.scrollToElementJS(DriverFactoryV1.getDriver(), decrementtBtn);
+							JavaScriptUtils.scrollToElementJS(DriverFactory.getDriver(), decrementtBtn);
 							decrementtBtn.click();
 							currentValue--;
 						}

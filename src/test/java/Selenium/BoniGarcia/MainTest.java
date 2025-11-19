@@ -1,6 +1,6 @@
 package Selenium.BoniGarcia;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import Base.Utils.GetDownloadDir;
 import Base.Utils.Screenshot;
 import POM.WebTest.BoniGarcia.Pages.*;
@@ -16,12 +16,13 @@ import org.testng.annotations.Optional;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeoutException;
-import Base.Listeners.Listener;
+
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -37,7 +38,7 @@ public class MainTest extends BaseTest {
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 		 * weryfikację adresu URL oraz występowania głównych elementów na stronie.
 		 */
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.verifyHomePageContent();
 		log.info("Test mainPageTestElementsVerification ukończony");
@@ -52,10 +53,10 @@ public class MainTest extends BaseTest {
 		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Web form,  na której przetestowane zostanie możliwość wypełnienia, weryfikacji i przesłania formularza oraz upewnienie się,
 		 * że formularz został poprawnie przesłany poprzez weryfikację wyświetlania odpowiedniego komunikatu o sukcesie.
 		 */
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web form");
-		WebForm webForm = new WebForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		WebForm webForm = new WebForm(DriverFactory.getDriver(), DriverFactory.getWait());
 		webForm.verifyAbstractPage();
 		webForm.fillTextInput();
 		webForm.fillPasswordInput();
@@ -82,10 +83,10 @@ public class MainTest extends BaseTest {
 		 * zmieniającej się treści w paragrafach.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Navigation");
-		NavigationPage navigationPage = new NavigationPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		NavigationPage navigationPage = new NavigationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		navigationPage.verifyAbstractPage();
 		navigationPage.verifyBtns();
 	}
@@ -98,10 +99,10 @@ public class MainTest extends BaseTest {
 		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Dropdown menu, i użycie wybranych dropdownów razem z kliknięciem odpowiednich przycisków w menu.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Dropdown menu");
-		DropdownMenuPage dropdownMenu = new DropdownMenuPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		DropdownMenuPage dropdownMenu = new DropdownMenuPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		dropdownMenu.verifyAbstractPage();
 		dropdownMenu.openDropOneAndPick(1);
 		dropdownMenu.openDropTwoAndPick(2);
@@ -118,10 +119,10 @@ public class MainTest extends BaseTest {
 		 * które widoczne są dopiero po umieszczeniu kursora na obrazkach.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Mouse over");
-		MouseOverPage mouseOverPage = new MouseOverPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MouseOverPage mouseOverPage = new MouseOverPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mouseOverPage.verifyAbstractPage();
 		mouseOverPage.hoverOverImg(2);
 		mouseOverPage.choseAndWaitFormElementToBeVisible("Award");
@@ -135,10 +136,10 @@ public class MainTest extends BaseTest {
 		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Drag and drop, na której test przeniesie element do miejsca docelowego.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Drag and drop");
-		DragAndDropPage dragAndDrop = new DragAndDropPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		DragAndDropPage dragAndDrop = new DragAndDropPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		dragAndDrop.verifyAbstractPage();
 		dragAndDrop.getElementCoords();
 		dragAndDrop.getTargetCoords();
@@ -155,10 +156,10 @@ public class MainTest extends BaseTest {
 		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Draw in canvas, na której zostanie użyte płótno do narysowania przykłądowego kształtu.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Draw in canvas");
-		CanvasPage canvasPage = new CanvasPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		CanvasPage canvasPage = new CanvasPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		canvasPage.verifyAbstractPage();
 		canvasPage.paintInCanvas();
 		canvasPage.paintInCanvas(new PointForCanvas(50, 20), new PointForCanvas(30, 10), new PointForCanvas(-20, -15));
@@ -171,10 +172,10 @@ public class MainTest extends BaseTest {
 		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Loading images a następnie weryfikację, czy obrazki zostaną wyświetlone.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Loading images");
-		LoadingImagesPage loadingImagesPage = new LoadingImagesPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		LoadingImagesPage loadingImagesPage = new LoadingImagesPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		loadingImagesPage.verifyAbstractPage();
 		loadingImagesPage.waitForImagesToLoad();
 		loadingImagesPage.confirmElementsVisibility();
@@ -190,10 +191,10 @@ public class MainTest extends BaseTest {
 		 do wykonania obliczeń.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Slow calculator");
-		SlowCalculator slowCalculator = new SlowCalculator(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		SlowCalculator slowCalculator = new SlowCalculator(DriverFactory.getDriver(), DriverFactory.getWait());
 		slowCalculator.verifyAbstractPage();
 		slowCalculator.verifyAbstractPage();
 		slowCalculator.setCalcDelay(3);
@@ -211,10 +212,10 @@ public class MainTest extends BaseTest {
 		 koniec.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Long page");
-		LongPage longPage = new LongPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		LongPage longPage = new LongPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		longPage.verifyAbstractPage();
 		longPage.scrollToLastParagraph();
 		longPage.getTextFromParagraph(3);
@@ -230,10 +231,10 @@ public class MainTest extends BaseTest {
 		 strony.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Infinite scroll");
-		InfiniteScrollPage infiniteScroll = new InfiniteScrollPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		InfiniteScrollPage infiniteScroll = new InfiniteScrollPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		infiniteScroll.verifyAbstractPage();
 		log.info("Początkowa wysokość strony to: {}", infiniteScroll.getPageHeight());
 		infiniteScroll.scrollXTimes();
@@ -248,10 +249,10 @@ public class MainTest extends BaseTest {
 		 ukrytego w shadow DOM.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Shadow DOM");
-		ShadowDomPage shadowDomPage = new ShadowDomPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		ShadowDomPage shadowDomPage = new ShadowDomPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		shadowDomPage.verifyAbstractPage();
 		shadowDomPage.getShadowRootContent();
 	}
@@ -265,10 +266,10 @@ public class MainTest extends BaseTest {
 		 *modyfikacja ich i weryfikacja, czy ciasteczka się zmieniły.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Cookies");
-		CookiesPage cookiesPage = new CookiesPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		CookiesPage cookiesPage = new CookiesPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		cookiesPage.verifyAbstractPage();
 		cookiesPage.refreshCookiesBtn();
 		cookiesPage.getCookiesText();
@@ -289,10 +290,10 @@ public class MainTest extends BaseTest {
 		 *różnych sekcjach i sprawdzenie możliwości przełączania się pomiędzy sekcjami strony.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Frames");
-		FramesPage framesPage = new FramesPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		FramesPage framesPage = new FramesPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		framesPage.switchToFrame("header");
 		framesPage.verifyMainHeader();
 		framesPage.verifyImage();
@@ -311,10 +312,10 @@ public class MainTest extends BaseTest {
 		 tekstu w ostatnim paragrafie.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("IFrames");
-		IFramePage iFramePage = new IFramePage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		IFramePage iFramePage = new IFramePage(DriverFactory.getDriver(), DriverFactory.getWait());
 		iFramePage.verifyAbstractPage();
 		iFramePage.switchToiFrame();
 		iFramePage.scrollPage();
@@ -330,10 +331,10 @@ public class MainTest extends BaseTest {
 		 *i weryfikację poprawności ich wyświetlania i działania, w kontekście przesłanego tekstu.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Dialog boxes");
-		DialogBoxesPage dialogBoxesPage = new DialogBoxesPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		DialogBoxesPage dialogBoxesPage = new DialogBoxesPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		dialogBoxesPage.verifyAbstractPage();
 		dialogBoxesPage.launchAlert();
 		String alertString = dialogBoxesPage.getTextFromAlert();
@@ -359,10 +360,10 @@ public class MainTest extends BaseTest {
 		 *a na końcu weryfikacja ich widoczności.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web storage");
-		WebStoragePage webStoragePage = new WebStoragePage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		WebStoragePage webStoragePage = new WebStoragePage(DriverFactory.getDriver(), DriverFactory.getWait());
 		webStoragePage.verifyAbstractPage();
 		webStoragePage.clearLocalStorage();
 		webStoragePage.clearSessionStorage();
@@ -385,10 +386,10 @@ public class MainTest extends BaseTest {
 		 *i weryfikację widoczności tych zmian.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Geolocation");
-		GeolocationPage geolocationPage = new GeolocationPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		GeolocationPage geolocationPage = new GeolocationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		geolocationPage.verifyAbstractPage();
 
 		geolocationPage.setCoordinates(4.323, 4.53);
@@ -406,10 +407,10 @@ public class MainTest extends BaseTest {
 		 przesłanie powiadomienia i weryfikację, czy powiadomienie o przesłanym powiadomieniu miało callback.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Notifications");
-		NotificationPage notificationPage = new NotificationPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		NotificationPage notificationPage = new NotificationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		notificationPage.verifyAbstractPage();
 		notificationPage.sendMeNotification();
 		notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
@@ -423,14 +424,14 @@ public class MainTest extends BaseTest {
 		 kamery i weryfikacja widoczności informacji o urządzeniu.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Get user media");
-		UserMediaPage userMediaPage = new UserMediaPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		UserMediaPage userMediaPage = new UserMediaPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		userMediaPage.verifyAbstractPage();
 		userMediaPage.runUserMedia();
 		log.info("W teście po uruchomieniu mediów przeglądarka używa : {}", userMediaPage.getVideoDeviceInfo());
-		Screenshot.takeScreenshot(DriverFactoryV1.getDriver());
+		Screenshot.takeScreenshot(DriverFactory.getDriver());
 		log.info("Screenshot został wykonany");
 	}
 
@@ -443,10 +444,10 @@ public class MainTest extends BaseTest {
 		 *który to tekst powinien być przetłumaczony na hiszpański.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Multilanguage");
-		MultilanguagePage multilanguagePage = new MultilanguagePage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MultilanguagePage multilanguagePage = new MultilanguagePage(DriverFactory.getDriver(), DriverFactory.getWait());
 		multilanguagePage.verifyAbstractPage();
 		log.info("Paragrafy posiadają następujące wartości: {}", multilanguagePage.getParagraphsInfo());
 	}
@@ -458,9 +459,9 @@ public class MainTest extends BaseTest {
 		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Console logs, i wydrukowanie logówz konsoli.
 		 */
 
-		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		consoleLogsPage.startListening();
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Console logs");
 		consoleLogsPage.verifyAbstractPage();
@@ -476,10 +477,10 @@ public class MainTest extends BaseTest {
 		 *weryfikację widoczności komunikatu o poprawnym zalogowaniu.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Login form");
-		LoginFormPage loginFormPage = new LoginFormPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		LoginFormPage loginFormPage = new LoginFormPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		loginFormPage.verifyAbstractPage();
 		loginFormPage.logIn();
 		loginFormPage.clickSubmitBtn();
@@ -496,10 +497,10 @@ public class MainTest extends BaseTest {
 		 formularza.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Slow login");
-		LoginFormPage loginFormPage = new LoginFormPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		LoginFormPage loginFormPage = new LoginFormPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		loginFormPage.verifyAbstractPage();
 		loginFormPage.logIn();
 		loginFormPage.clickSubmitBtn();
@@ -514,10 +515,10 @@ public class MainTest extends BaseTest {
 		 obliczeń w pętli.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Random calculator");
-		RandomCalculatorPage randomCalculator = new RandomCalculatorPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		RandomCalculatorPage randomCalculator = new RandomCalculatorPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		randomCalculator.verifyAbstractPage();
 		randomCalculator.setCorrectTimesToRun("20");
 		for (int i = 1; i < 10; i++) {
@@ -538,11 +539,18 @@ public class MainTest extends BaseTest {
 		 *i pobranie wybranego pliku poprzez użycie przycisku na stronie.
 		 */
 
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Download files");
-		FileDownloadPage fileDownloadPage = new FileDownloadPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+
+		FileDownloadPage fileDownloadPage = new FileDownloadPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		fileDownloadPage.verifyAbstractPage();
+		GetDownloadDir.clearDownloadFolder();
+		try {
+			Thread.sleep(Duration.ofSeconds(5));
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
 		try {
 			fileDownloadPage.downloadFile();
 		} catch (FileNotFoundException e) {
@@ -560,10 +568,10 @@ public class MainTest extends BaseTest {
 		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony A/B Testing, i weryfikację, który
 		 wariant strony uruchomił się w tym teście.
 		 */
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("A/B Testing");
-		ABTestingPage abTestingPage = new ABTestingPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		ABTestingPage abTestingPage = new ABTestingPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		abTestingPage.verifyAbstractPage();
 		abTestingPage.verifyTypeOfVariation();
 	}
@@ -575,10 +583,10 @@ public class MainTest extends BaseTest {
 		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Data types, wypełnienie formularza i weryfikację,
 		 * czy wszystkie pola posiadają poprawne dane po przesłaniu formularza.
 		 */
-		MainPage mainPage = new MainPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Data types");
-		DataTypesPage dataTypesPage = new DataTypesPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		DataTypesPage dataTypesPage = new DataTypesPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		dataTypesPage.verifyAbstractPage();
 		dataTypesPage.insertDataToForm();
 		dataTypesPage.submitForm();

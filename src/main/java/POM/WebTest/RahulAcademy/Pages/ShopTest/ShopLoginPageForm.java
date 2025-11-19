@@ -1,11 +1,10 @@
 package POM.WebTest.RahulAcademy.Pages.ShopTest;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +22,7 @@ public class ShopLoginPageForm  {
     public ShopLoginPageForm(WebDriver driver, WebDriverWait wait) {
         this.driver = driver;
         this.wait = wait;
-        actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        actions = new WebElementActions(DriverFactory.getDriver(), DriverFactory.getWait());
         log = LoggerFactory.getLogger("Logger");
     }
 
@@ -92,7 +91,7 @@ public class ShopLoginPageForm  {
 
     public ShopPage clickSignIn(){
         actions.find(signInBtn).click();
-        return new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        return new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
     }
 
 

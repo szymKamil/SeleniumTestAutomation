@@ -1,6 +1,6 @@
 package POM.WebTest.RahulAcademy.Pages.ShopTest;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
 import org.openqa.selenium.By;
@@ -22,8 +22,8 @@ public class CheckoutPage extends ShopPage {
 
     public CheckoutPage(WebDriver driver, WebDriverWait wait) {
         super(driver, wait);
-        actions = new WebElementActions(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        actions = new WebElementActions(DriverFactory.getDriver(), DriverFactory.getWait());
+        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
     }
 
     //Elementy

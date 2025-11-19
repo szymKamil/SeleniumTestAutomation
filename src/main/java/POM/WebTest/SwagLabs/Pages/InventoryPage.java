@@ -1,6 +1,5 @@
 package POM.WebTest.SwagLabs.Pages;
 
-import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.SwagLabs.Utils.InventoryFilter;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;

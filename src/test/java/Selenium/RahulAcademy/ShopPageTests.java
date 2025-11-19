@@ -1,6 +1,6 @@
 package Selenium.RahulAcademy;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import POM.WebTest.RahulAcademy.DataProviders.DataProviderLoginFormTest;
 import POM.WebTest.RahulAcademy.Helpers.CartPickResult;
 import POM.WebTest.RahulAcademy.Pages.ShopTest.CheckoutPage;
@@ -23,7 +23,7 @@ public class ShopPageTests extends BaseTest {
 
     @Test(dataProvider = "logInShopData", dataProviderClass = DataProviderLoginFormTest.class)
     public void loginFormVerification(String radio, String role){
-        ShopLoginPageForm pageShopLoginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        ShopLoginPageForm pageShopLoginForm = new ShopLoginPageForm(DriverFactory.getDriver(), DriverFactory.getWait());
         pageShopLoginForm.insertLogin().insertPassword().choseRadio(radio).selectForms(role)
                 .selectTermsAndConditions()
                 .clickSignIn();
@@ -31,23 +31,23 @@ public class ShopPageTests extends BaseTest {
 
     @Test()
     public void verifyShopIsOnline(){
-        pageShopLoginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        pageShopLoginForm = new ShopLoginPageForm(DriverFactory.getDriver(), DriverFactory.getWait());
+        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
         shopPage.logInToAppAs("Admin", "Student").verifyShopIsOnline().verifySlider();
     }
 
     @Test
     public void verifySlider(){
-        pageShopLoginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        pageShopLoginForm = new ShopLoginPageForm(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        pageShopLoginForm = new ShopLoginPageForm(DriverFactory.getDriver(), DriverFactory.getWait());
+        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
+        pageShopLoginForm = new ShopLoginPageForm(DriverFactory.getDriver(), DriverFactory.getWait());
         shopPage.logInToAppAs("Admin", "Student").verifySlider();
     }
 
     @Test
     public void shoppingCartTest(){
-        checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
+        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
         CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
         shopPage.goToCheckout();
         checkoutPage.verifyNumberOfProducts(result);
@@ -55,8 +55,8 @@ public class ShopPageTests extends BaseTest {
 
     @Test
     public void shoppingCartRemoveFromCartTest(){
-        checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
+        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
         CartPickResult result =  shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
         shopPage.goToCheckout();
         checkoutPage.verifyNumberOfProducts(result).removeProductsFromCart();
@@ -65,7 +65,7 @@ public class ShopPageTests extends BaseTest {
 
     @Test
     public void shoppingCartFinaliseOrderTest(){
-        shopPage = new ShopPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
         //TODO: poprawić usatwienia przeglądarki by ignorowac komunikat o wykradzionym haśle
         CartPickResult result = shopPage.logInToAppAs("Admin", "Student").pickRandomProducts();
         shopPage.goToCheckout();

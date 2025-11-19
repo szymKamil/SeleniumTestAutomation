@@ -1,6 +1,6 @@
 package POM.WebTest.RahulAcademy.Listener;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import Base.Utils.Screenshot;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class TestNGListener implements ITestListener {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        Screenshot.takeScreenshot(DriverFactoryV1.getDriver());
+        Screenshot.takeScreenshot(DriverFactory.getDriver());
         logger.info("Test nieukończony z powodu błędu. Błąd spowodowany: " + result.getThrowable());
     }
 }

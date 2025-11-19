@@ -1,7 +1,7 @@
 package Selenium.RahulAcademy.Base;
 
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import Selenium.RahulAcademy.LocatorsFormLoginTests;
 import Selenium.RahulAcademy.ShopPageTests;
 import Selenium.RahulAcademy.VegetableShopTests;
@@ -26,15 +26,15 @@ public class BaseTest {
     @Parameters({"browser", "timeout"})
     @BeforeMethod(alwaysRun = true)
     public void config(@Optional("chrome") String browser, @Optional("25") int timeout, Method method) throws InterruptedException {
-            DriverFactoryV1.initDriver(browser, timeout);
+            DriverFactory.initDriver(browser, timeout);
             logger.info("Rozpoczynam test: {}", method.getName());
             Class<?> testClass = method.getDeclaringClass();
             if (testClass.equals(LocatorsFormLoginTests.class)) {
-                DriverFactoryV1.getDriver().get(FORM_TEST_PAGE);
+                DriverFactory.getDriver().get(FORM_TEST_PAGE);
             } else if (testClass.equals(ShopPageTests.class)) {
-                DriverFactoryV1.getDriver().get(SHOP_LOGIN_PAGE);
+                DriverFactory.getDriver().get(SHOP_LOGIN_PAGE);
             } else if (testClass.equals(VegetableShopTests.class)) {
-                DriverFactoryV1.getDriver().get(VEGETABLE_SHOP_PAGE);
+                DriverFactory.getDriver().get(VEGETABLE_SHOP_PAGE);
             } else {
                 logger.error("Błędnie podany adres URL, test nie został uruchomiony.");
                 throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
@@ -49,7 +49,7 @@ public class BaseTest {
             logger.info("Test zakończony pomyślnie: {}", method.getName());
         }
         logger.info("Testy zostały ukończone.");
-        DriverFactoryV1.quit();
+        DriverFactory.quit();
     }
 
 

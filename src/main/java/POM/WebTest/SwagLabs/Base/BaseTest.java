@@ -1,6 +1,6 @@
 package POM.WebTest.SwagLabs.Base;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,17 +15,17 @@ public class BaseTest  {
 
     @BeforeClass
     void initiateDriver(@Optional("chrome") String browser, @Optional("25") int timeout) throws InterruptedException {
-        DriverFactoryV1.initDriver(browser, timeout);
+        DriverFactory.initDriver(browser, timeout);
     }
 
     @BeforeMethod
     void startTest(){
-            DriverFactoryV1.getDriver().get("https://www.saucedemo.com/");
+            DriverFactory.getDriver().get("https://www.saucedemo.com/");
     }
 
     @AfterClass
     void quitDriver(){
-            DriverFactoryV1.getDriver().quit();
+            DriverFactory.getDriver().quit();
     }
 
 }

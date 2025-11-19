@@ -1,8 +1,6 @@
 package Parallel;
 
-import Base.BaseTest.DriverFactoryV1;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
-import com.fasterxml.jackson.databind.ser.Serializers;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;

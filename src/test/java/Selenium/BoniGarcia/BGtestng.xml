@@ -7,11 +7,14 @@
     <test verbose="1" preserve-order="true" name="Packed 1">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
-<!--        <parameter name="url" value="http://selenium-hub:4444/wd/hub"/>-->
+        <parameter name="url" value="http://localhost:4444/"/>
+<!--
+        <parameter name="running.location" value="DOCKER_GRID"/> &lt;!&ndash; DOCKER lub LOCAL &ndash;&gt;
+-->
         <classes >
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
-                    <include name="mainPageTestElementsVerification"/>
+                    <!-- <include name="mainPageTestElementsVerification"/>
                     <include name="dropdownMenuTest"/>
                     <include name="navigationPageTest"/>
                     <include name="mouseOverTest"/>
@@ -24,7 +27,8 @@
                     <include name="shadowRootTest"/>
                     <include name="cookiesPageTest"/>
                     <include name="framesPageTest"/>
-                    <include name="iFramesPageTest"/>
+                    <include name="iFramesPageTest"/>-->
+                    <include name="downloadFileTest"/>
                 </methods>
             </class>
         </classes>

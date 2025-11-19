@@ -1,6 +1,6 @@
 package Cucumber.Rahul.VegetablesShop;
 
-import Base.BaseTest.DriverFactoryV1;
+import Base.Drivers.DriverFactory;
 
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.MainPageShop;
@@ -28,11 +28,11 @@ public class VegetablesShopSteps {
 
 	@Before()
 	public void setUp() throws InterruptedException {
-		DriverFactoryV1.initDriver("chrome", 15);
-		driver = DriverFactoryV1.getDriver();
-		wait = DriverFactoryV1.getWait();
-		shopPage = new MainPageShop(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
-		checkoutPage = new CheckoutPage(DriverFactoryV1.getDriver(), DriverFactoryV1.getWait());
+		DriverFactory.initDriver("chrome", 15);
+		driver = DriverFactory.getDriver();
+		wait = DriverFactory.getWait();
+		shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+		checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
 	}
 
