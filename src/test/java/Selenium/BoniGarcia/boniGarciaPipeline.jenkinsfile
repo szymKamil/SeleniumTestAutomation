@@ -12,13 +12,12 @@ pipeline {
 
 
     stages {
-        stage('Prepare Workspace') {
-            steps {
-                sh 'ls -la'
-                sh 'git rev-parse --is-inside-work-tree'
-                deleteDir()
+            stage('Clean') {
+                steps {
+                    // Wymaga pluginu Workspace Cleanup
+                    cleanWs()
+                }
             }
-        }
 
 
         stage('Docker test') {
