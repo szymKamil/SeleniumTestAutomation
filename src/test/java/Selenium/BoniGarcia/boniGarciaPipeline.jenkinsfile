@@ -48,7 +48,7 @@ pipeline {
             steps {
                 echo "Pobieranie kodu z repozytorium..."
                 // Tutaj ręcznie pobieramy kod do CZYSTEGO folderu
-                git branch: 'main',
+                git branch: 'master',
                         url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
                         credentialsId: 'github-token'
             }
