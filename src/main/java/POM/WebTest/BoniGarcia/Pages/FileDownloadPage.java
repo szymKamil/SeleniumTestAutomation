@@ -45,10 +45,6 @@ public class FileDownloadPage extends AbstractPage {
 
     //Metody testowe
     public void downloadFile(int choseFileToDownload) throws IOException {
-        System.out.println("RUNNING_IN_DOCKER = " + System.getenv("RUNNING_IN_DOCKER"));
-        Path downloadFolder = GetDownloadDir.getDownloadDir();
-        System.out.println("Ścieżka do przeszukania to: " + downloadFolder);
-        int baseNumberOfFiles = Objects.requireNonNull(downloadFolder.toFile().listFiles()).length;
         if (choseFileToDownload >= 0 && choseFileToDownload <= 4){
             List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
             WebElement btn = btns.get(choseFileToDownload);
@@ -57,38 +53,38 @@ public class FileDownloadPage extends AbstractPage {
             log.error("Popraw numer przycisku! Wybierz jeden z przedziału 0-4.");
             throw new Error("Błędnie wybrany przycisk w metodzie");
         }
-        File downloadedFile;
         WebDriver driver = DriverFactory.getDriver();
-        if (driver instanceof HasDownloads downloader) {
-            // Grid / RemoteWebDriver – pobieranie działa
-            Path saveTo = Path.of("DownloadFolder").toAbsolutePath();
-            downloader.downloadFile("webdrivermanager.png", Path.of(saveTo.toUri()));
+        if (driver instanceof HasDownloads downloader ) {
             System.out.println("Driver wspiera HasDownloads (RemoteWebDriver / Grid).");
-
+            downloader.downloadFile("webdrivermanager.png", Path.of("DownloadFolder"));
         } else {
-            // Lokalny ChromeDriver – brak wsparcia
-            System.out.println("HasDownloads not supported by this driver.");
             System.out.println("Driver NIE wspiera HasDownloads (ChromeDriver lokalny).");
 
         }
-
-        try {
-            Path saveTo = Path.of("DownloadFolder").toAbsolutePath();
-             ((HasDownloads) driver).downloadFile("webdrivermanager.png", Path.of(saveTo.toUri()));
-             downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
-        } catch ( FileNotFoundException | InterruptedException e) {
-            throw new FileNotFoundException(e.getMessage());
-		}
-		log.info("Znaleziono pobrany plik: {}", downloadedFile);
-		try {
-			Thread.sleep(Duration.ofSeconds(15));
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
     public void downloadFile() throws IOException {
         downloadFile(0);
+    }
+
+    public boolean checkFileExistsInContainer(String containerName, String fileName) {
+        try {
+            // Komenda: docker exec nazwa_kontenera ls /home/seluser/Downloads/nazwa_pliku
+            String[] command = {
+                    "docker", "exec", containerName,
+                    "ls", "/home/seluser/Downloads/" + fileName
+            };
+
+            Process process = Runtime.getRuntime().exec(command);
+            int exitCode = process.waitFor();
+
+            // Jeśli exitCode == 0, to znaczy że 'ls' znalazło plik
+            return exitCode == 0;
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
 

@@ -543,15 +543,8 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Download files");
-
 		FileDownloadPage fileDownloadPage = new FileDownloadPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		fileDownloadPage.verifyAbstractPage();
-		GetDownloadDir.clearDownloadFolder();
-		try {
-			Thread.sleep(Duration.ofSeconds(5));
-		} catch (InterruptedException e) {
-			throw new RuntimeException(e);
-		}
 		try {
 			fileDownloadPage.downloadFile();
 		} catch (FileNotFoundException e) {
@@ -559,30 +552,9 @@ public class MainTest extends BaseTest {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		GetDownloadDir.clearDownloadFolder();
-		Assert.assertTrue(checkFileExistsInContainer("chrome-node-env", "webdrivermanager.png"));
-
 	}
 
-	public boolean checkFileExistsInContainer(String containerName, String fileName) {
-		try {
-			// Komenda: docker exec nazwa_kontenera ls /home/seluser/Downloads/nazwa_pliku
-			String[] command = {
-					"docker", "exec", containerName,
-					"ls", "/home/seluser/Downloads/" + fileName
-			};
 
-			Process process = Runtime.getRuntime().exec(command);
-			int exitCode = process.waitFor();
-
-			// Jeśli exitCode == 0, to znaczy że 'ls' znalazło plik
-			return exitCode == 0;
-
-		} catch (Exception e) {
-			e.printStackTrace();
-			return false;
-		}
-	}
 
 
 

@@ -148,15 +148,14 @@ public final class DriverFactory {
      static Map<String, Object> addExperimentalOptions() throws IOException {
         Map<String, Object> prefs = new HashMap<>();
         Path path = Path.of("src/main/resources/experimentalOptions.properties");
-		 var downloadPath = GetDownloadDir.getDownloadDir();
-
+		 //var downloadPath = GetDownloadDir.getDownloadDirectory();
 		 try {
             BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()));
             String optionLine;
             while ((optionLine = bufferedReader.readLine()) != null){
-				if(optionLine.contains("${DownloadPath}")){
-                    optionLine = optionLine.replace("${DownloadPath}", downloadPath.toString());
-				}
+				/*if(optionLine.contains("${DownloadPath}")){
+                    optionLine = optionLine.replace("${DownloadPath}", downloadPath.toString() != null ? downloadPath.toString() : "" );
+				}*/
                String[] optionSplit = optionLine.split("=");
                if(optionSplit[1] != null){
                    try {
