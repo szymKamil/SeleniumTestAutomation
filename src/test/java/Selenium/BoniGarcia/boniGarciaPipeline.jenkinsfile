@@ -12,6 +12,9 @@ pipeline {
 
 
     stages {
+
+
+
         stage('Docker test') {
             steps {
                 sh 'docker ps'
@@ -30,6 +33,11 @@ pipeline {
             }
         }
 
+        stage('Prepare Workspace') {
+            steps {
+                deleteDir()
+            }
+        }
         stage('Checkout') {
             steps {
                 git branch: 'jenkins-integration',
