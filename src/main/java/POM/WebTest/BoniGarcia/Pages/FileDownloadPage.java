@@ -1,7 +1,9 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 
+import Base.Drivers.DriverFactory;
 import Base.Utils.GetDownloadDir;
+import org.openqa.selenium.HasDownloads;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -13,6 +15,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -42,6 +45,7 @@ public class FileDownloadPage extends AbstractPage {
 
     //Metody testowe
     public void downloadFile(int choseFileToDownload) throws IOException {
+        System.out.println("RUNNING_IN_DOCKER = " + System.getenv("RUNNING_IN_DOCKER"));
         Path downloadFolder = GetDownloadDir.getDownloadDir();
         System.out.println("Ścieżka do przeszukania to: " + downloadFolder);
         int baseNumberOfFiles = Objects.requireNonNull(downloadFolder.toFile().listFiles()).length;
@@ -54,13 +58,34 @@ public class FileDownloadPage extends AbstractPage {
             throw new Error("Błędnie wybrany przycisk w metodzie");
         }
         File downloadedFile;
-        try {
-             downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
-        } catch (InterruptedException | FileNotFoundException e) {
-            throw new FileNotFoundException(e.getMessage());
+        WebDriver driver = DriverFactory.getDriver();
+        if (driver instanceof HasDownloads downloader) {
+            // Grid / RemoteWebDriver – pobieranie działa
+            Path saveTo = Path.of("DownloadFolder").toAbsolutePath();
+            downloader.downloadFile("webdrivermanager.png", Path.of(saveTo.toUri()));
+            System.out.println("Driver wspiera HasDownloads (RemoteWebDriver / Grid).");
+
+        } else {
+            // Lokalny ChromeDriver – brak wsparcia
+            System.out.println("HasDownloads not supported by this driver.");
+            System.out.println("Driver NIE wspiera HasDownloads (ChromeDriver lokalny).");
+
         }
-        log.info("Znaleziono pobrany plik: {}", downloadedFile.getName());
-    }
+
+        try {
+            Path saveTo = Path.of("DownloadFolder").toAbsolutePath();
+             ((HasDownloads) driver).downloadFile("webdrivermanager.png", Path.of(saveTo.toUri()));
+             downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
+        } catch ( FileNotFoundException | InterruptedException e) {
+            throw new FileNotFoundException(e.getMessage());
+		}
+		log.info("Znaleziono pobrany plik: {}", downloadedFile);
+		try {
+			Thread.sleep(Duration.ofSeconds(15));
+		} catch (InterruptedException e) {
+			throw new RuntimeException(e);
+		}
+	}
 
     public void downloadFile() throws IOException {
         downloadFile(0);

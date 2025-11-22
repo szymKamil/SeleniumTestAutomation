@@ -2,6 +2,7 @@ package Base.Utils;
 
 import Base.Drivers.DriverFactory;
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.HasDownloads;
 import org.openqa.selenium.Platform;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
@@ -30,7 +31,7 @@ public class GetDownloadDir {
 			System.out.println("Ustawiam folder pobierania na: " + dir);
 		} else {
 			System.out.println("Test uruchamiany jest zdalnie na URL: " + url);
-			dir = Path.of("/home/seluser/Downloads");
+			dir = Path.of("DownloadFolder").toAbsolutePath();
 			System.out.println("Ustawiam folder pobierania na: " + dir);
 		}
 		try {
@@ -59,7 +60,11 @@ public class GetDownloadDir {
 					}
 				});
 			}
+
+			((HasDownloads) DriverFactory.getDriver()).deleteDownloadableFiles();
 			System.out.println("Wszystkie pliki z folderu pobierania zostały usunięte.");
+
+
 		}
 	}
 }

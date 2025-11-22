@@ -47,8 +47,8 @@ public final class DriverFactory {
         WebDriver driver = null;
         try {
         if (url != null) {
-            driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
-         //   driver = new RemoteWebDriver(url,loadOptionsFromFile(browser, true));
+         //   driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
+            driver = new RemoteWebDriver(url,loadOptionsFromFile(browser, true));
             urlVerification = url;
         } else {
             switch(browser.toLowerCase()) {
@@ -59,8 +59,6 @@ public final class DriverFactory {
             }
 
         }
-
-        driver.manage().window().maximize();
         WebDriver decoratedDriver = decorate(driver, new Listener());
         decoratedDriver.manage().window().maximize();
         DRIVER_THREAD.set(decoratedDriver);
@@ -83,7 +81,7 @@ public final class DriverFactory {
     }
 
 
-     static Capabilities loadOptionsFromFile(String browser, boolean flag)  {
+     static AbstractDriverOptions<?> loadOptionsFromFile(String browser, boolean flag)  {
         AbstractDriverOptions<?> options;
         switch(browser.toLowerCase()) {
             case "chrome" -> options = new ChromeOptions();
@@ -92,6 +90,7 @@ public final class DriverFactory {
             default -> throw new IllegalArgumentException("Błędna nazwa przeglądarki %s. Użyj jednej z następujących: chrome, firefox, edge.".formatted(browser));
         }
         Path optionPath = Path.of("src/main/resources/options.properties");
+         options.setEnableDownloads(true);
 
         try(BufferedReader bufferedReader = new BufferedReader(new FileReader(optionPath.toFile()))){
             String optionsLine;
@@ -114,12 +113,12 @@ public final class DriverFactory {
     }
 
     private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value) throws IOException {
+
         if (options instanceof ChromeOptions chromeOptions) {
             if (value.equalsIgnoreCase("true")) {
                 chromeOptions.addArguments("--" + key);
             } else if (value.contains(",")) {
                 chromeOptions.addArguments("--" + key + "=" + value);
-
             } else if (key.equals("user-data-dir")) {
                 String threadId = String.valueOf(Thread.currentThread().getId());
                 chromeOptions.addArguments("--" + key + "=" + value.replace("${threadId}", threadId));
@@ -129,7 +128,6 @@ public final class DriverFactory {
                 chromeOptions.setExperimentalOption("prefs", prefs);
             }
             System.out.println("Dodałem opcje eksperymentalne");
-
         }
         if (options instanceof FirefoxOptions firefoxOptions){
             if (value.equalsIgnoreCase("true")){

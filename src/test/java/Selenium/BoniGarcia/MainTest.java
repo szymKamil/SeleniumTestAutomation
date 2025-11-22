@@ -11,6 +11,7 @@ import io.qameta.allure.testng.AllureTestNg;
 import org.openqa.selenium.support.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.testng.Assert;
 import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 
@@ -559,7 +560,32 @@ public class MainTest extends BaseTest {
 			throw new RuntimeException(e);
 		}
 		GetDownloadDir.clearDownloadFolder();
+		Assert.assertTrue(checkFileExistsInContainer("chrome-node-env", "webdrivermanager.png"));
+
 	}
+
+	public boolean checkFileExistsInContainer(String containerName, String fileName) {
+		try {
+			// Komenda: docker exec nazwa_kontenera ls /home/seluser/Downloads/nazwa_pliku
+			String[] command = {
+					"docker", "exec", containerName,
+					"ls", "/home/seluser/Downloads/" + fileName
+			};
+
+			Process process = Runtime.getRuntime().exec(command);
+			int exitCode = process.waitFor();
+
+			// Jeśli exitCode == 0, to znaczy że 'ls' znalazło plik
+			return exitCode == 0;
+
+		} catch (Exception e) {
+			e.printStackTrace();
+			return false;
+		}
+	}
+
+
+
 
 	@Test()
 	public void testDoubleVariant() {
