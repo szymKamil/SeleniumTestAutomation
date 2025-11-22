@@ -12,7 +12,13 @@ pipeline {
 
 
     stages {
-
+        stage('Prepare Workspace') {
+            steps {
+                sh 'ls -la'
+                sh 'git rev-parse --is-inside-work-tree'
+                deleteDir()
+            }
+        }
 
 
         stage('Docker test') {
@@ -33,11 +39,7 @@ pipeline {
             }
         }
 
-        stage('Prepare Workspace') {
-            steps {
-                deleteDir()
-            }
-        }
+
         stage('Checkout') {
             steps {
                 git branch: 'jenkins-integration',
