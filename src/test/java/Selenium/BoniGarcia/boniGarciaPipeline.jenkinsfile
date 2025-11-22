@@ -11,23 +11,29 @@ pipeline {
     }
 
 
-    stages {
-            stage('Clean') {
-                steps {
-                    // Wymaga pluginu Workspace Cleanup
-                    cleanWs()
-                }
-            }
+    options {
+        skipDefaultCheckout()
+    }
 
+    stages {
+        stage('Clean') {
+            steps {
+                // Teraz to zadziała jako pierwsze i naprawi uszkodzony folder
+                echo "Czyszczenie przestrzeni roboczej..."
+                cleanWs()
+            }
+        }
 
         stage('Docker test') {
             steps {
                 sh 'docker ps'
             }
         }
+
         stage('Check Selenium Grid') {
             steps {
                 script {
+                    // Sprawdzamy czy Grid żyje, zanim pobierzemy kod
                     def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub:4444/wd/hub/status", returnStdout: true).trim()
                     if (response != '200') {
                         error "Selenium Grid nie działa! Uruchom go osobno w Dockerze."
@@ -38,10 +44,11 @@ pipeline {
             }
         }
 
-
         stage('Checkout') {
             steps {
-                git branch: 'jenkins-integration',
+                echo "Pobieranie kodu z repozytorium..."
+                // Tutaj ręcznie pobieramy kod do CZYSTEGO folderu
+                git branch: 'main',
                         url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
                         credentialsId: 'github-token'
             }
@@ -59,6 +66,8 @@ pipeline {
                 sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/BoniGarcia/BGtestng.xml'
             }
         }
+    }
+
 
         stage('Report') {
             steps {
@@ -66,7 +75,7 @@ pipeline {
                 junit '**/target/surefire-reports/*.xml'
             }
         }
-    }
+
 
     post {
         always {
