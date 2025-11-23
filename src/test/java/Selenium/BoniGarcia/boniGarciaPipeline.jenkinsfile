@@ -14,7 +14,6 @@ pipeline {
     options {
         skipDefaultCheckout()
     }
-
     stages {
         stage('Clean') {
             steps {
@@ -23,7 +22,6 @@ pipeline {
                 cleanWs()
             }
         }
-
         stage('Docker test') {
             steps {
                 sh 'docker ps'
@@ -34,7 +32,7 @@ pipeline {
             steps {
                 script {
                     // Sprawdzamy czy Grid żyje, zanim pobierzemy kod
-                    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
+                    def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub:4444/wd/hub/status", returnStdout: true).trim()
                     if (response != '200') {
                         error "Selenium Grid nie działa! Uruchom go osobno w Dockerze."
                     } else {
