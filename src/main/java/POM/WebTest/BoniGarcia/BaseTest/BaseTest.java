@@ -14,28 +14,21 @@ import java.net.URL;
 
 public abstract class BaseTest {
 
-
-	/*-----------------*/
-	public static final String LOCAL_URL = "http://localhost:4444/wd/hub";
-	static final URI DOCKER_URL = URI.create("http://192.168.1.105:5555/");
-	/*-----------------*/
 	Logger log;
-	/*------Klasy stron-----------*/
-	AbstractPage ap;
-	/*-----------------*/
-
-
 	@BeforeClass
 	public void runLogger() {
 		log = LoggerFactory.getLogger(BaseTest.class);
 	}
 
-
 	//    @Listeners(TestListener.class)
 	@Parameters({"browser", "timeout", "url"})
 	@BeforeMethod
-	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional(LOCAL_URL) String url) throws Exception {
-		DriverFactory.initDriver(browser, 30/*, new URL(url)*/);
+	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("local") String url) throws Exception {
+		if (url.equals("local")){
+			DriverFactory.initDriver(browser, 30);
+		} else {
+			DriverFactory.initDriver(browser, 30, new URL(url));
+		}
 	}
 
 

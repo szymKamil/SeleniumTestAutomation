@@ -1,8 +1,7 @@
 package POM.WebTest.BoniGarcia.Pages;
 
-
-import Base.Drivers.DriverFactory;
-import Base.Utils.GetDownloadDir;
+import Base.Utils.FileDownloadUtils;
+import Base.Utils.Utils;
 import org.openqa.selenium.HasDownloads;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -10,16 +9,15 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Path;
-import java.time.Duration;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Objects;
 
 
 public class FileDownloadPage extends AbstractPage {
@@ -44,7 +42,8 @@ public class FileDownloadPage extends AbstractPage {
     WebElement downloadWseleniumLogoPdfBtn;
 
     //Metody testowe
-    public void downloadFile(int choseFileToDownload) throws IOException {
+    public void downloadFile(int choseFileToDownload) throws IOException, InterruptedException {
+        int baseNumberOfFiles = FileDownloadUtils.getDownloadDirectory().toFile().listFiles().length;
         if (choseFileToDownload >= 0 && choseFileToDownload <= 4){
             List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
             WebElement btn = btns.get(choseFileToDownload);
@@ -53,17 +52,19 @@ public class FileDownloadPage extends AbstractPage {
             log.error("Popraw numer przycisku! Wybierz jeden z przedziału 0-4.");
             throw new Error("Błędnie wybrany przycisk w metodzie");
         }
-        WebDriver driver = DriverFactory.getDriver();
-        if (driver instanceof HasDownloads downloader ) {
-            System.out.println("Driver wspiera HasDownloads (RemoteWebDriver / Grid).");
+        Path downloadFolder = FileDownloadUtils.getDownloadDirectory();
+        log.info("Ścieżka do przeszukania to: {}", downloadFolder);
+        if (driver instanceof HasDownloads downloader && !Utils.testIsInDockerEnv()) {
+            log.info("Test uruchomiony zdalnie. Pobieram plik za pomocą (HasDownloads)");
             downloader.downloadFile("webdrivermanager.png", Path.of("DownloadFolder"));
-        } else {
-            System.out.println("Driver NIE wspiera HasDownloads (ChromeDriver lokalny).");
-
+        } else if (Utils.testIsInDockerEnv()) {
+            log.info("Test uruchomiony lokalnie.");
+            var downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
+            Assert.assertNotNull(downloadedFile);
         }
 	}
 
-    public void downloadFile() throws IOException {
+    public void downloadFile() throws IOException, InterruptedException {
         downloadFile(0);
     }
 
@@ -88,7 +89,6 @@ public class FileDownloadPage extends AbstractPage {
     /***
      * Metoda weryfikuje, czy w trakcie testu plik został pobrany. W parametrze @baseNumOfFiles przekazywana jest liczba plików znajdująca się w katalogu w danej chwili.
      * Po pobraniu wykonywana jest pętla zliczająca pliki i sprawdzająca, czy liczba plików wynosi +1. Wówczas weryfikacja zakończy się pozytywnie.
-     *
      */
     public File waitForDownloadedFile(File downloadFolder, int timeoutSeconds, int baseNumOfFiles) throws FileNotFoundException, InterruptedException {
         int waited = 0;
@@ -98,12 +98,10 @@ public class FileDownloadPage extends AbstractPage {
                     !name.endsWith(".tmp") &&
                     !name.endsWith(".part")
             );
-
             if (files != null && files.length > baseNumOfFiles) {
                 File lastFile = Arrays.stream(files)
                         .max(Comparator.comparingLong(File::lastModified))
                         .orElse(null);
-
                 if (lastFile != null && lastFile.exists()) {
                     return lastFile;
                 }

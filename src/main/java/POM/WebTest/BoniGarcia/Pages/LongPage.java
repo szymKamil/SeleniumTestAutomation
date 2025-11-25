@@ -51,6 +51,7 @@ public class LongPage extends AbstractPage{
 
     public void scrollToLastParagraph(){
         WebElement lastParagraph = driver.findElement(By.cssSelector("p:last-of-type"));
+        wait.until(ExpectedConditions.visibilityOf(lastParagraph));
         actions.scrollToElement(lastParagraph).perform();
     }
 

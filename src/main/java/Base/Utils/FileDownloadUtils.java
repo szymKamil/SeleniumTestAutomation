@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-public class GetDownloadDir {
+public class FileDownloadUtils {
 
 
 	/***
@@ -16,37 +16,27 @@ public class GetDownloadDir {
 	 * b) w przypadku innego systemu, np. Linux, przyjmowane jest zdalne uruchomienie kontenerowe w Dokerze, przez co konfigurowany jest domyślny katalog pobierania,.
 	 * W przypadku nieznalezienia katalogu jest on tworzony.
 	 */
-	public static boolean testIsRunningInDocker() {
-		boolean dockerEnv = Boolean.parseBoolean(System.getProperty("dockerEnviroment", "false"));
-		System.out.println("DockerEnv ma wartość: " + dockerEnv);
-		return dockerEnv;
-	}
-
 	public static Path getDownloadDirectory(){
-		boolean dockerEnv = testIsRunningInDocker();
-		Path dir = null;
-		if (!dockerEnv) {
+		boolean localTest = Utils.testIsInDockerEnv();
+		Path dir;
+		if (localTest) {
 			dir = Path.of("DownloadFolder").toAbsolutePath();
-			System.out.println("Test uruchomiony lokalnie. Ustawiam folder pobierania na: " + dir);
-		} /*else {
-			dir = Path.of("/home/seluser/Downloads/");
-			System.out.println("Test uruchamiany jest zdalnie. Ustawiam folder pobierania na: " + dir);
-		}*/
-		/*try {
-			if (!Files.exists(dir)) {
-				Files.createDirectories(dir);
-			} else {
-				System.out.println("Folder istnieje");
+			try {
+				if (!Files.exists(dir)) {
+					Files.createDirectories(dir);
+				}
+			} catch (Exception e) {
+				throw new RuntimeException("Błąd przy tworzeniu folderu " + e.getMessage());
 			}
-		} catch (Exception e) {
-			throw new RuntimeException("Błąd przy tworzeniu folderu " + e.getMessage());
-		}*/
+		} else {
+			dir = Path.of("/home/seluser/Downloads/");
+		}
 		return dir;
 	}
 
 	public static void clearDownloadFolderFromFiles() throws IOException {
-		boolean isDocker = testIsRunningInDocker();
-		if (!isDocker) {
+		boolean localTest = Utils.testIsInDockerEnv();
+		if (localTest) {
 			var downloadFolder = getDownloadDirectory();
 			System.out.println("Czyszczę folder: " + downloadFolder.toAbsolutePath());
 			if (Files.exists(downloadFolder) && Files.isDirectory(downloadFolder)) {
@@ -55,7 +45,7 @@ public class GetDownloadDir {
 						try {
 							Files.deleteIfExists(f);
 						} catch (IOException e) {
-							throw new RuntimeException("Nie udało się usunąc pliku: " + f + " " + e);
+							throw new RuntimeException("Nie udało się usunąć pliku: " + f + " " + e);
 						}
 					});
 				}

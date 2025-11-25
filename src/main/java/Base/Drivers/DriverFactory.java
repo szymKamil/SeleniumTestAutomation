@@ -1,10 +1,8 @@
 package Base.Drivers;
 
 import Base.Listeners.Listener;
-import Base.Utils.GetDownloadDir;
 import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -29,6 +27,8 @@ import java.time.Duration;
 import java.util.HashMap;
 import java.util.Map;
 
+import static Base.Utils.FileDownloadUtils.getDownloadDirectory;
+
 public final class DriverFactory {
 	private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
 	private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
@@ -47,11 +47,11 @@ public final class DriverFactory {
 		WebDriver driver = null;
 		try {
 			if (url != null) {
-                    System.setProperty("Local", "false");
+                    System.setProperty("LocalTest", "false");
 				   driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
 			} else {
-                System.setProperty("Local", "true");
+                System.setProperty("LocalTest", "true");
 				switch (browser.toLowerCase()) {
 					case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser, false));
 					case "firefox" -> driver = new FirefoxDriver((FirefoxOptions) loadOptionsFromFile(browser, false));
@@ -154,9 +154,10 @@ public final class DriverFactory {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(expPropFile.toFile()));
 			String optionLine;
 			while ((optionLine = bufferedReader.readLine()) != null) {
-				/*if(optionLine.contains("${DownloadPath}")){
-                    optionLine = optionLine.replace("${DownloadPath}", downloadPath.toString() != null ? downloadPath.toString() : "" );
-				}*/
+				if(optionLine.contains("${DownloadPath}")){
+					getDownloadDirectory();
+					optionLine = optionLine.replace("${DownloadPath}", getDownloadDirectory().toString());
+				}
 				String[] optionSplit = optionLine.split("=");
 				if (optionSplit[1] != null) {
 					try {
