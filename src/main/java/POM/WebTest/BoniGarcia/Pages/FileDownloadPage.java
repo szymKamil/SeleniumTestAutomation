@@ -74,11 +74,8 @@ public class FileDownloadPage extends AbstractPage {
                     "docker", "exec", containerName,
                     "ls", "/home/seluser/Downloads/" + fileName
             };
-
             Process process = Runtime.getRuntime().exec(command);
             int exitCode = process.waitFor();
-
-            // Jeśli exitCode == 0, to znaczy że 'ls' znalazło plik
             return exitCode == 0;
 
         } catch (Exception e) {

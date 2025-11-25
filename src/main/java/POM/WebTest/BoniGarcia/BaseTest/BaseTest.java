@@ -35,7 +35,7 @@ public abstract class BaseTest {
 	@Parameters({"browser", "timeout", "url"})
 	@BeforeMethod
 	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional(LOCAL_URL) String url) throws Exception {
-		DriverFactory.initDriver(browser, 30, new URL(url));
+		DriverFactory.initDriver(browser, 30/*, new URL(url)*/);
 	}
 
 

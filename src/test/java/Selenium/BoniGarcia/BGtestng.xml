@@ -11,7 +11,7 @@
         <classes >
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
-                    <!-- <include name="mainPageTestElementsVerification"/>
+                    <include name="mainPageTestElementsVerification"/>
                     <include name="dropdownMenuTest"/>
                     <include name="navigationPageTest"/>
                     <include name="mouseOverTest"/>
@@ -24,7 +24,7 @@
                     <include name="shadowRootTest"/>
                     <include name="cookiesPageTest"/>
                     <include name="framesPageTest"/>
-                    <include name="iFramesPageTest"/>-->
+                    <include name="iFramesPageTest"/>
                     <include name="downloadFileTest"/>
                 </methods>
             </class>
