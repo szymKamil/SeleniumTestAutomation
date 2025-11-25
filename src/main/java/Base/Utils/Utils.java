@@ -11,7 +11,7 @@ public class Utils {
         Utils.driver = DriverFactory.getDriver();
     }
 
-    public static boolean testIsInDockerEnv() {
+    public static boolean testIsInLocalEnv() {
         boolean dockerEnv = Boolean.parseBoolean(System.getProperty("LocalTest"));
         return dockerEnv;
     }

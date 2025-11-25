@@ -17,7 +17,7 @@ public class FileDownloadUtils {
 	 * W przypadku nieznalezienia katalogu jest on tworzony.
 	 */
 	public static Path getDownloadDirectory(){
-		boolean localTest = Utils.testIsInDockerEnv();
+		boolean localTest = Utils.testIsInLocalEnv();
 		Path dir;
 		if (localTest) {
 			dir = Path.of("DownloadFolder").toAbsolutePath();
@@ -35,7 +35,7 @@ public class FileDownloadUtils {
 	}
 
 	public static void clearDownloadFolderFromFiles() throws IOException {
-		boolean localTest = Utils.testIsInDockerEnv();
+		boolean localTest = Utils.testIsInLocalEnv();
 		if (localTest) {
 			var downloadFolder = getDownloadDirectory();
 			System.out.println("Czyszczę folder: " + downloadFolder.toAbsolutePath());
