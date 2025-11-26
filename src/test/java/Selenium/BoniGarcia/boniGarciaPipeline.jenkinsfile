@@ -34,7 +34,10 @@ pipeline {
                     // Sprawdzamy czy Grid żyje, zanim pobierzemy kod
                     def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
                     if (response != '200') {
-                        error "Selenium Grid nie działa! Uruchom go osobno w Dockerze."
+                        error "Selenium Grid nie działa! Uruchamiam go osobno w Dockerze."
+                        sh '''
+                                docker compose -p test-env start
+                           '''
                     } else {
                         echo "✅ Grid OK — kontynuuję testy."
                     }
@@ -66,10 +69,13 @@ pipeline {
         }
 
 
-        stage('Report') {
+        stage('Allure Report') {
             steps {
-                echo 'Zbieranie raportów testów...'
-                junit '**/target/surefire-reports/*.xml'
+                allure([
+                        includeProperties: false,
+                        jdk: '',
+                        results: [[path: 'target/allure-results']]
+                ])
             }
         }
     }
@@ -81,12 +87,9 @@ pipeline {
             echo 'Pipeline zakończony — czyszczenie'
             script {
                 try {
+                    echo  "Zatrzymuję środowisko gridowe"
                     sh '''
-                        docker stop selenium-hub || true
-                        docker stop chrome-node || true
-                        docker stop chrome-node-2 || true
-                        docker stop firefox-node || true
-                        docker stop edge-node || true
+                      docker compose -p test-env stop
                     '''
                 } catch (Exception e) {
                     echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
