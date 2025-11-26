@@ -68,22 +68,16 @@ pipeline {
             }
         }
 
-
-        stage('Allure Report') {
-            steps {
-                allure([
-                        includeProperties: false,
-                        jdk: '',
-                        results: [[path: 'target/allure-results']]
-                ])
-            }
-        }
     }
-
-
 
     post {
         always {
+            allure([
+                    includeProperties: false,
+                    jdk: '',
+                    commandline: 'allure',
+                    results: [[path: 'target/allure-results']]
+            ])
             echo 'Pipeline zakończony — czyszczenie'
             script {
                 try {
@@ -104,7 +98,6 @@ pipeline {
             echo '❌ Błąd testów!'
         }
     }
-
 }
 
 
