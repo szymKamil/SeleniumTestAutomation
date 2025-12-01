@@ -22,11 +22,6 @@ pipeline {
                 cleanWs()
             }
         }
-        stage('Docker test') {
-            steps {
-                sh 'docker ps'
-            }
-        }
 
         stage('Check Selenium Grid') {
             steps {
@@ -48,7 +43,6 @@ pipeline {
         stage('Checkout') {
             steps {
                 echo "Pobieranie kodu z repozytorium..."
-                // Tutaj ręcznie pobieramy kod do CZYSTEGO folderu
                 git branch: 'master',
                         url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
                         credentialsId: 'github-token'
