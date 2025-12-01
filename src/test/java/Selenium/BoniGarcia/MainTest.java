@@ -64,7 +64,7 @@ public class MainTest extends BaseTest {
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Parameters("path")
-	public void webFormTest(@Optional("src/test/resources/f-vat_2011.pdf") String path) {
+	public void webFormTest(@Optional("src/test/resources/f-vat_2011.pdf") String file) {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web form");
@@ -76,7 +76,7 @@ public class MainTest extends BaseTest {
 		webForm.selectElementOnDropdownList("Two");
 		webForm.verifyDisabledFields();
 		webForm.selectElementOnDataList(DropdownOptions.OPTION_B);
-		webForm.uploadFile(path);
+		webForm.uploadFile(file);
 		webForm.checkboxSelector();
 		webForm.radioSelector(2);
 		webForm.colorPicker(new Color(65, 45, 34, 2).asHex());

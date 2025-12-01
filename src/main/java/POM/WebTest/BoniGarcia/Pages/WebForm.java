@@ -16,7 +16,9 @@ import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
+import java.net.URISyntaxException;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -153,7 +155,8 @@ public class WebForm extends AbstractPage {
         if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
             ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
         }
-        fileField.sendKeys(Path.of(path).toAbsolutePath().toString());
+        log.info("Dołączam plik {}", Path.of(path).toAbsolutePath());
+		fileField.sendKeys(Path.of(path).toAbsolutePath().toString());
         log.info("Plik został poprawnie przesłany.");
     }
 
