@@ -1,6 +1,7 @@
 package Base.Drivers;
 
 import Base.Listeners.Listener;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
@@ -16,12 +17,11 @@ import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.net.URL;
+import java.net.*;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.HashMap;
@@ -46,9 +46,9 @@ public final class DriverFactory {
 		WebDriverManager.getInstance(browser).setup();
 		WebDriver driver = null;
 		try {
-			if (url != null) {
-                    System.setProperty("LocalTest", "false");
-				   driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
+			if (url != null && isURLup(url)) {
+					System.setProperty("LocalTest", "false");
+					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
 			} else {
                 System.setProperty("LocalTest", "true");
@@ -67,10 +67,10 @@ public final class DriverFactory {
 			WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
 			logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread()
 					.getId());
-		} catch (Exception e) {
+		} catch (WebDriverException | IOException e) {
 			logger.error("Błąd podczas inicjalizacji drivera: ", e);
 			quit();
-			throw new RuntimeException("Nie udało się uruchomić drivera", e);
+			throw new WebDriverException("Nie udało się uruchomić drivera", e);
 		}
 		logger.info("Uruchomiony został thread {}", Thread.currentThread()
 				.getName());
@@ -203,6 +203,21 @@ public final class DriverFactory {
 				WAIT_THREAD.remove();
 			}
 		}
+	}
+
+	public static Boolean isURLup(URL url) throws IOException {
+		try {
+			HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+			connection.setConnectTimeout(2000);
+			connection.setReadTimeout(2000);
+			connection.setRequestMethod("GET");
+			int responseCode = connection.getResponseCode();
+			System.out.println("Status połączenia to: " + responseCode);
+			return (200 <= responseCode && responseCode <= 399);
+		} catch (Exception e) {
+			return false;
+		}
+
 	}
 
 }

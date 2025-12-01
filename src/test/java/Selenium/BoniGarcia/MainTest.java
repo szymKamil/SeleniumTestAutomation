@@ -1,5 +1,6 @@
 package Selenium.BoniGarcia;
 
+import Base.Listeners.Listener;
 import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.Screenshot;
@@ -7,7 +8,9 @@ import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.BaseTest.BaseTest;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
 import POM.WebTest.BoniGarcia.Utils.PointForCanvas;
+import io.qameta.allure.*;
 import io.qameta.allure.testng.AllureTestNg;
+import io.qameta.allure.testng.Tag;
 import org.openqa.selenium.support.Color;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,27 +34,37 @@ public class MainTest extends BaseTest {
 
 	private static final Logger log = LoggerFactory.getLogger(MainTest.class);
 
-	@Test(priority = 1, groups = {"interface", "regression"})
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację adresu URL oraz występowania głównych elementów na stronie.
+	 */
+	@Test(priority = 0, groups = {"interface", "regression"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Main page verification")
+	@Description("Weryfikacja, czy strona logowania posiada wszystkie elementy.")
+	@Owner("Kamil")
+	@Tag("Interface")
+	@Severity(SeverityLevel.BLOCKER)
 	public void mainPageTestElementsVerification() {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację adresu URL oraz występowania głównych elementów na stronie.
-		 */
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.verifyHomePageContent();
 		log.info("Test mainPageTestElementsVerification ukończony");
 	}
 
-
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, następnie przejście do podstrony Web form,  na której przetestowane zostanie możliwość wypełnienia, weryfikacji i przesłania formularza oraz upewnienie się,
+	 * że formularz został poprawnie przesłany poprzez weryfikację wyświetlania odpowiedniego komunikatu o sukcesie.
+	 */
+	@Test(priority = 2, groups = {"functional", "regression"}, dependsOnMethods = {"mainPageTestElementsVerification"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Web form verification")
+	@Description("Weryfikacja, czy w formularzu można uzupełnić wszytskie pola, a na końcu przesłać całość.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
 	@Parameters("path")
-	@Test(priority = 2, groups = {"functional", "regression"})
-	public void webFormTest(@Optional("D:\\Programowanie\\Nauka\\SeleniumTestAutomation\\SeleniumTestAutomation\\src\\main\\resources\\f-vat_2011.pdf") String path) {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Web form,  na której przetestowane zostanie możliwość wypełnienia, weryfikacji i przesłania formularza oraz upewnienie się,
-		 * że formularz został poprawnie przesłany poprzez weryfikację wyświetlania odpowiedniego komunikatu o sukcesie.
-		 */
+	public void webFormTest(@Optional("src/test/resources/f-vat_2011.pdf") String path) {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web form");
@@ -73,7 +86,11 @@ public class MainTest extends BaseTest {
 		log.info("Test webFormTest ukończony");
 	}
 
-
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Web form verification")
+	@Description("Weryfikacja, czy na stronie z nawigacją można przechodzić pomiędzy poszczególnymi podstronami za pomoca przycisków.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
 	@Test(priority = 3, dependsOnMethods = {"mainPageTestElementsVerification"}, groups = "interface")
 	public void navigationPageTest() {
 		/***
@@ -91,13 +108,17 @@ public class MainTest extends BaseTest {
 	}
 
 
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Dropdown Menu Test")
+	@Description("Weryfikacja działania pól z dropdownem.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
 	@Test(priority = 2, groups = "interface")
 	public void dropdownMenuTest() {
 		/***
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Dropdown menu, i użycie wybranych dropdownów razem z kliknięciem odpowiednich przycisków w menu.
 		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Dropdown menu");
@@ -109,8 +130,12 @@ public class MainTest extends BaseTest {
 
 	}
 
-
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Mouse Over Test")
+	@Description("Weryfikacja, czy umieszczenie kursora na elementach poprawie wyświetla hinty pod nimi.")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(priority = 3)
 	public void mouseOverTest() {
 		/***
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -128,13 +153,18 @@ public class MainTest extends BaseTest {
 		mouseOverPage.verifyImgCaptions();
 	}
 
-	@Test()
+
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Drag and Drop Test")
+	@Description("Test sprawdza działanie mechanizmu drag and drop.")
+	@Severity(SeverityLevel.MINOR)
+	@Owner("Kamil")
+	@Test(priority = 3, groups = {"interface"})
 	public void dragAndDropTest() {
 		/***
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Drag and drop, na której test przeniesie element do miejsca docelowego.
 		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Drag and drop");
@@ -148,7 +178,12 @@ public class MainTest extends BaseTest {
 
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Canvas test")
+	@Description("Test sprawdza działanie mechanizmu rysowania na płótnie.")
+	@Severity(SeverityLevel.MINOR)
+	@Owner("Kamil")
+	@Test(priority = 4, groups = {"interface"})
 	public void canvasTest() {
 		/**
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -164,7 +199,13 @@ public class MainTest extends BaseTest {
 		canvasPage.paintInCanvas(new PointForCanvas(50, 20), new PointForCanvas(30, 10), new PointForCanvas(-20, -15));
 	}
 
-	@Test()
+
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Image loading test")
+	@Description("Test sprawdza czy rysunki na stronie poprawnie się ładują.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(priority = 2, groups = {"interface"})
 	public void loadingImages() {
 		/**
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -182,7 +223,12 @@ public class MainTest extends BaseTest {
 
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Slow calculator test")
+	@Description("Test sprawdza czy czy wolny kalkulator działa poprawnie.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(priority = 1, groups = {"business"})
 	public void slowCalculatorTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -203,7 +249,12 @@ public class MainTest extends BaseTest {
 
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Long page test")
+	@Description("Test sprawdza czy strona poprawie się przewija.")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(priority = 3, groups = {"interface"})
 	public void longPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -222,7 +273,13 @@ public class MainTest extends BaseTest {
 
 	}
 
-	@Test()
+
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Infinite scroll")
+	@Description("Test sprawdza czy nieskończona strona pozwala bez końća przewijać stronę.")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(priority = 3, groups = {"interface"})
 	public void infiniteScrollTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -240,7 +297,12 @@ public class MainTest extends BaseTest {
 		log.info("Końcowa wysokość strony to: {}", infiniteScroll.getPageHeight());
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Shadow Root")
+	@Description("Test sprawdza czy można dostać się do ShadowRoot strony.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(priority = 2, groups = {"interface", "shadowRoot"})
 	public void shadowRootTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -256,7 +318,13 @@ public class MainTest extends BaseTest {
 		shadowDomPage.getShadowRootContent();
 	}
 
-	@Test()
+
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Shadow Root")
+	@Description("Test sprawdza czy można dostać się do ShadowRoot strony.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(priority = 2, groups = {"interface", "shadowRoot"})
 	public void cookiesPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -280,7 +348,12 @@ public class MainTest extends BaseTest {
 		cookiesPage.getCookiesText();
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Frames test")
+	@Description("Test sprawdza czy można przełączać się na stronie pomiędzy ramkami.")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(priority = 4, groups = {"interface"})
 	public void framesPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -302,15 +375,18 @@ public class MainTest extends BaseTest {
 		framesPage.verifyVisibilityOfParagraphs();
 
 	}
-
-	@Test()
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony IFrames, przescrollowanie i weryfikację
+	 tekstu w ostatnim paragrafie.
+	 */
+	@Epic("Boni Garcia WebPageTest")
+	@Story("iFrames test")
+	@Description("Test sprawdza czy można przełączać się pomiędzy ramkami.")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(priority = 4, groups = {"interface", "shadowRoot"})
 	public void iFramesPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony IFrames, przescrollowanie i weryfikację
-		 tekstu w ostatnim paragrafie.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("IFrames");
@@ -318,18 +394,19 @@ public class MainTest extends BaseTest {
 		iFramePage.verifyAbstractPage();
 		iFramePage.switchToiFrame();
 		iFramePage.scrollPage();
-		String testString = "Magnis feugiat natoque proin commodo laoreet mauris, odio ligula sagittis montes dapibus fames ultricies, interdum ridiculus volutpat aenean pulvinar. " + "Fames curabitur himenaeos nec porta lectus tempus, conubia purus nam lacus rhoncus primis, class fusce fermentum velit tortor. " + "Non consequat fringilla mauris mus tortor commodo cum, quis ultrices lobortis curabitur ad pulvinar massa imperdiet, primis quisque nisi ultricies purus lacus.";
 	}
 
-	@Test()
+	/** Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Dialog boxes, następnie uruchomienie każdego
+	 z aletrów i weryfikację poprawności ich wyświetlania i działania, w kontekście przesłanego tekstu.
+	 */
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Alert test")
+	@Description("Test sprawdza czy można korzystać z alertów.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(priority = 3, groups = {"interface"})
 	public void alertPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Dialog boxes, następnie uruchomienie każdego
-		 z aletrów
-		 *i weryfikację poprawności ich wyświetlania i działania, w kontekście przesłanego tekstu.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Dialog boxes");
@@ -350,7 +427,12 @@ public class MainTest extends BaseTest {
 		assertThat(dialogBoxesPage.getTextFromModal()).isEqualTo("You chose: Save changes");
 	}
 
-	@Test(groups = {"devTools"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("WebStorage")
+	@Description("Test sprawdza działanie magazynu danych na stronie (pamięci podręcznej).")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(groups = {"devTools"}, priority = 1)
 	public void webStoragePageTests() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -376,7 +458,12 @@ public class MainTest extends BaseTest {
 		log.info("Session storage posiada wartości: {}", webStoragePage.getTextFormSessionParagraph());
 	}
 
-	@Test(groups = {"devTools"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Geolocation")
+	@Description("Test sprawdzający mechanizm geolokacji.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(groups = {"devTools"}, priority = 1)
 	public void geolocationTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -390,7 +477,6 @@ public class MainTest extends BaseTest {
 		mainPage.goToSubPage("Geolocation");
 		GeolocationPage geolocationPage = new GeolocationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		geolocationPage.verifyAbstractPage();
-
 		geolocationPage.setCoordinates(4.323, 4.53);
 		geolocationPage.clickGeolocationBtn();
 		log.info("Koordynaty to: {}", geolocationPage.returnCoordinates());
@@ -398,7 +484,12 @@ public class MainTest extends BaseTest {
 				.contains("4.323")).isTrue();
 	}
 
-	@Test(groups = {"devTools"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Notification test")
+	@Description("Test sprawdza działanie powiadomień systemowych.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(groups = {"devTools"}, priority = 1)
 	public void notificationPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -415,7 +506,12 @@ public class MainTest extends BaseTest {
 		notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
 	}
 
-	@Test(groups = {"devTools"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Media test")
+	@Description("Test sprawdza działanie mediów (kamera, mikrofon).")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(groups = {"devTools"}, priority = 2)
 	public void userMediaPageTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -434,6 +530,11 @@ public class MainTest extends BaseTest {
 		log.info("Screenshot został wykonany");
 	}
 
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Multilagnguage")
+	@Description("Test sprawdza działanie mechanizmu tłumaczenia strony.")
+	@Severity(SeverityLevel.BLOCKER)
+	@Owner("Kamil")
 	@Test()
 	public void multiLanguageTest() {
 		/**
@@ -451,7 +552,12 @@ public class MainTest extends BaseTest {
 		log.info("Paragrafy posiadają następujące wartości: {}", multilanguagePage.getParagraphsInfo());
 	}
 
-	@Test(groups = {"devTools"})
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Console test")
+	@Description("Test sprawdza działanie konsoli.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(groups = {"devTools, interface"}, priority = 1)
 	public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki i uruchomienie nasłuchiwania logów, przejście do głównej strony,
@@ -468,7 +574,13 @@ public class MainTest extends BaseTest {
 
 	}
 
-	@Test()
+
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Login form test")
+	@Description("Test sprawdza działanie mechanizmu logowania.")
+	@Severity(SeverityLevel.BLOCKER)
+	@Owner("Kamil")
+	@Test(groups = {"interface, business"}, priority = 0)
 	public void loginFormTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -487,7 +599,12 @@ public class MainTest extends BaseTest {
 
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Slow login form test")
+	@Description("Test sprawdza działanie mechanizmu logowania przy obciążeniu strony.")
+	@Severity(SeverityLevel.BLOCKER)
+	@Owner("Kamil")
+	@Test(groups = {"interface, business"}, priority = 0)
 	public void slowLoginFormTest() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -506,7 +623,12 @@ public class MainTest extends BaseTest {
 		loginFormPage.verifySuccessLogin();
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Random calculator test")
+	@Description("Test sprawdza działanie kalkulatora generującego losowe wyniki.")
+	@Severity(SeverityLevel.NORMAL)
+	@Owner("Kamil")
+	@Test(groups = {"interface, business"}, priority = 1)
 	public void randomCalculator() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -530,7 +652,13 @@ public class MainTest extends BaseTest {
 		}
 	}
 
-	@Test()
+
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Download file test")
+	@Description("Test sprawdza działanie mechanizmu pobierania plików.")
+	@Severity(SeverityLevel.CRITICAL)
+	@Owner("Kamil")
+	@Test(groups = {"interface, business"}, priority = 0)
 	public void downloadFileTest() throws IOException {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -550,9 +678,12 @@ public class MainTest extends BaseTest {
 		FileDownloadUtils.clearDownloadFolderFromFiles();
 	}
 
-
-
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Double variant test")
+	@Description("Test sprawdza działanie mechanizmu losowego generowania treści na stronie.")
+	@Severity(SeverityLevel.TRIVIAL)
+	@Owner("Kamil")
+	@Test(groups = {"interface, business"}, priority = 5)
 	public void testDoubleVariant() {
 		/**
 		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
@@ -567,7 +698,12 @@ public class MainTest extends BaseTest {
 		abTestingPage.verifyTypeOfVariation();
 	}
 
-	@Test()
+	@Epic("Boni Garcia WebPageTest")
+	@Story("Data types test")
+	@Description("Test sprawdza działanie mechanizmu wypełniania formularza losowymi danymi.")
+	@Severity(SeverityLevel.BLOCKER)
+	@Owner("Kamil")
+	@Test(groups = {"business"}, priority = 1)
 	public void dataTypesTest() {
 		/***
 		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,

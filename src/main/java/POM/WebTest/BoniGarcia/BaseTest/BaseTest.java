@@ -1,15 +1,11 @@
 package POM.WebTest.BoniGarcia.BaseTest;
 
-
 import Base.Drivers.DriverFactory;
-import POM.WebTest.BoniGarcia.Pages.*;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
 import org. slf4j. Logger;
-
 import java.lang.reflect.Method;
-import java.net.URI;
 import java.net.URL;
 
 public abstract class BaseTest {
@@ -20,7 +16,6 @@ public abstract class BaseTest {
 		log = LoggerFactory.getLogger(BaseTest.class);
 	}
 
-	//    @Listeners(TestListener.class)
 	@Parameters({"browser", "timeout", "url"})
 	@BeforeMethod
 	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("local") String url) throws Exception {

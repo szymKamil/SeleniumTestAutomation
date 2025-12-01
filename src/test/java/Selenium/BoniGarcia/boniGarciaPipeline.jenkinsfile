@@ -83,7 +83,10 @@ pipeline {
                 try {
                     echo  "Zatrzymuję środowisko gridowe"
                     sh '''
-                      docker compose -p test-env stop
+                      docker stop selenium-hub-env
+                      docker stop firefox-node-env
+                      docker stop chrome-node-env
+                      docker stop edge-node-env
                     '''
                 } catch (Exception e) {
                     echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"

@@ -1,15 +1,22 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
 import Base.Utils.GenerateRandomText;
 import Base.Utils.ParseWord;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
+import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.*;
+import org.openqa.selenium.remote.FileDetector;
+import org.openqa.selenium.remote.LocalFileDetector;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.io.File;
+import java.nio.file.Path;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -143,7 +150,10 @@ public class WebForm extends AbstractPage {
     }
 
     public void uploadFile(String path) {
-        fileField.sendKeys(path);
+        if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
+            ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
+        }
+        fileField.sendKeys(Path.of(path).toAbsolutePath().toString());
         log.info("Plik został poprawnie przesłany.");
     }
 

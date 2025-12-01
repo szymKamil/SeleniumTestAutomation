@@ -1,19 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="All Test Suite" thread-count="1" parallel="false">
+<suite name="Boni Garcia Test Suite" thread-count="2" parallel="methods">
     <listeners>
-        <listener class-name="io.qameta.allure.testng.AllureTestNg"></listener>
+        <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
-    <test verbose="1" preserve-order="true" name="Packed 1">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Chrome Tests">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
-        <parameter name="url" value="http://selenium-hub-env:4444/wd/hub"/>
-<!--        <parameter name="url" value="http://localhost:4444/wd/hub"/>-->
-        <!--<parameter name="url" value="local"/>-->
+<!--        <parameter name="url" value="http://selenium-hub-env:4444/wd/hub"/>-->
+        <parameter name="url" value="http://localhost:4444/"/>
+        <groups>
+            <run>
+                <exclude name="devTools"/>
+            </run>
+        </groups>
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
-                   <include name="mainPageTestElementsVerification"/>
+                    <include name="webFormTest"/>
+                    <include name="mainPageTestElementsVerification"/>
                     <include name="dropdownMenuTest"/>
                     <include name="navigationPageTest"/>
                     <include name="mouseOverTest"/>

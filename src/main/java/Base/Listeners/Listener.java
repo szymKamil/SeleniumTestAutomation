@@ -3,8 +3,6 @@ package Base.Listeners;
 import io.qameta.allure.Allure;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.events.WebDriverListener;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-
 import java.io.ByteArrayInputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
