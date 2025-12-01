@@ -31,7 +31,10 @@ pipeline {
                     if (response != '200') {
                         error "Selenium Grid nie działa! Uruchamiam go osobno w Dockerze."
                         sh '''
-                                docker compose -p test-env start
+                                docker start selenium-hub-env
+                                docker start firefox-node-env
+                                docker start chrome-node-env
+                                docker start edge-node-env
                            '''
                     } else {
                         echo "✅ Grid OK — kontynuuję testy."
