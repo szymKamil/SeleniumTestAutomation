@@ -19,6 +19,7 @@ import org.testng.annotations.Optional;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -60,11 +61,11 @@ public class MainTest extends BaseTest {
 	@Test(priority = 2, groups = {"functional", "regression"}, dependsOnMethods = {"mainPageTestElementsVerification"})
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Web form verification")
-	@Description("Weryfikacja, czy w formularzu można uzupełnić wszytskie pola, a na końcu przesłać całość.")
+	@Description("Weryfikacja, czy w formularzu można uzupełnić wszystkie pola, a na końcu przesłać całość.")
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Parameters("path")
-	public void webFormTest(@Optional("f-vat_2011.pdf") String file) {
+	public void webFormTest(@Optional("f-vat_2011.pdf") String file) throws URISyntaxException {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web form");

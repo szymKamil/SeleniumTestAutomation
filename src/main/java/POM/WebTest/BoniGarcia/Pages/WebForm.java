@@ -152,12 +152,12 @@ public class WebForm extends AbstractPage {
                 .getAttribute(VALUE);
     }
 
-    public void uploadFile(String file) {
+    public void uploadFile(String file) throws URISyntaxException {
         URL resourceUrl = getClass().getClassLoader().getResource(file);
         if (resourceUrl == null) {
             throw new RuntimeException("Plik nie znaleziony w classpath: " + file);
         }
-        String fileAbsolutePath = new File(resourceUrl.getFile()).getAbsolutePath();
+        String fileAbsolutePath = Paths.get(resourceUrl.toURI()).toFile().getAbsolutePath();
         if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
             ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
         }

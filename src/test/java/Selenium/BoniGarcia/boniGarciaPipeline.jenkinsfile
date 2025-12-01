@@ -29,7 +29,7 @@ pipeline {
                     // Sprawdzamy czy Grid żyje, zanim pobierzemy kod
                     def response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
                     if (response != '200') {
-                        error "Selenium Grid nie działa! Uruchamiam go osobno w Dockerze."
+                        echo "Selenium Grid nie działa! Uruchamiam go osobno w Dockerze."
                         sh '''
                                 docker start selenium-hub-env
                                 docker start firefox-node-env
@@ -38,6 +38,16 @@ pipeline {
                            '''
                     } else {
                         echo "✅ Grid OK — kontynuuję testy."
+                    }
+                    def retries = 5
+                    while (retries > 0) {
+                        response = sh(script: "curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
+                        if (response == '200') break
+                        retries--
+                        sleep 5
+                    }
+                    if (response != '200') {
+                        error "Nie udało się uruchomić Selenium Grid!"
                     }
                 }
             }
