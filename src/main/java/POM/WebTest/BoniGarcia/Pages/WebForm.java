@@ -14,6 +14,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -26,7 +28,6 @@ import java.util.List;
 
 
 public class WebForm extends AbstractPage {
-
 
     public final String TEST_STRING = "Tekst przykładowy";
     public final String TEST_PASSWORD = "Haslo_123_456";
@@ -159,8 +160,11 @@ public class WebForm extends AbstractPage {
         }
         String fileAbsolutePath = Paths.get(resourceUrl.toURI()).toFile().getAbsolutePath();
         if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
+            System.out.println("Driver jest instancją RemoteWebDriver");
+            log.info("Driver jest instancją RemoteWebDriver");
             ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
         }
+        System.out.println("Dołączam plik: " + fileAbsolutePath);
         log.info("Dołączam plik {}", fileAbsolutePath);
 		fileField.sendKeys(fileAbsolutePath);
         log.info("Plik został poprawnie przesłany.");

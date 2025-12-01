@@ -19,7 +19,7 @@ public class AbstractPage {
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
-    protected final Logger log = LoggerFactory.getLogger("Logger");
+    protected final Logger log = LoggerFactory.getLogger(AbstractPage.class);
 
 
     public AbstractPage(WebDriver driver, WebDriverWait wait) {
