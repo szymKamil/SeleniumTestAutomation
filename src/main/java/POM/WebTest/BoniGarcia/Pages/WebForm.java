@@ -154,19 +154,16 @@ public class WebForm extends AbstractPage {
     }
 
     public void uploadFile(String file) throws URISyntaxException {
-        URL resourceUrl = getClass().getClassLoader().getResource(file);
-        if (resourceUrl == null) {
-            throw new RuntimeException("Plik nie znaleziony w classpath: " + file);
+        String fileAbsolutePath = Paths.get(file).toFile().getAbsolutePath();
+        if (!new java.io.File(fileAbsolutePath).exists()) {
+            throw new RuntimeException("Plik nie istnieje na ścieżce: " + fileAbsolutePath);
         }
-        String fileAbsolutePath = Paths.get(resourceUrl.toURI()).toFile().getAbsolutePath();
         if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
-            System.out.println("Driver jest instancją RemoteWebDriver");
-            log.info("Driver jest instancją RemoteWebDriver");
+            log.info("Driver jest instancją RemoteWebDriver, ustawiam LocalFileDetector.");
             ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
         }
-        System.out.println("Dołączam plik: " + fileAbsolutePath);
-        log.info("Dołączam plik {}", fileAbsolutePath);
-		fileField.sendKeys(fileAbsolutePath);
+        log.info("Dołączam plik z absolutnej ścieżki: {}", fileAbsolutePath);
+        fileField.sendKeys(fileAbsolutePath);
         log.info("Plik został poprawnie przesłany.");
     }
 
