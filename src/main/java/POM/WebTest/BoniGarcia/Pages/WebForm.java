@@ -153,8 +153,27 @@ public class WebForm extends AbstractPage {
                 .getAttribute(VALUE);
     }
 
-    public void uploadFile(String file) throws URISyntaxException {
-        String fileAbsolutePath = Paths.get(file).toFile().getAbsolutePath();
+    public void uploadFile(String file) {
+        String jenkinsWorkspace = System.getenv("WORKSPACE");
+        Path absolutePath = Paths.get(jenkinsWorkspace, file);
+        String fileAbsolutePath = absolutePath.toString();
+        java.io.File uploadFile = new java.io.File(fileAbsolutePath);
+        if (!uploadFile.exists()) {
+            log.error("KRYTYCZNY BŁĄD: Plik nie istnieje na ścieżce: {}", fileAbsolutePath);
+            throw new RuntimeException("Plik nie istnieje pod ścieżką: " + fileAbsolutePath);
+        }
+
+        // 4. Ustawienie LocalFileDetector i wysłanie
+
+            ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
+
+
+        log.info("Dołączam plik z bezwzględnej ścieżki (WORKSPACE): {}", fileAbsolutePath);
+        fileField.sendKeys(fileAbsolutePath);
+        log.info("Plik został poprawnie przesłany.");
+
+
+        /*String fileAbsolutePath = Paths.get(file).toFile().getAbsolutePath();
         if (!new java.io.File(fileAbsolutePath).exists()) {
             throw new RuntimeException("Plik nie istnieje na ścieżce: " + fileAbsolutePath);
         }
@@ -164,7 +183,7 @@ public class WebForm extends AbstractPage {
         }
         log.info("Dołączam plik z absolutnej ścieżki: {}", fileAbsolutePath);
         fileField.sendKeys(fileAbsolutePath);
-        log.info("Plik został poprawnie przesłany.");
+        log.info("Plik został poprawnie przesłany.");*/
     }
 
 
