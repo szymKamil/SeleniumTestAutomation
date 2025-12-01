@@ -17,6 +17,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.io.File;
 import java.net.URISyntaxException;
+import java.net.URL;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
@@ -151,12 +152,17 @@ public class WebForm extends AbstractPage {
                 .getAttribute(VALUE);
     }
 
-    public void uploadFile(String path) {
+    public void uploadFile(String file) {
+        URL resourceUrl = getClass().getClassLoader().getResource(file);
+        if (resourceUrl == null) {
+            throw new RuntimeException("Plik nie znaleziony w classpath: " + file);
+        }
+        String fileAbsolutePath = new File(resourceUrl.getFile()).getAbsolutePath();
         if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
             ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
         }
-        log.info("Dołączam plik {}", Path.of(path).toAbsolutePath());
-		fileField.sendKeys(Path.of(path).toAbsolutePath().toString());
+        log.info("Dołączam plik {}", fileAbsolutePath);
+		fileField.sendKeys(fileAbsolutePath);
         log.info("Plik został poprawnie przesłany.");
     }
 

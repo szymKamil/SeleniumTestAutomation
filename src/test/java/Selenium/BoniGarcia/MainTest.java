@@ -64,7 +64,7 @@ public class MainTest extends BaseTest {
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Parameters("path")
-	public void webFormTest(@Optional("src/test/resources/f-vat_2011.pdf") String file) {
+	public void webFormTest(@Optional("f-vat_2011.pdf") String file) {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web form");
