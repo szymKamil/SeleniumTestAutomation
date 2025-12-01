@@ -94,8 +94,7 @@
     <build>
         <testResources>
             <testResource>
-                <directory>Selenium/BoniGarcia</directory>
-                <filtering>true</filtering>
+                <directory>src/test/resources</directory>
             </testResource>
         </testResources>
 
