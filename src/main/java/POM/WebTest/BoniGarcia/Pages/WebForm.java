@@ -4,9 +4,7 @@ import Base.Drivers.DriverFactory;
 import Base.Utils.GenerateRandomText;
 import Base.Utils.ParseWord;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
-import org.jspecify.annotations.Nullable;
 import org.openqa.selenium.*;
-import org.openqa.selenium.remote.FileDetector;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
@@ -14,14 +12,8 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
-import java.net.URISyntaxException;
-import java.net.URL;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -29,14 +21,13 @@ import java.util.List;
 
 public class WebForm extends AbstractPage {
 
-    Logger logger = LoggerFactory.getLogger(WebForm.class);
 
-    public final String TEST_STRING = "Tekst przykładowy";
-    public final String TEST_PASSWORD = "Haslo_123_456";
-    final String TEST_RANDOM_TEXT = GenerateRandomText.randomGeneratedText(88);
-    final String VALUE = "value";
-    final String CONFIRMATION_TEXT = "Form submitted";
-    public Select select;
+    public static final String TEST_STRING = "Tekst przykładowy";
+    public static final String TEST_PASSWORD = "Haslo_123_456";
+    static final String TEST_RANDOM_TEXT = GenerateRandomText.randomGeneratedText(88);
+    static final String VALUE = "value";
+    static final String CONFIRMATION_TEXT = "Form submitted";
+    private static Select select;
 
     //Elementy na stronie
     @FindBy(xpath = "//h1[@class='display-6']")
@@ -83,7 +74,6 @@ public class WebForm extends AbstractPage {
 
     @FindBy(name = "my-date")
     WebElement dateField;
-
 
     //TEST DATA
     @FindBy(name = "my-range")
@@ -156,23 +146,27 @@ public class WebForm extends AbstractPage {
     }
 
     public void uploadFile(String file) {
+        File searchedFile;
         WebDriver driver = DriverFactory.getDriver();
         WebDriver rawDriver = driver;
         if (driver instanceof WrapsDriver) {
             rawDriver = ((WrapsDriver) driver).getWrappedDriver();
         }
-        if (rawDriver instanceof RemoteWebDriver) {
-            ((RemoteWebDriver) rawDriver).setFileDetector(new LocalFileDetector());
+        if (rawDriver instanceof RemoteWebDriver && System.getProperty("LocalTest").equals("false")) {
             System.out.println("Ustawiam LocalFileDetector na RemoteWebDriver");
-            logger.info("Ustawiam LocalFileDetector na RemoteWebDriver");
+            ((RemoteWebDriver) rawDriver).setFileDetector(new LocalFileDetector());
+            searchedFile = new LocalFileDetector().getLocalFile(file).getAbsoluteFile();
+            log.info("Ustawiam LocalFileDetector na RemoteWebDriver");
         } else {
             System.out.println("Sterownik NIE jest RemoteWebDriver. Typ: " + rawDriver.getClass().getName());
-            logger.warn("Sterownik NIE jest RemoteWebDriver. Typ: {}", rawDriver.getClass().getName());
+            log.warn("Sterownik NIE jest RemoteWebDriver. Typ: {}", rawDriver.getClass().getName());
+            LocalFileDetector localFileDetector = new LocalFileDetector();
+            searchedFile = localFileDetector.getLocalFile(file).getAbsoluteFile();
         }
 
-        logger.info("Dołączam plik: {}", file);
-        fileField.sendKeys(file);
-        logger.info("Plik został poprawnie przesłany.");
+        log.info("Dołączam plik: {}", file);
+        fileField.sendKeys(searchedFile.toString());
+        log.info("Plik został poprawnie przesłany.");
 
     }
 

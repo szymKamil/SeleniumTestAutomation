@@ -32,7 +32,7 @@ import static Base.Utils.FileDownloadUtils.getDownloadDirectory;
 public final class DriverFactory {
 	private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
 	private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
-	private static final Logger logger = LoggerFactory.getLogger(DriverFactory.class);
+	private static Logger logger = null;
 
 	private DriverFactory() {
 	}
@@ -42,6 +42,7 @@ public final class DriverFactory {
 	}
 
 	public static void initDriver(String browser, int time, URL url) {
+		logger = LoggerFactory.getLogger(DriverFactory.class);
 		logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
 		WebDriverManager.getInstance(browser).setup();
 		WebDriver driver = null;
@@ -191,6 +192,13 @@ public final class DriverFactory {
 		return wait;
 	}
 
+	public static Logger getLogger() {
+		if (logger != null) {
+			return logger;
+		} else {
+			throw new RuntimeException("Problem z uruchomieniem loggera");
+		}
+	}
 
 	public static void quit() {
 		WebDriver driver = DRIVER_THREAD.get();

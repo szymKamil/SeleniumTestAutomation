@@ -1,5 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -19,12 +20,13 @@ public class AbstractPage {
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
-    protected final Logger log = LoggerFactory.getLogger(AbstractPage.class);
+    Logger log;
 
 
     public AbstractPage(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
+        this.driver = DriverFactory.getDriver();
+        this.wait = DriverFactory.getWait();
+        this.log = DriverFactory.getLogger();
     }
 
     //Elementy
