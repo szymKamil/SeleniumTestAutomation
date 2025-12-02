@@ -156,30 +156,24 @@ public class WebForm extends AbstractPage {
     }
 
     public void uploadFile(String file) {
-        LocalFileDetector fileDetector = new LocalFileDetector();
         WebDriver driver = DriverFactory.getDriver();
-        ((RemoteWebDriver) driver).setFileDetector(fileDetector);
-        System.out.println("Ustawiam LocalFileDetector na bazowym RemoteWebDriver");
-        logger.info("Ustawiam LocalFileDetector na bazowym RemoteWebDriver");
-        ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
-        System.out.println("Sterownik nie jest RemoteWebDriver. Aktualny typ: {} " + driver.getClass().getName());
-        logger.warn("Sterownik nie jest RemoteWebDriver. Aktualny typ: {}", driver.getClass().getName());
-        logger.info("Dołączam plik z bezwzględnej ścieżki (WORKSPACE): {}", file);
+        WebDriver rawDriver = driver;
+        if (driver instanceof WrapsDriver) {
+            rawDriver = ((WrapsDriver) driver).getWrappedDriver();
+        }
+        if (rawDriver instanceof RemoteWebDriver) {
+            ((RemoteWebDriver) rawDriver).setFileDetector(new LocalFileDetector());
+            System.out.println("Ustawiam LocalFileDetector na RemoteWebDriver");
+            logger.info("Ustawiam LocalFileDetector na RemoteWebDriver");
+        } else {
+            System.out.println("Sterownik NIE jest RemoteWebDriver. Typ: " + rawDriver.getClass().getName());
+            logger.warn("Sterownik NIE jest RemoteWebDriver. Typ: {}", rawDriver.getClass().getName());
+        }
+
+        logger.info("Dołączam plik: {}", file);
         fileField.sendKeys(file);
         logger.info("Plik został poprawnie przesłany.");
 
-
-        /*String fileAbsolutePath = Paths.get(file).toFile().getAbsolutePath();
-        if (!new java.io.File(fileAbsolutePath).exists()) {
-            throw new RuntimeException("Plik nie istnieje na ścieżce: " + fileAbsolutePath);
-        }
-        if (DriverFactory.getDriver() instanceof RemoteWebDriver) {
-            log.info("Driver jest instancją RemoteWebDriver, ustawiam LocalFileDetector.");
-            ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
-        }
-        log.info("Dołączam plik z absolutnej ścieżki: {}", fileAbsolutePath);
-        fileField.sendKeys(fileAbsolutePath);
-        log.info("Plik został poprawnie przesłany.");*/
     }
 
 
