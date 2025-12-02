@@ -29,6 +29,8 @@ import java.util.List;
 
 public class WebForm extends AbstractPage {
 
+    Logger logger = LoggerFactory.getLogger(WebForm.class);
+
     public final String TEST_STRING = "Tekst przykładowy";
     public final String TEST_PASSWORD = "Haslo_123_456";
     final String TEST_RANDOM_TEXT = GenerateRandomText.randomGeneratedText(88);
@@ -154,23 +156,17 @@ public class WebForm extends AbstractPage {
     }
 
     public void uploadFile(String file) {
-        String jenkinsWorkspace = System.getenv("WORKSPACE");
-        Path absolutePath = Paths.get(jenkinsWorkspace, file);
-        String fileAbsolutePath = absolutePath.toString();
-        java.io.File uploadFile = new java.io.File(fileAbsolutePath);
-        if (!uploadFile.exists()) {
-            log.error("KRYTYCZNY BŁĄD: Plik nie istnieje na ścieżce: {}", fileAbsolutePath);
-            throw new RuntimeException("Plik nie istnieje pod ścieżką: " + fileAbsolutePath);
-        }
-
-        // 4. Ustawienie LocalFileDetector i wysłanie
-
-            ((RemoteWebDriver) DriverFactory.getDriver()).setFileDetector(new LocalFileDetector());
-
-
-        log.info("Dołączam plik z bezwzględnej ścieżki (WORKSPACE): {}", fileAbsolutePath);
-        fileField.sendKeys(fileAbsolutePath);
-        log.info("Plik został poprawnie przesłany.");
+        LocalFileDetector fileDetector = new LocalFileDetector();
+        WebDriver driver = DriverFactory.getDriver();
+        ((RemoteWebDriver) driver).setFileDetector(fileDetector);
+        System.out.println("Ustawiam LocalFileDetector na bazowym RemoteWebDriver");
+        logger.info("Ustawiam LocalFileDetector na bazowym RemoteWebDriver");
+        ((RemoteWebDriver) driver).setFileDetector(new LocalFileDetector());
+        System.out.println("Sterownik nie jest RemoteWebDriver. Aktualny typ: {} " + driver.getClass().getName());
+        logger.warn("Sterownik nie jest RemoteWebDriver. Aktualny typ: {}", driver.getClass().getName());
+        logger.info("Dołączam plik z bezwzględnej ścieżki (WORKSPACE): {}", file);
+        fileField.sendKeys(file);
+        logger.info("Plik został poprawnie przesłany.");
 
 
         /*String fileAbsolutePath = Paths.get(file).toFile().getAbsolutePath();

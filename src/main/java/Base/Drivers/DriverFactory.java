@@ -46,9 +46,13 @@ public final class DriverFactory {
 		WebDriverManager.getInstance(browser).setup();
 		WebDriver driver = null;
 		try {
+			WebDriver decoratedDriver = decorate(driver, new Listener());
+			decoratedDriver.manage()
+					.window()
+					.maximize();
 			if (url != null && isURLup(url)) {
 					System.setProperty("LocalTest", "false");
-					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
+					decoratedDriver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
 			} else {
                 System.setProperty("LocalTest", "true");
@@ -59,10 +63,6 @@ public final class DriverFactory {
 					default -> logger.info("Błędnie wybrana przeglądarka!!!");
 				}
 			}
-			WebDriver decoratedDriver = decorate(driver, new Listener());
-			decoratedDriver.manage()
-					.window()
-					.maximize();
 			DRIVER_THREAD.set(decoratedDriver);
 			WAIT_THREAD.set(new WebDriverWait(driver, Duration.ofSeconds(time)));
 			logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread()
