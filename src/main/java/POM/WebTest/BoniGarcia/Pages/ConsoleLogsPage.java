@@ -10,6 +10,8 @@ import org.openqa.selenium.devtools.v142.runtime.Runtime;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.TimeUnit;
@@ -21,9 +23,11 @@ public class ConsoleLogsPage extends AbstractPage {
     private DevTools devTools;
     CompletableFuture<ConsoleEvent> consoleEvent;
     CompletableFuture<JavascriptException> jsEvent;
+    Logger log = LoggerFactory.getLogger(ConsoleLogsPage.class);
+
 
     public ConsoleLogsPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(driver, this);
         devTools = ((HasDevTools) driver).getDevTools();
     }

@@ -1,16 +1,25 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
 import org.openqa.selenium.*;
+import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class DialogBoxesPage extends AbstractPage {
 
+    Actions actions;
+    Logger log = LoggerFactory.getLogger(DialogBoxesPage.class);
 
-    public DialogBoxesPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+
+    public DialogBoxesPage() {
+        super();
+        actions = new Actions(DriverFactory.getDriver());
         PageFactory.initElements(driver, this);
     }
 
@@ -46,53 +55,39 @@ public class DialogBoxesPage extends AbstractPage {
     WebElement modalAlertCancelBtn;
 
     //Metody testowe
-    public void launchAlertAndChoseBtn(WebElement btn){
-        wait.until(ExpectedConditions.elementToBeClickable(btn)).click();
+    public void launchAlertByBtn(WebElement btn){
+        wait.until(ExpectedConditions.visibilityOf(btn));
+        wait.until(ExpectedConditions.elementToBeClickable(btn));
+        actions.click(btn).perform();
     }
 
     public void launchAlert(){
-        launchAlertAndChoseBtn(launchAlertBtn);
+        launchAlertByBtn(launchAlertBtn);
+        String alertString = getTextFromAlertAndAccept();
+        log.info("Alert posiada tekst: {}", alertString);
     }
     public void launchConfirm(){
-        launchAlertAndChoseBtn(launchConfirmBtn);
+        launchAlertByBtn(launchConfirmBtn);
     }
     public void launchPrompt(){
-        launchAlertAndChoseBtn(promptAlertBtn);
+        launchAlertByBtn(promptAlertBtn);
+
     }
     public void launchModal(){
-        launchAlertAndChoseBtn(modalAlertBtn);
+        launchAlertByBtn(modalAlertBtn);
     }
 
-    public String getTextFromAlert(){
-        boolean alertPresent;
-        try {
-            wait.until(ExpectedConditions.alertIsPresent());
-            alertPresent = true;
-        } catch (TimeoutException e) {
-            alertPresent = false;
-        }
-        if (!alertPresent){
-            launchAlert();
-            wait.until(ExpectedConditions.alertIsPresent());
-        }
-        String alertText =  driver.switchTo().alert().getText();
-        driver.switchTo().alert().accept();
+    public String getTextFromAlertAndAccept(){
+        wait.until(ExpectedConditions.alertIsPresent());
+        Alert alert = driver.switchTo().alert();
+        String alertText = alert.getText();
+        alert.accept();
         return alertText;
 
     }
 
     public String getTextFromConfirm(String btnToClickInAlert){
-        boolean alertPresent;
-        try {
-            wait.until(ExpectedConditions.alertIsPresent());
-            alertPresent = true;
-        } catch (TimeoutException e) {
-            alertPresent = false;
-        }
-        if (!alertPresent){
-            launchConfirm();
-            wait.until(ExpectedConditions.alertIsPresent());
-        }
+        wait.until(ExpectedConditions.alertIsPresent());
         String alertText =  driver.switchTo().alert().getText();
         if (btnToClickInAlert.equalsIgnoreCase("accept") || btnToClickInAlert.equalsIgnoreCase("OK")){
             driver.switchTo().alert().accept();

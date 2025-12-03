@@ -22,7 +22,7 @@ public class GeolocationPage extends AbstractPage {
     DevTools devTools;
 
     public GeolocationPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
         devTools = ((HasDevTools) driver).getDevTools();

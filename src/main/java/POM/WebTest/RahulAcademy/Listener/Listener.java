@@ -13,9 +13,7 @@ import java.lang.reflect.Method;
 
 public class Listener implements WebDriverListener {
 
-
     private static final Logger log = LoggerFactory.getLogger(Listener.class);
-
 
     @Override
     public void onError(Object target, Method method, Object[] args, InvocationTargetException e) {
@@ -25,7 +23,7 @@ public class Listener implements WebDriverListener {
     @Override
     public void beforeQuit(WebDriver driver) {
         log.info("Wykonuję screenshot");
-        takeScreenshot(driver);
+        takeScreenshot();
     }
 
     @Override

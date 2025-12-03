@@ -14,7 +14,7 @@ public class IFramePage extends AbstractPage{
     private JavascriptExecutor js;
 
     public IFramePage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }

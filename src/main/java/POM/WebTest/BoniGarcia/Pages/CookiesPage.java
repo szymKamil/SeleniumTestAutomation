@@ -9,13 +9,16 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class CookiesPage extends AbstractPage{
 
+    Logger log = LoggerFactory.getLogger(CookiesPage.class);
     Actions actions;
 
     public CookiesPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
     }

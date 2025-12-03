@@ -8,17 +8,19 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
 public class LongPage extends AbstractPage{
 
-
+    Logger log = LoggerFactory.getLogger(LongPage.class);
     private Actions actions;
 
 
     public LongPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         actions = new Actions(this.driver);
         PageFactory.initElements(this.driver, this);
     }

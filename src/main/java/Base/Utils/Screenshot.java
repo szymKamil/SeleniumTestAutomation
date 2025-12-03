@@ -1,9 +1,12 @@
 package Base.Utils;
 
+import Base.Drivers.DriverFactory;
 import POM.WebTest.BoniGarcia.Utils.TimeStampGenerator;
+import net.bytebuddy.ByteBuddy;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WrapsDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.remote.SessionId;
 import org.slf4j.Logger;
@@ -19,14 +22,13 @@ import java.nio.file.Paths;
 
 public class Screenshot {
 
-    private static final Logger log = LoggerFactory.getLogger(Screenshot.class);
-    WebDriver driver;
+    private static final Logger log = DriverFactory.getLogger();
 
-    public void setDriver(WebDriver driver){
-        this.driver = driver;
-    }
-
-    public static void takeScreenshot(WebDriver driver){
+    public static void takeScreenshot(){
+        WebDriver driver = DriverFactory.getDriver();
+        if (driver instanceof WrapsDriver wrapsDriver){
+            driver = wrapsDriver.getWrappedDriver();
+        }
         TakesScreenshot ts = (TakesScreenshot) driver;
         File screenshot = ts.getScreenshotAs(OutputType.FILE);
         SessionId sessionId = ((RemoteWebDriver) driver).getSessionId();

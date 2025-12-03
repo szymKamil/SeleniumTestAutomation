@@ -1,6 +1,5 @@
 package Selenium.BoniGarcia;
 
-import Base.Listeners.Listener;
 import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.Screenshot;
@@ -19,7 +18,6 @@ import org.testng.annotations.Optional;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.net.URISyntaxException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -65,7 +63,7 @@ public class MainTest extends BaseTest {
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Parameters("path")
-	public void webFormTest(@Optional("src/test/resources/f-vat_2011.pdf") String file) throws URISyntaxException {
+	public void webFormTest(@Optional("src/test/resources/f-vat_2011.pdf") String file)  {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web form");
@@ -87,19 +85,18 @@ public class MainTest extends BaseTest {
 		log.info("Test webFormTest ukończony");
 	}
 
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, następnie przejście do podstrony Navigation, a następnie weryfikację działania przycisków i weryfikację
+	 * zmieniającej się treści w paragrafach.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Web form verification")
-	@Description("Weryfikacja, czy na stronie z nawigacją można przechodzić pomiędzy poszczególnymi podstronami za pomoca przycisków.")
+	@Description("Weryfikacja, czy na stronie z nawigacją można przechodzić pomiędzy poszczególnymi podstronami za pomocą przycisków.")
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Test(priority = 3, dependsOnMethods = {"mainPageTestElementsVerification"}, groups = "interface")
 	public void navigationPageTest() {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Navigation, a następnie weryfikację działania przycisków i weryfikację
-		 * zmieniającej się treści w paragrafach.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Navigation");
@@ -108,7 +105,10 @@ public class MainTest extends BaseTest {
 		navigationPage.verifyBtns();
 	}
 
-
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, następnie przejście do podstrony Dropdown menu, i użycie wybranych dropdownów razem z kliknięciem odpowiednich przycisków w menu.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Dropdown Menu Test")
 	@Description("Weryfikacja działania pól z dropdownem.")
@@ -116,10 +116,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 2, groups = "interface")
 	public void dropdownMenuTest() {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Dropdown menu, i użycie wybranych dropdownów razem z kliknięciem odpowiednich przycisków w menu.
-		 */
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Dropdown menu");
@@ -130,7 +126,11 @@ public class MainTest extends BaseTest {
 		dropdownMenu.openDropThreeAndPick(3);
 
 	}
-
+	/***
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, następnie przejście do podstrony Mouse over i weryfikacje podpisów pod rysunkami,
+	 * które widoczne są dopiero po umieszczeniu kursora na obrazkach.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Mouse Over Test")
 	@Description("Weryfikacja, czy umieszczenie kursora na elementach poprawie wyświetla hinty pod nimi.")
@@ -138,12 +138,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 3)
 	public void mouseOverTest() {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, następnie przejście do podstrony Mouse over i weryfikacje podpisów pod rysunkami,
-		 * które widoczne są dopiero po umieszczeniu kursora na obrazkach.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Mouse over");
@@ -154,7 +148,10 @@ public class MainTest extends BaseTest {
 		mouseOverPage.verifyImgCaptions();
 	}
 
-
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Drag and drop, na której test przeniesie element do miejsca docelowego.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Drag and Drop Test")
 	@Description("Test sprawdza działanie mechanizmu drag and drop.")
@@ -162,10 +159,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 3, groups = {"interface"})
 	public void dragAndDropTest() {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Drag and drop, na której test przeniesie element do miejsca docelowego.
-		 */
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Drag and drop");
@@ -178,7 +171,10 @@ public class MainTest extends BaseTest {
 		dragAndDrop.getTargetCoords();
 
 	}
-
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Draw in canvas, na której zostanie użyte płótno do narysowania przykłądowego kształtu.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Canvas test")
 	@Description("Test sprawdza działanie mechanizmu rysowania na płótnie.")
@@ -186,11 +182,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 4, groups = {"interface"})
 	public void canvasTest() {
-		/**
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Draw in canvas, na której zostanie użyte płótno do narysowania przykłądowego kształtu.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Draw in canvas");
@@ -200,7 +191,10 @@ public class MainTest extends BaseTest {
 		canvasPage.paintInCanvas(new PointForCanvas(50, 20), new PointForCanvas(30, 10), new PointForCanvas(-20, -15));
 	}
 
-
+	/**
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Loading images a następnie weryfikację, czy obrazki zostaną wyświetlone.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Image loading test")
 	@Description("Test sprawdza czy rysunki na stronie poprawnie się ładują.")
@@ -208,11 +202,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 2, groups = {"interface"})
 	public void loadingImages() {
-		/**
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Loading images a następnie weryfikację, czy obrazki zostaną wyświetlone.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Loading images");
@@ -220,10 +209,13 @@ public class MainTest extends BaseTest {
 		loadingImagesPage.verifyAbstractPage();
 		loadingImagesPage.waitForImagesToLoad();
 		loadingImagesPage.confirmElementsVisibility();
-
-
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Slow calculator, i użycie kalkulatora
+	 do wykonania obliczeń.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Slow calculator test")
 	@Description("Test sprawdza czy czy wolny kalkulator działa poprawnie.")
@@ -231,12 +223,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 1, groups = {"business"})
 	public void slowCalculatorTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Slow calculator, i użycie kalkulatora
-		 do wykonania obliczeń.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Slow calculator");
@@ -246,10 +232,13 @@ public class MainTest extends BaseTest {
 		slowCalculator.setCalcDelay(3);
 		slowCalculator.useCalculator("2+3=");
 		slowCalculator.getResultOfCalc();
-
-
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Long page, i przescrollowanie jej na sam
+	 koniec.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Long page test")
 	@Description("Test sprawdza czy strona poprawie się przewija.")
@@ -257,12 +246,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 3, groups = {"interface"})
 	public void longPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Long page, i przescrollowanie jej na sam
-		 koniec.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Long page");
@@ -274,7 +257,11 @@ public class MainTest extends BaseTest {
 
 	}
 
-
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Infinite scroll, a następnie przescrollowanie
+	 strony.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Infinite scroll")
 	@Description("Test sprawdza czy nieskończona strona pozwala bez końća przewijać stronę.")
@@ -282,12 +269,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 3, groups = {"interface"})
 	public void infiniteScrollTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Infinite scroll, a następnie przescrollowanie
-		 strony.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Infinite scroll");
@@ -298,6 +279,11 @@ public class MainTest extends BaseTest {
 		log.info("Końcowa wysokość strony to: {}", infiniteScroll.getPageHeight());
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Shadow DOM i odczytanie wartości z elementu
+	 ukrytego w shadow DOM.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Shadow Root")
 	@Description("Test sprawdza czy można dostać się do ShadowRoot strony.")
@@ -305,12 +291,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 2, groups = {"interface", "shadowRoot"})
 	public void shadowRootTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Shadow DOM i odczytanie wartości z elementu
-		 ukrytego w shadow DOM.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Shadow DOM");
@@ -319,7 +299,12 @@ public class MainTest extends BaseTest {
 		shadowDomPage.getShadowRootContent();
 	}
 
-
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Cookies, następnie pobranie domyślnych
+	 wartości ciasteczek,
+	 *modyfikacja ich i weryfikacja, czy ciasteczka się zmieniły.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Shadow Root")
 	@Description("Test sprawdza czy można dostać się do ShadowRoot strony.")
@@ -327,13 +312,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 2, groups = {"interface", "shadowRoot"})
 	public void cookiesPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Cookies, następnie pobranie domyślnych
-		 wartości ciasteczek,
-		 *modyfikacja ich i weryfikacja, czy ciasteczka się zmieniły.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Cookies");
@@ -349,6 +327,12 @@ public class MainTest extends BaseTest {
 		cookiesPage.getCookiesText();
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Frames, a następnie weryfikację
+	 widoczności elementów ukrytych w
+	 *różnych sekcjach i sprawdzenie możliwości przełączania się pomiędzy sekcjami strony.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Frames test")
 	@Description("Test sprawdza czy można przełączać się na stronie pomiędzy ramkami.")
@@ -356,13 +340,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(priority = 4, groups = {"interface"})
 	public void framesPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Frames, a następnie weryfikację
-		 widoczności elementów ukrytych w
-		 *różnych sekcjach i sprawdzenie możliwości przełączania się pomiędzy sekcjami strony.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Frames");
@@ -374,8 +351,8 @@ public class MainTest extends BaseTest {
 		framesPage.verifyCopyrights();
 		framesPage.switchToFrame("body");
 		framesPage.verifyVisibilityOfParagraphs();
-
 	}
+
 	/**
 	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony IFrames, przescrollowanie i weryfikację
@@ -403,7 +380,7 @@ public class MainTest extends BaseTest {
 	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Alert test")
-	@Description("Test sprawdza czy można korzystać z alertów.")
+	@Description("Test sprawdza czy alerty działają poprawnie.")
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Test(priority = 3, groups = {"interface"})
@@ -411,14 +388,11 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Dialog boxes");
-		DialogBoxesPage dialogBoxesPage = new DialogBoxesPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		DialogBoxesPage dialogBoxesPage = new DialogBoxesPage();
 		dialogBoxesPage.verifyAbstractPage();
 		dialogBoxesPage.launchAlert();
-		String alertString = dialogBoxesPage.getTextFromAlert();
-		log.info("Alert posiada tekst: {}", alertString);
 		dialogBoxesPage.launchConfirm();
-		String confirmText = dialogBoxesPage.getTextFromConfirm("ok");
-		assertThat(confirmText).isEqualTo("Is this correct?");
+		assertThat(dialogBoxesPage.getTextFromConfirm("ok")).isEqualTo("Is this correct?");
 		assertThat(dialogBoxesPage.getTextFromConfirmParagraph()).isEqualTo("You chose: true");
 		String promptText = "To jest prompt :)";
 		dialogBoxesPage.launchPrompt();
@@ -428,6 +402,13 @@ public class MainTest extends BaseTest {
 		assertThat(dialogBoxesPage.getTextFromModal()).isEqualTo("You chose: Save changes");
 	}
 
+
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Web storage, następnie wyczyszczenie lokalnej
+	 pamięci przeglądarki i dodanie nowych kluczy,
+	 *a na końcu weryfikacja ich widoczności.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("WebStorage")
 	@Description("Test sprawdza działanie magazynu danych na stronie (pamięci podręcznej).")
@@ -435,13 +416,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"devTools"}, priority = 1)
 	public void webStoragePageTests() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Web storage, następnie wyczyszczenie lokalnej
-		 pamięci przeglądarki i dodanie nowych kluczy,
-		 *a na końcu weryfikacja ich widoczności.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Web storage");
@@ -459,6 +433,12 @@ public class MainTest extends BaseTest {
 		log.info("Session storage posiada wartości: {}", webStoragePage.getTextFormSessionParagraph());
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Geolocation, następnie zmianę ustawień
+	 przeglądarki i zmianę informacji o geolokacji, miejscu przeglądarki,
+	 *i weryfikację widoczności tych zmian.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Geolocation")
 	@Description("Test sprawdzający mechanizm geolokacji.")
@@ -466,13 +446,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"devTools"}, priority = 1)
 	public void geolocationTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Geolocation, następnie zmianę ustawień
-		 przeglądarki i zmianę informacji o geolokacji, miejscu przeglądarki,
-		 *i weryfikację widoczności tych zmian.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Geolocation");
@@ -485,6 +458,12 @@ public class MainTest extends BaseTest {
 				.contains("4.323")).isTrue();
 	}
 
+
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Notifications, następnie
+	 przesłanie powiadomienia i weryfikację, czy powiadomienie o przesłanym powiadomieniu miało callback.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Notification test")
 	@Description("Test sprawdza działanie powiadomień systemowych.")
@@ -492,12 +471,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"devTools"}, priority = 1)
 	public void notificationPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Notifications, następnie
-		 przesłanie powiadomienia i weryfikację, czy powiadomienie o przesłanym powiadomieniu miało callback.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Notifications");
@@ -507,6 +480,11 @@ public class MainTest extends BaseTest {
 		notificationPage.createAndSendNotification("Powiadomienie", "To działające powiadomienie uruchomione poprzez JS");
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Get user media, i uruchomienie fejkowej
+	 kamery i weryfikacja widoczności informacji o urządzeniu.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Media test")
 	@Description("Test sprawdza działanie mediów (kamera, mikrofon).")
@@ -514,12 +492,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"devTools"}, priority = 2)
 	public void userMediaPageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Get user media, i uruchomienie fejkowej
-		 kamery i weryfikacja widoczności informacji o urządzeniu.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Get user media");
@@ -527,10 +499,16 @@ public class MainTest extends BaseTest {
 		userMediaPage.verifyAbstractPage();
 		userMediaPage.runUserMedia();
 		log.info("W teście po uruchomieniu mediów przeglądarka używa : {}", userMediaPage.getVideoDeviceInfo());
-		Screenshot.takeScreenshot(DriverFactory.getDriver());
+		Screenshot.takeScreenshot();
 		log.info("Screenshot został wykonany");
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Multilanguage, i sprawdzenie widoczności
+	 tekstu w paragrafach,
+	 *który to tekst powinien być przetłumaczony na hiszpański.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Multilagnguage")
 	@Description("Test sprawdza działanie mechanizmu tłumaczenia strony.")
@@ -538,13 +516,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test()
 	public void multiLanguageTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Multilanguage, i sprawdzenie widoczności
-		 tekstu w paragrafach,
-		 *który to tekst powinien być przetłumaczony na hiszpański.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Multilanguage");
@@ -553,6 +524,10 @@ public class MainTest extends BaseTest {
 		log.info("Paragrafy posiadają następujące wartości: {}", multilanguagePage.getParagraphsInfo());
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki i uruchomienie nasłuchiwania logów, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Console logs, i wydrukowanie logówz konsoli.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Console test")
 	@Description("Test sprawdza działanie konsoli.")
@@ -560,11 +535,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"devTools, interface"}, priority = 1)
 	public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki i uruchomienie nasłuchiwania logów, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Console logs, i wydrukowanie logówz konsoli.
-		 */
-
 		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		consoleLogsPage.startListening();
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
@@ -599,7 +569,12 @@ public class MainTest extends BaseTest {
 		loginFormPage.verifySuccessLogin();
 
 	}
-
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Login form, a następnie zalogowanie się i
+	 *weryfikację widoczności komunikatu o poprawnym zalogowaniu.Wszystko to z uwzględnieniem wolniejszego działania
+	 formularza.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Slow login form test")
 	@Description("Test sprawdza działanie mechanizmu logowania przy obciążeniu strony.")
@@ -607,13 +582,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"interface, business"}, priority = 0)
 	public void slowLoginFormTest() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Login form, a następnie zalogowanie się i
-		 *weryfikację widoczności komunikatu o poprawnym zalogowaniu.Wszystko to z uwzględnieniem wolniejszego działania
-		 formularza.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Slow login");
@@ -624,6 +592,11 @@ public class MainTest extends BaseTest {
 		loginFormPage.verifySuccessLogin();
 	}
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Random calculator, a następnie wykonanie
+	 obliczeń w pętli.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Random calculator test")
 	@Description("Test sprawdza działanie kalkulatora generującego losowe wyniki.")
@@ -631,12 +604,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"interface, business"}, priority = 1)
 	public void randomCalculator() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Random calculator, a następnie wykonanie
-		 obliczeń w pętli.
-		 */
-
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Random calculator");
@@ -654,6 +621,11 @@ public class MainTest extends BaseTest {
 	}
 
 
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Download files,
+	 *i pobranie wybranego pliku poprzez użycie przycisku na stronie.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Download file test")
 	@Description("Test sprawdza działanie mechanizmu pobierania plików.")
@@ -661,11 +633,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"interface, business"}, priority = 0)
 	public void downloadFileTest() throws IOException {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Download files,
-		 *i pobranie wybranego pliku poprzez użycie przycisku na stronie.
-		 */
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Download files");
@@ -679,6 +646,12 @@ public class MainTest extends BaseTest {
 		FileDownloadUtils.clearDownloadFolderFromFiles();
 	}
 
+
+	/**
+	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony A/B Testing, i weryfikację, który
+	 wariant strony uruchomił się w tym teście.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Double variant test")
 	@Description("Test sprawdza działanie mechanizmu losowego generowania treści na stronie.")
@@ -686,11 +659,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"interface, business"}, priority = 5)
 	public void testDoubleVariant() {
-		/**
-		 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 *weryfikację tekstu nagłówka, i następnie przejście do podstrony A/B Testing, i weryfikację, który
-		 wariant strony uruchomił się w tym teście.
-		 */
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("A/B Testing");
@@ -699,6 +667,11 @@ public class MainTest extends BaseTest {
 		abTestingPage.verifyTypeOfVariation();
 	}
 
+	/***
+	 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
+	 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Data types, wypełnienie formularza i weryfikację,
+	 * czy wszystkie pola posiadają poprawne dane po przesłaniu formularza.
+	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Data types test")
 	@Description("Test sprawdza działanie mechanizmu wypełniania formularza losowymi danymi.")
@@ -706,11 +679,6 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"business"}, priority = 1)
 	public void dataTypesTest() {
-		/***
-		 * Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
-		 * weryfikację tekstu nagłówka, i następnie przejście do podstrony Data types, wypełnienie formularza i weryfikację,
-		 * czy wszystkie pola posiadają poprawne dane po przesłaniu formularza.
-		 */
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Data types");
@@ -719,8 +687,5 @@ public class MainTest extends BaseTest {
 		dataTypesPage.insertDataToForm();
 		dataTypesPage.submitForm();
 		dataTypesPage.verifySuccessForm();
-
-
 	}
-
 }

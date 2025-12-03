@@ -7,12 +7,14 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class ABTestingPage extends AbstractPage {
 
+    Logger log = LoggerFactory.getLogger(AbstractPage.class);
 
     public ABTestingPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(this.driver, this);
     }
 

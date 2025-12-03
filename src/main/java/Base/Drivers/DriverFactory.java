@@ -1,6 +1,6 @@
 package Base.Drivers;
 
-import Base.Listeners.Listener;
+import Base.Listeners.TestStepsListener;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
@@ -32,7 +32,7 @@ import static Base.Utils.FileDownloadUtils.getDownloadDirectory;
 public final class DriverFactory {
 	private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
 	private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
-	private static Logger logger = null;
+	public static Logger logger = LoggerFactory.getLogger(DriverFactory.class);
 
 	private DriverFactory() {
 	}
@@ -42,7 +42,6 @@ public final class DriverFactory {
 	}
 
 	public static void initDriver(String browser, int time, URL url) {
-		logger = LoggerFactory.getLogger(DriverFactory.class);
 		logger.info("Inicjalizacja drivera dla przeglądarki: {}, URL: {}", browser, url);
 		WebDriverManager.getInstance(browser).setup();
 		WebDriver driver = null;
@@ -50,18 +49,18 @@ public final class DriverFactory {
 
 			if (url != null && isURLup(url)) {
 					System.setProperty("LocalTest", "false");
-					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser, true)).address(url).build();
+					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
 			} else {
                 System.setProperty("LocalTest", "true");
 				switch (browser.toLowerCase()) {
-					case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser, false));
-					case "firefox" -> driver = new FirefoxDriver((FirefoxOptions) loadOptionsFromFile(browser, false));
-					case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser, false));
+					case "chrome" -> driver = new ChromeDriver((ChromeOptions) loadOptionsFromFile(browser));
+					case "firefox" -> driver = new FirefoxDriver((FirefoxOptions) loadOptionsFromFile(browser));
+					case "edge" -> driver = new EdgeDriver((EdgeOptions) loadOptionsFromFile(browser));
 					default -> logger.info("Błędnie wybrana przeglądarka!!!");
 				}
 			}
-			var decoratedDriver = decorate(driver, new Listener());
+			var decoratedDriver = decorate(driver, new TestStepsListener());
 			decoratedDriver.manage()
 					.window()
 					.maximize();
@@ -87,7 +86,7 @@ public final class DriverFactory {
 	}
 
 
-	static AbstractDriverOptions<?> loadOptionsFromFile(String browser, boolean flag) {
+	static AbstractDriverOptions<?> loadOptionsFromFile(String browser) {
 		AbstractDriverOptions<?> options;
 		switch (browser.toLowerCase()) {
 			case "chrome" -> options = new ChromeOptions();
@@ -104,7 +103,7 @@ public final class DriverFactory {
 				if (optionSplit.length == 2) {
 					String key = optionSplit[0].trim();
 					String value = optionSplit[1].trim();
-					if (!flag && !key.contains("local")) {
+					if (!value.equals("false") && !key.contains("local")) {
 						addOptionsToDriver(options, key, value);
 					}
 				}

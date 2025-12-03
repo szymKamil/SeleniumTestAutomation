@@ -15,7 +15,7 @@ public class InfiniteScrollPage extends AbstractPage {
     JavascriptExecutor js;
 
     public InfiniteScrollPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         actions = new Actions(driver);
         js = (JavascriptExecutor) driver;
     }

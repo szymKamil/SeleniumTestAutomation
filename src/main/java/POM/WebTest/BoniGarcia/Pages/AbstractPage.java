@@ -15,18 +15,15 @@ import static org.assertj.core.api.Assertions.assertThat;
 /***
  * Klasa zawierająca abstrakcyjne elementy, występujące na każdej ze stron testowych Boni Garciego.
  */
-
 public class AbstractPage {
 
     protected final WebDriver driver;
     protected final WebDriverWait wait;
-    Logger log;
 
 
-    public AbstractPage(WebDriver driver, WebDriverWait wait) {
+    public AbstractPage() {
         this.driver = DriverFactory.getDriver();
         this.wait = DriverFactory.getWait();
-        this.log = DriverFactory.getLogger();
     }
 
     //Elementy

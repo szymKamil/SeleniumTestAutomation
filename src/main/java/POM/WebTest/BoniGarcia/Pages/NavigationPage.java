@@ -7,15 +7,17 @@ import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class NavigationPage extends AbstractPage{
 
+    Logger log = LoggerFactory.getLogger(NavigationPage.class);
 
     private StringBuilder LOREM_IPSUM;
 
     public NavigationPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(driver, this);
     }
 

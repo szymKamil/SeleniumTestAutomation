@@ -14,16 +14,14 @@ public class TestNGListener implements ITestListener {
     Logger logger = LoggerFactory.getLogger("Logger");
 
 
-
     @Override
     public void onTestSuccess(ITestResult result) {
         logger.info("Test wykonał się z sukcesem ✅");
     }
 
-
     @Override
     public void onTestFailure(ITestResult result) {
-        Screenshot.takeScreenshot(DriverFactory.getDriver());
+        Screenshot.takeScreenshot();
         logger.info("Test nieukończony z powodu błędu. Błąd spowodowany: " + result.getThrowable());
     }
 }

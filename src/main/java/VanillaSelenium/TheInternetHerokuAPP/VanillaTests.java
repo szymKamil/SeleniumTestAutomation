@@ -54,7 +54,6 @@ public class VanillaTests {
 
     @Test
     public void connectionTest(){
-//        driver.get("https://the-internet.herokuapp.com/");
         driver.get("https://the-internet.herokuapp.com/");
         WebElement heading = wait.until(ExpectedConditions.visibilityOfElementLocated(By.cssSelector("h1.heading")));
         heading.isDisplayed();

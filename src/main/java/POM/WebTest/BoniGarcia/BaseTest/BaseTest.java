@@ -17,8 +17,8 @@ public abstract class BaseTest {
 	}
 
 	@Parameters({"browser", "timeout", "url"})
-	@BeforeMethod
-	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("http://localhost:4444/") String url) throws Exception {
+	@BeforeSuite
+	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("local") String url) throws Exception {
 		if (url.equals("local")){
 			DriverFactory.initDriver(browser, 30);
 		} else {
@@ -26,14 +26,19 @@ public abstract class BaseTest {
 		}
 	}
 
+	@BeforeMethod
+	public void beforeTestInfo(Method method){
+		log.info("Rozpoczynam test: {}, {}", method.getName(), method.getDeclaredAnnotations());
+	}
 
-    @AfterMethod(alwaysRun = true)
-    public void shutDown(ITestResult testResult, Method method) {
-        if (ITestResult.FAILURE == testResult.getStatus()) {
-            log.error("Test się nie powiódł!: {}", method.getName());
+
+    @AfterSuite(alwaysRun = true)
+    public void shutDown() {
+/*        if (ITestResult.FAILURE == testResult.getStatus()) {
+            log.error("Test się nie powiódł!: {}", testResult.getName());
         } else if (ITestResult.SUCCESS == testResult.getStatus()) {
-            log.info("Test zakończony pomyślnie: {}", method.getName());
-        }
+            log.info("Testy zakończone pomyślnie: {}", testResult.getName());
+        }*/
         log.info("Testy zostały ukończone.");
         DriverFactory.quit();
     }

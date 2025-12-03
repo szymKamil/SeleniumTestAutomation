@@ -15,7 +15,7 @@ public class DropdownMenuPage extends AbstractPage {
     Actions actions;
 
     public DropdownMenuPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
+        super();
         PageFactory.initElements(driver, this);
         actions = new Actions(this.driver);
     }

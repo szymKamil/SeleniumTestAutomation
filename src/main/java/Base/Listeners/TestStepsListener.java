@@ -8,7 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 
-public class Listener implements WebDriverListener {
+public class TestStepsListener implements WebDriverListener {
 
 	private void attach(WebDriver driver, String name){
 		if (name != null && name.contains("findElement")) return;

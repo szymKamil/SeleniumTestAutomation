@@ -9,6 +9,8 @@ import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.Assert;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.List;
 
 public class FileDownloadPage extends AbstractPage {
 
+	Logger log = LoggerFactory.getLogger(FileDownloadPage.class);
 
 	//Elementy na stronie
 	@FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.png']")
@@ -34,7 +37,7 @@ public class FileDownloadPage extends AbstractPage {
 	WebElement downloadWseleniumLogoPdfBtn;
 
 	public FileDownloadPage(WebDriver driver, WebDriverWait wait) {
-		super(driver, wait);
+		super();
 		PageFactory.initElements(this.driver, this);
 	}
 
