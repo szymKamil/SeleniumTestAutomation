@@ -46,8 +46,7 @@ public final class DriverFactory {
 		WebDriverManager.getInstance(browser).setup();
 		WebDriver driver = null;
 		try {
-
-			if (url != null && isURLup(url)) {
+			if (url != null && !url.getPath().equals("local") && isURLup(url)) {
 					System.setProperty("LocalTest", "false");
 					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
