@@ -32,7 +32,7 @@
             </class>
         </classes>
     </test>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="false">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="true">
         <parameter name="browser" value="firefox"/>
         <parameter name="timeout" value="30"/>
         <groups>
@@ -63,7 +63,7 @@
             </class>
         </classes>
     </test>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Edge Tests" enabled="false">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Edge Tests" enabled="true">
         <parameter name="browser" value="edge"/>
         <parameter name="timeout" value="30"/>
         <groups>
