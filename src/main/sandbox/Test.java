@@ -5,6 +5,7 @@ import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.v142.network.Network;
 import org.openqa.selenium.devtools.v142.network.model.Cookie;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.edge.EdgeOptions;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -49,7 +50,7 @@ WebDriver driver;
 //        driver = RemoteWebDriver.builder().oneOf(new ChromeOptions())
 //                .address(seleniumServerUrl).build();
 
-         driver = new ChromeDriver(options);
+         driver = new EdgeDriver(options3);
 
 
 

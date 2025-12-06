@@ -47,7 +47,8 @@ public class GeolocationPage extends AbstractPage {
 
     public void setCoordinates(double latitude, double longitude, int accuracy, int altitude, int altitudeAccuracy, int heading, int speed){
         devTools.createSession();
-        devTools.send(Emulation.setGeolocationOverride(Optional.of(latitude), Optional.of(longitude), Optional.of(accuracy),
+        devTools.send(Emulation.setGeolocationOverride(Optional.of(latitude), Optional.of(longitude),
+                Optional.of(accuracy),
                 Optional.of(altitude),
                 Optional.of(altitudeAccuracy),
                 Optional.of(heading),

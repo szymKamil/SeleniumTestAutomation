@@ -13,7 +13,7 @@ public abstract class BaseTest {
 	Logger log = LoggerFactory.getLogger(BaseTest.class);;
 
 	@Parameters({"browser", "timeout", "url"})
-	@BeforeMethod
+	@BeforeMethod(alwaysRun = true)
 	public void config(@Optional("Chrome") String browser, @Optional("55") int timeout, @Optional("local") String url, Method method) throws Exception {
 		if (url.equals("local")){
 			log.info("Uruchamiam test lokalnie, na przeglądarce: {}, z timeoutem: {}", browser, timeout);
@@ -25,12 +25,6 @@ public abstract class BaseTest {
 		Story story = method.getAnnotation(Story.class);
 		log.info("Rozpoczynam test: {}, {}", method.getName(), story != null ? story : "Brak adnotacji @Story dla testu.");
 	}
-
-	/*@BeforeMethod
-	public void beforeTestInfo(Method method){
-		Story story = method.getAnnotation(Story.class);
-		log.info("Rozpoczynam test: {}, {}", method.getName(), story != null ? story : "Brak adnotacji @Story dla testu.");
-	}*/
 
 
     @AfterMethod(alwaysRun = true)

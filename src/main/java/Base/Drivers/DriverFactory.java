@@ -50,6 +50,7 @@ public final class DriverFactory {
 					System.setProperty("LocalTest", "false");
 					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
+					logger.info("Uruchamiam testy zdalnie, środowisko zdalne ma sttaus: {}", isURLup(url));
 			} else {
                 System.setProperty("LocalTest", "true");
 				switch (browser.toLowerCase()) {
