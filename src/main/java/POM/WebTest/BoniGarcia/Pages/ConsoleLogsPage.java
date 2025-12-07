@@ -46,7 +46,10 @@ public class ConsoleLogsPage extends AbstractPage {
         devTools.getDomains().events().addConsoleListener(consoleEvent::complete);
         jsEvent = new CompletableFuture<>();
         devTools.getDomains().events().addJavascriptExceptionListener(jsEvent::complete);*/
-
+        biDi.addListener( Log.entryAdded(), (LogEntry logentry) -> {
+            System.out.println("Oto log entry: " + logentry.getConsoleLogEntry().get());
+            log.info("{}", logentry.getJavascriptLogEntry().toString());
+        } );
     }
 
 
@@ -54,6 +57,30 @@ public class ConsoleLogsPage extends AbstractPage {
 /*
         biDi.addListener(new BaseLogEntry(LogLevel.INFO, driver, "", Duration.ofSeconds(15), StackTrace))
 */
+
+
+        /*biDi.addListener( Log.entryAdded(), (LogEntry logentry) -> {
+            System.out.println("Oto log entry: " + logentry.getConsoleLogEntry().get());
+            log.info("{}", logentry.getJavascriptLogEntry().toString());
+        } );*/
+
+        CompletableFuture<LogEntry> logFuture = new CompletableFuture<>();
+
+        biDi.addListener(Log.entryAdded(), (LogEntry logEntry) -> {
+            // Tutaj możesz dodać warunek, np. szukając konkretnego tekstu,
+            // poziomu logowania (np. ERROR) lub typu (Console/JS).
+            if (logEntry.getConsoleLogEntry().isPresent()) {
+                // Log został znaleziony - Zakończ oczekiwanie
+                logFuture.complete(logEntry);
+            }
+        });
+        try {
+            LogEntry znalezionyLog = logFuture.get(15, TimeUnit.SECONDS);
+            System.out.println("✅ Log ZNALEZIONY: " + znalezionyLog.getConsoleLogEntry().get().getText());
+        } catch (Exception e) {
+            System.err.println("❌ Timeout lub błąd: Nie znaleziono oczekiwanego logu w ciągu 5 sekund.");
+        }
+
         /*log.info(biDi.getBidiSessionStatus().getMessage());
         CompletableFuture<JavascriptLogEntry> futureJSLogs = new CompletableFuture<>();
         LogInspector logInspector = new LogInspector(driver); // Tworzy inspektora logów z BiDi
@@ -71,7 +98,7 @@ public class ConsoleLogsPage extends AbstractPage {
         log.debug("Console event: {}, {}, {}", consoleMessage.getTimestamp(), consoleMessage.getArgs(), consoleMessage.getMessages());
         log.debug("Console event: {}, {}", jsEventMsg.getMessage(), jsEventMsg.getSystemInformation());*/
 
-
+/*
 // Zmień kolejność: nasłuchiwanie MUSI być ustawione PRZED czekaniem
 
         log.info(biDi.getBidiSessionStatus().getMessage());
@@ -88,6 +115,7 @@ public class ConsoleLogsPage extends AbstractPage {
 // To jest kluczowe! Ustawiamy, że JAK TYLKO pojawi się log JS, ma on
 // ukończyć futureJSLogs i dostarczyć obiekt JavascriptLogEntry.
         logInspector.onJavaScriptLog(futureJSLogs::complete);
+
 
 // W tym miejscu powinna znaleźć się Twoja akcja na stronie, która generuje log(i), np.:
 // driver.findElement(By.id("someId")).click();
@@ -108,7 +136,7 @@ public class ConsoleLogsPage extends AbstractPage {
             consoleLogs.forEach(e -> log.info("Typ: " + e.getType() + ", Treść: " + e.getText()));
         } else {
             log.info("Nie przechwycono żadnych logów konsoli.");
-        }
+        }*/
 
 
 

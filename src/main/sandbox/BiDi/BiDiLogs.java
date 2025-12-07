@@ -2,8 +2,12 @@ package BiDi;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.bidi.BiDi;
+import org.openqa.selenium.bidi.HasBiDi;
 import org.openqa.selenium.bidi.log.ConsoleLogEntry;
 import org.openqa.selenium.bidi.log.JavascriptLogEntry;
+import org.openqa.selenium.bidi.log.Log;
+import org.openqa.selenium.bidi.log.LogEntry;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -42,6 +46,39 @@ public class BiDiLogs {
 		Assert.assertEquals("Hello, world!", logEntry.getText());
 
 		((RemoteWebDriver) driver).script().removeConsoleMessageHandler(id);
+	}
+
+	@Test
+	void canAddConsoleMessageHandlerMoje()
+			throws ExecutionException, InterruptedException, TimeoutException, java.util.concurrent.TimeoutException {
+		CompletableFuture<ConsoleLogEntry> future = new CompletableFuture<>();
+		BiDi biDi = null;
+
+		if (driver instanceof HasBiDi hasBiDi){
+			biDi = hasBiDi.getBiDi();
+		}
+		CompletableFuture<LogEntry> logFuture = new CompletableFuture<>();
+
+		biDi.addListener(Log.entryAdded(), (LogEntry logEntry) -> {
+			// Tutaj możesz dodać warunek, np. szukając konkretnego tekstu,
+			// poziomu logowania (np. ERROR) lub typu (Console/JS).
+			if (logEntry.getConsoleLogEntry().isPresent()) {
+				// Log został znaleziony - Zakończ oczekiwanie
+				logFuture.complete(logEntry);
+			}
+		});
+
+		driver.get("https://www.selenium.dev/selenium/web/bidi/logEntryAdded.html");
+		driver.findElement(By.id("consoleLog")).click();
+
+		try {
+			LogEntry znalezionyLog = logFuture.get(15, TimeUnit.SECONDS);
+			System.out.println("✅ Log ZNALEZIONY: " + znalezionyLog.getConsoleLogEntry().get().getText());
+		} catch (Exception e) {
+			System.err.println("❌ Timeout lub błąd: Nie znaleziono oczekiwanego logu w ciągu 5 sekund.");
+		}
+		driver.quit();
+
 	}
 
 	@Test
