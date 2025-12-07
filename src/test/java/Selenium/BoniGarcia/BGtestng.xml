@@ -4,7 +4,7 @@
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Chrome Tests" enabled="true">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Chrome Tests" enabled="false">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
         <parameter name="url" value="http://selenium-hub-env:4444"/>
@@ -13,33 +13,13 @@
             <class name="Selenium.BoniGarcia.MainTest"/>
         </classes>
     </test>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="false">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="true">
         <parameter name="browser" value="firefox"/>
         <parameter name="timeout" value="30"/>
-        <groups>
-            <run>
-                <exclude name="devTools"/>
-            </run>
-        </groups>
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
-                    <include name="webFormTest"/>
-                    <include name="mainPageTestElementsVerification"/>
-                    <include name="dropdownMenuTest"/>
-                    <include name="navigationPageTest"/>
-                    <include name="mouseOverTest"/>
-                    <include name="dragAndDropTest"/>
-                    <include name="canvas"/>
-                    <include name="loadingImages"/>
-                    <include name="slowCalculatorTest"/>
-                    <include name="longPageTest"/>
-                    <include name="infiniteScroll"/>
-                    <include name="shadowRootTest"/>
-                    <include name="cookiesPageTest"/>
-                    <include name="framesPageTest"/>
-                    <include name="iFramesPageTest"/>
-                    <include name="downloadFileTest"/>
+                    <include name="consoleLogsTest"/>
                 </methods>
             </class>
         </classes>
