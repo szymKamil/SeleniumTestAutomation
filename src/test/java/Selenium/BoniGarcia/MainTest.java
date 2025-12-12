@@ -533,16 +533,15 @@ public class MainTest extends BaseTest {
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Test(groups = {"devTools, interface"}, priority = 1)
-	public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
+	public void consoleLogsTest() {
 		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		consoleLogsPage.startListening();
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Console logs");
 		consoleLogsPage.verifyAbstractPage();
-/*
 		consoleLogsPage.getConsoleLogs();
-*/
+
 	}
 
 

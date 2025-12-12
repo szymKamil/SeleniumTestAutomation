@@ -20,9 +20,9 @@ import java.util.concurrent.*;
 public class BiDiLogs2 {
 
 	public static void main(String[] args) {
-		//testLogow();
+		testLogow();
 		//testlogow2();
-		testlogow3();
+		//testlogow3();
 	}
 
 		static void testLogow(){
