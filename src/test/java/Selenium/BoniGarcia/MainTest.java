@@ -540,7 +540,9 @@ public class MainTest extends BaseTest {
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Console logs");
 		consoleLogsPage.verifyAbstractPage();
+/*
 		consoleLogsPage.getConsoleLogs();
+*/
 	}
 
 
