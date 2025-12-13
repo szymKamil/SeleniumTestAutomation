@@ -118,7 +118,7 @@ public final class DriverFactory {
 	}
 	private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value) throws IOException {
 		if (options instanceof ChromeOptions chromeOptions) {
-			if (value.equalsIgnoreCase("true")) {
+			if (value.contains("true")) {
 				chromeOptions.addArguments("--" + key);
 			} else if (value.contains(",")) {
 				chromeOptions.addArguments("--" + key + "=" + value);
@@ -133,16 +133,15 @@ public final class DriverFactory {
 			}
 		}
 		if (options instanceof FirefoxOptions firefoxOptions) {
-			if (value.equalsIgnoreCase("true")) {
+			if (value.contains("true")) {
 				firefoxOptions.addArguments("--" + key);
-
 			} else if (value.contains(",")) {
 				firefoxOptions.addArguments("--" + key + "=" + value);
 			}
 			firefoxOptions.setCapability("webSocketUrl", true);
 		}
 		if (options instanceof EdgeOptions edgeOptions) {
-			if (value.equalsIgnoreCase("true")) {
+			if (value.contains("true")) {
 				edgeOptions.addArguments("--" + key);
 			} else if (value.contains(",")) {
 				edgeOptions.addArguments("--" + key + "=" + value);
@@ -151,7 +150,9 @@ public final class DriverFactory {
 			if (!prefs.isEmpty()) {
 				edgeOptions.setExperimentalOption("prefs", prefs);
 			}
+/*
 			edgeOptions.setCapability("webSocketUrl", true);
+*/
 		}
 	}
 

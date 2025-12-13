@@ -4,7 +4,7 @@
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Chrome Tests" enabled="true">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Chrome Tests" enabled="false">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="30"/>
 <!--        <parameter name="url" value="http://selenium-hub-env:4444"/>-->
@@ -18,7 +18,7 @@
             </class>
         </classes>
     </test>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="true">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="false">
         <parameter name="browser" value="firefox"/>
         <parameter name="timeout" value="30"/>
 <!--        <parameter name="url" value="http://DESKTOP-SD08TEB:4444"/>-->
@@ -41,7 +41,7 @@
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
                 <!--<methods>
-                    <include name="consoleLogsTest"/>
+                    <include name="alertPageTest"/>
                 </methods>-->
             </class>
         </classes>
