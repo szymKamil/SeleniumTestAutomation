@@ -147,6 +147,11 @@ public final class DriverFactory {
 			} else if (value.contains(",")) {
 				edgeOptions.addArguments("--" + key + "=" + value);
 			}
+			Map<String, Object> prefs = addExperimentalOptions();
+			if (!prefs.isEmpty()) {
+				edgeOptions.setExperimentalOption("prefs", prefs);
+			}
+			edgeOptions.setCapability("webSocketUrl", true);
 		}
 	}
 

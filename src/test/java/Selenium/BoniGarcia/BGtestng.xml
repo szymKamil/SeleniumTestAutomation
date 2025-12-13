@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
-<suite name="Boni Garcia Test Suite" thread-count="1" parallel="false">
+<suite name="Boni Garcia Test Suite" thread-count="1" parallel="tests">
     <listeners>
         <listener class-name="io.qameta.allure.testng.AllureTestNg"/>
     </listeners>
@@ -18,26 +18,32 @@
             </class>
         </classes>
     </test>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="false">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Firefox Tests" enabled="true">
         <parameter name="browser" value="firefox"/>
         <parameter name="timeout" value="30"/>
 <!--        <parameter name="url" value="http://DESKTOP-SD08TEB:4444"/>-->
+        <parameter name="url" value="http://192.168.1.109:4444"/>
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
-     <!--           <methods>
+                <!--<methods>
                     <include name="consoleLogsTest"/>
                 </methods>-->
             </class>
         </classes>
     </test>
-    <test verbose="1" preserve-order="true" name="Boni Garcia Edge Tests" enabled="false">
+    <test verbose="1" preserve-order="true" name="Boni Garcia Edge Tests" enabled="true">
         <parameter name="browser" value="edge"/>
         <parameter name="timeout" value="30"/>
 <!--        <parameter name="url" value="http://DESKTOP-SD08TEB:4444"/>-->
+        <parameter name="url" value="http://192.168.1.109:4444"/>
         <groups>
         </groups>
         <classes>
-            <class name="Selenium.BoniGarcia.MainTest"/>
+            <class name="Selenium.BoniGarcia.MainTest">
+                <!--<methods>
+                    <include name="consoleLogsTest"/>
+                </methods>-->
+            </class>
         </classes>
     </test>
 </suite>
