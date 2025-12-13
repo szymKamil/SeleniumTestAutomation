@@ -63,7 +63,9 @@ public class ConsoleLogsPage extends AbstractPage {
 			devTools.getDomains()
 					.events()
 					.addJavascriptExceptionListener(jsEvent::complete);
-			 devTools.getDomains().events().addConsoleListener(e -> consoleEventList.add(e));
+			devTools.getDomains()
+					.events()
+					.addConsoleListener(e -> consoleEventList.add(e));
 			devTools.getDomains()
 					.events()
 					.addJavascriptExceptionListener(e -> {
@@ -97,7 +99,6 @@ public class ConsoleLogsPage extends AbstractPage {
 
 
 	public void getConsoleLogs() {
-		log.info("Oto odszukane logi z konsoli: ");
 		try {
 			if (consoleEvent.isDone() & jsEvent.isDone()) {
 				log.info("Złapałem console event o typie {} i treści {}, timesamp: {}, ", consoleEvent.get()
@@ -112,36 +113,41 @@ public class ConsoleLogsPage extends AbstractPage {
 		} catch (Exception e) {
 			log.info("CompletableFuture nie złapało żadnego z logów.");
 		}
-		if (consoleEventList.size() > 0) {
-			for (ConsoleEvent event : consoleEventList) {
-				log.info("W teście znaleziono następujące błędy z konsoli: {}, {}, {}", event.getMessages(), event.getType(), event.getTimestamp());
-			}
-		}
-		try{
-			for (JavascriptException exception : javascriptExceptions) {
-				log.info("W teście znaleziono następujące błędy JS: {}", exception.getMessage());
+
+		logIterator(consoleEventList);
+		logIterator(javascriptExceptions);
+		logIterator(consoleLogs);
+		logIterator(consoleJSEventList);
+	}
+
+
+	void logIterator(CopyOnWriteArrayList<?> logArray) {
+		try {
+			for (Object browserLog : logArray) {
+				if (browserLog instanceof LogEntry entry) {
+					log.info("Log z konsoli: {}, typ: {}, metoda: {}", entry.getConsoleLogEntry()
+							.get()
+							.getText(), entry.getConsoleLogEntry()
+							.get()
+							.getType(), entry.getConsoleLogEntry()
+							.get()
+							.getMethod());
+				} else if (browserLog instanceof ConsoleEvent event) {
+					log.info("W teście znaleziono następujące błędy z konsoli: {}, {}, {}", event.getMessages(), event.getType(), event.getTimestamp());
+				} else if (browserLog instanceof JavascriptException exception) {
+					log.info("Log z konsoli JS: {}", exception.getMessage());
+				} else {
+					log.info("Nie znaleziono logów.");
+				}
 			}
 		} catch (Exception e){
-			log.info("Test nie obsługuje łapania JavascriptException poprzez DevTools");
-		}
-		try {
-			for (LogEntry consLog : consoleLogs) {
-				log.info("Log z konsoli: {}, typ: {}, metoda: {}", consLog.getConsoleLogEntry()
-						.get()
-						.getText(), consLog.getConsoleLogEntry()
-						.get()
-						.getType(), consLog.getConsoleLogEntry()
-						.get()
-						.getMethod());
-			}
-			for (LogEntry consLog : consoleJSEventList) {
-				log.info("Log z konsoli JS: {}", consLog.getJavascriptLogEntry()
-						.get()
-						.getText());
-			}
-		} catch (Exception e) {
-			log.error("❌ Timeout lub błąd: Nie znaleziono oczekiwanego logu lub wystąpił błąd logu.");
+			log.info("Nie znaleziono logów w tablicy {}", logArray.getClass().getSimpleName());
 		}
 	}
 }
+
+
+
+
+
 
