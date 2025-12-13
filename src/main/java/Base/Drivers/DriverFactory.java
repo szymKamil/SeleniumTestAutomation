@@ -135,9 +135,11 @@ public final class DriverFactory {
 		if (options instanceof FirefoxOptions firefoxOptions) {
 			if (value.equalsIgnoreCase("true")) {
 				firefoxOptions.addArguments("--" + key);
+
 			} else if (value.contains(",")) {
 				firefoxOptions.addArguments("--" + key + "=" + value);
 			}
+			firefoxOptions.setCapability("webSocketUrl", true);
 		}
 		if (options instanceof EdgeOptions edgeOptions) {
 			if (value.equalsIgnoreCase("true")) {
