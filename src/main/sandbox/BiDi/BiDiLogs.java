@@ -8,6 +8,9 @@ import org.openqa.selenium.bidi.log.ConsoleLogEntry;
 import org.openqa.selenium.bidi.log.JavascriptLogEntry;
 import org.openqa.selenium.bidi.log.Log;
 import org.openqa.selenium.bidi.log.LogEntry;
+import org.openqa.selenium.bidi.module.Network;
+import org.openqa.selenium.bidi.network.AddInterceptParameters;
+import org.openqa.selenium.bidi.network.InterceptPhase;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -15,6 +18,8 @@ import org.testng.Assert;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.time.Duration;
+import java.time.temporal.ChronoUnit;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.ExecutionException;
@@ -46,6 +51,17 @@ public class BiDiLogs {
 		Assert.assertEquals("Hello, world!", logEntry.getText());
 
 		((RemoteWebDriver) driver).script().removeConsoleMessageHandler(id);
+	}
+
+	@Test
+	void canFailRequest() {
+		try (Network network = new Network(driver)) {
+			network.addIntercept(new AddInterceptParameters(InterceptPhase.BEFORE_REQUEST_SENT));
+			network.onBeforeRequestSent(
+					responseDetails -> network.failRequest(responseDetails.getRequest().getRequestId()));
+			driver.manage().timeouts().pageLoadTimeout(Duration.of(5, ChronoUnit.SECONDS));
+			Assert.assertThrows(TimeoutException.class, () -> driver.get("https://the-internet.herokuapp.com/basic_auth"));
+		}
 	}
 
 	@Test
