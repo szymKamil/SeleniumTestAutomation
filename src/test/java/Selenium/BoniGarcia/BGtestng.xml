@@ -12,9 +12,9 @@
 <!--        <parameter name="url" value="http://localhost:4444"/>-->
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
-                <!--<methods>
+                <methods>
                     <include name="consoleLogsTest"/>
-                </methods>-->
+                </methods>
             </class>
         </classes>
     </test>
@@ -25,9 +25,9 @@
         <!--<parameter name="url" value="http://192.168.1.109:4444"/>-->
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
-                <!--<methods>
-                    <include name="consoleLogsTest"/>
-                </methods>-->
+                <methods>
+                    <include name="downloadFileTest"/>
+                </methods>
             </class>
         </classes>
     </test>

@@ -14,6 +14,7 @@ import java.net.URLEncoder;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -47,6 +48,8 @@ public class MockApiTest {
 				.hostname(host)
 				.pathname(path)
 				.search(search);
+
+		System.out.println("Przechwytujemy: " + pattern.toMap());
 
 		String id = network.addIntercept(new AddInterceptParameters(InterceptPhase.BEFORE_REQUEST_SENT)
 				.urlPattern(pattern));
@@ -82,23 +85,55 @@ public class MockApiTest {
 			String url = req.getUrl();
 			String method = req.getMethod();
 			boolean blocked = event.isBlocked();
+			System.out.println("Złapany event: " + url + " metoda? " + method + " zablokowany? " + blocked);
 
 			if (!blocked) return;
 
+			/*if (url.contains("hammer02.avif")) {
+				network.failRequest(event.getRequest().getRequestId());
+				System.out.println("[BLOCKED] " + url);
+			} else {
+				network.continueRequest(
+						new ContinueRequestParameters(event.getRequest()
+								.getRequestId())
+				);
+			}*/
+			byte[] imageBytes = Base64.getDecoder().decode(emptyResponse);
+
+			String base64 = Base64.getEncoder().encodeToString(imageBytes);
+
+
+
 			if ("GET".equalsIgnoreCase(method)) {
+				System.out.println("Mamy event do odpowiedzenia");
 				ProvideResponseParameters resp = new ProvideResponseParameters(req.getRequestId()).statusCode(200)
 						.reasonPhrase("OK")
+						/*.headers(List.of(
+								new Header("content-type",
+										new BytesValue(BytesValue.Type.STRING, "image/avif")),
+								new Header("cache-control",
+										new BytesValue(BytesValue.Type.STRING, "max-age=14400")),
+									new Header(
+											"content-length",
+											new BytesValue(
+													BytesValue.Type.STRING,
+													String.valueOf(imageBytes.length)
+											)
+									)
+						))*/
+
 						.headers(List.of(
 								new Header("access-control-allow-origin",
 										new BytesValue(BytesValue.Type.STRING, "*")),
 								new Header("content-type",
 										new BytesValue(BytesValue.Type.STRING, "application/json"))
 						))
-						.body(new BytesValue(BytesValue.Type.STRING, emptyResponse));
+						.body(new BytesValue(BytesValue.Type.BASE64, base64));
 
 				network.provideResponse(resp);
 				System.out.println("[BLOCKED] " + method + " " + url);
 			} else {
+				System.out.println("Kontynuuję");
 				network.continueRequest(new ContinueRequestParameters(req.getRequestId()));
 			}
 		});
@@ -134,7 +169,7 @@ public class MockApiTest {
 			String resultMsg = wait.until(d -> d.findElement(searchContainer).getText());
 			assertThat("There are no products found.").isEqualTo(resultMsg);
 		} finally {
-			tearDown();
+			//tearDown();
 		}
 	}
 
