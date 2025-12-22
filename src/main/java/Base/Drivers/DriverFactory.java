@@ -104,12 +104,10 @@ public final class DriverFactory {
 
 		List<Path> paths = new ArrayList<>(List.of(optionPath, firefoxOptionPath));
 		boolean isFirefox = options instanceof FirefoxOptions;
+		boolean firefoxPropertiesFlag;
 
 		for (Path path : paths) {
-			if (!isFirefox && path.getFileName().toString()
-					.equals("firefoxOptions.properties")) {
-				continue;
-			} else {
+				firefoxPropertiesFlag = path.getFileName().toString().equals("firefoxOptions.properties");
 				try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()))) {
 					String optionsLine;
 					while ((optionsLine = bufferedReader.readLine()) != null) {
@@ -118,21 +116,20 @@ public final class DriverFactory {
 							String key = optionSplit[0].trim();
 							String value = optionSplit[1].trim();
 							if (/*!value.equals("false") &&*/ !key.contains("local")) {
-								addOptionsToDriver(options, key, value);
+								addOptionsToDriver(options, key, value, firefoxPropertiesFlag);
 							}
 						}
 					}
 				} catch (IOException e) {
 					System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
 				}
-			}
 		}
 		logger.info("Uruchamiam testy z następującymi opcjami: " + options.asMap());
 		return options;
 	}
 
 
-	private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value) throws IOException {
+	private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value, boolean firefoxPropertiesFlag) throws IOException {
 		if (options instanceof ChromeOptions chromeOptions) {
 			if (value.contains("true")) {
 				chromeOptions.addArguments("--" + key);
@@ -148,23 +145,23 @@ public final class DriverFactory {
 				chromeOptions.setExperimentalOption("prefs", prefs);
 			}
 		}
+		//TODO: zrobić jakiś bardziej elegancką weryfikację plików z firefoxOptions
 		if (options instanceof FirefoxOptions firefoxOptions) {
-			if (value.contains("true") && !key.contains("browser") && !key.contains("webSocketUrl")) {
+			if (value.contains("true") && !firefoxPropertiesFlag) {
 				firefoxOptions.addArguments("--" + key);
-			} else if (value.contains(",")) {
+			} else if (value.contains(",") && !firefoxPropertiesFlag) {
 				firefoxOptions.addArguments("--" + key + "=" + value);
-				//TODO: zrobić jakiś bardziej elegancką weryfikację plików z firefoxOptions
-			} else if (key.contains("browser") || key.contains("webSocketUrl")){
+			} else if (firefoxPropertiesFlag) {
 				if (value.contains("${DownloadPath}")){
 					value = value.replace("${DownloadPath}", getDownloadDirectory().toString());
-					System.out.println("Download folder ustawiam na " + value);
+					firefoxOptions.addPreference(key, value);
+				} else if (value.length() == 1){
+					int intValue = Integer.parseInt(value);
+					firefoxOptions.addPreference(key, intValue);
+				} else {
+					firefoxOptions.addPreference(key, value);
 				}
-				System.out.println("Download folder ustawiam na " + key + " " + value);
-				firefoxOptions.addPreference(key, value);
-				firefoxOptions.addPreference("browser.download.folderList", 2);
-
 			}
-			firefoxOptions.setCapability("webSocketUrl", true);
 			firefoxOptions.enableBiDi();
 		}
 		if (options instanceof EdgeOptions edgeOptions) {

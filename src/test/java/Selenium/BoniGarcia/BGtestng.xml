@@ -26,7 +26,7 @@
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
                 <methods>
-                    <include name="downloadFileTest"/>
+                    <include name="geolocationTest"/>
                 </methods>
             </class>
         </classes>

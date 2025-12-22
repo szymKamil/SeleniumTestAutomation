@@ -6,10 +6,15 @@ import org.openqa.selenium.bidi.BiDi;
 import org.openqa.selenium.bidi.Command;
 import org.openqa.selenium.bidi.Event;
 import org.openqa.selenium.bidi.HasBiDi;
+import org.openqa.selenium.bidi.emulation.Emulation;
+import org.openqa.selenium.bidi.emulation.GeolocationCoordinates;
+import org.openqa.selenium.bidi.emulation.SetGeolocationOverrideParameters;
 import org.openqa.selenium.bidi.module.Network;
 import org.openqa.selenium.bidi.network.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.DevTools;
+import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -174,6 +179,7 @@ public class NetworkBiDi {
 				RequestData req = event.getRequest();
 
 			});
+
 		}
 
 
@@ -285,7 +291,36 @@ public class NetworkBiDi {
 
 
 		//Geolokacja!!!!!!!!!!!!!!!!
-//		bidi.send(Emulation.setGeolocationOverride(4.323, 4.53))
+/*//BrowsingContext context = new BrowsingContext(contextDriver, contextDriver.getWindowHandle());
+
+org.openqa.selenium.bidi.emulation.Emulation emulation = new org.openqa.selenium.bidi.emulation.Emulation(contextDriver);
+// 4. Definiujesz koordynaty (np. Warszawa)
+GeolocationCoordinates coordinates = new GeolocationCoordinates(52.2297, 21.0122);
+
+// 5. Ustawiasz parametry - UWAGA na .userContexts()
+// Metoda ta przyjmuje Listę Stringów (ID kontekstów użytkownika)
+SetGeolocationOverrideParameters params = new SetGeolocationOverrideParameters(coordinates)
+		.userContexts(List.of(userContextId));
+
+            emulation.setGeolocationOverride(params);
+
+            System.out.println("Geolokalizacja ustawiona dla UserContext: " + userContextId);
+
+
+            *//*List<String> contextList = new ArrayList<>(List.of(context.toString()));
+            GeolocationCoordinates geolocationCoordinates = new GeolocationCoordinates(latitude, longitude);
+            SetGeolocationOverrideParameters geolocationOverrideParameters = new SetGeolocationOverrideParameters(geolocationCoordinates).userContexts(contextList);
+            emulation.setGeolocationOverride(geolocationOverrideParameters);*//*
+            System.out.println("Koordynaty ustawione dla BiDi");*/
+/*try (
+DevTools devTools = ((HasDevTools) driver).getDevTools()) {
+		devTools.createSession();
+    devTools.send(Emulation.setGeolocationOverride(
+		Optional.of(51.5074), // Szerokość (Latitude)
+        Optional.of(-0.1278), // Długość (Longitude)
+        Optional.of(1)        // Dokładność (Accuracy)
+    ));
+			}*/
 
 //		bidi.addListener(new Network(chromeDriver), e -> chromeDriver.network().add
 
