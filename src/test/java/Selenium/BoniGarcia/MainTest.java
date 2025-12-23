@@ -17,6 +17,7 @@ import org.testng.annotations.*;
 import org.testng.annotations.Optional;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -450,6 +451,7 @@ public class MainTest extends BaseTest {
 		mainPage.goToSubPage("Geolocation");
 		GeolocationPage geolocationPage = new GeolocationPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		geolocationPage.verifyAbstractPage();
+		geolocationPage.setDevToolsOrBidi();
 		geolocationPage.setCoordinates(4.323, 4.53);
 		geolocationPage.clickGeolocationBtn();
 		log.info("Koordynaty to: {}", geolocationPage.returnCoordinates());
@@ -533,7 +535,7 @@ public class MainTest extends BaseTest {
 	@Severity(SeverityLevel.CRITICAL)
 	@Owner("Kamil")
 	@Test(groups = {"devTools, interface"}, priority = 1)
-	public void consoleLogsTest() throws ExecutionException, InterruptedException, TimeoutException {
+	public void consoleLogsTest() {
 		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		consoleLogsPage.startListening();
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());

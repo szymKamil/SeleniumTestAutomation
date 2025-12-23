@@ -12,15 +12,11 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 public class UserMediaPage extends AbstractPage{
 
     Actions actions;
-    DevTools devTools;
-    JavascriptExecutor js;
 
     public UserMediaPage(WebDriver driver, WebDriverWait wait) {
         super();
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
-        devTools = ((HasDevTools) driver).getDevTools();
-        js = (JavascriptExecutor) driver;
     }
 
     //Elementy na stronie
@@ -33,6 +29,7 @@ public class UserMediaPage extends AbstractPage{
     //Metody testowe
     public void runUserMedia(){
         wait.until(ExpectedConditions.elementToBeClickable(startBtn)).click();
+
     }
 
     public String getVideoDeviceInfo(){

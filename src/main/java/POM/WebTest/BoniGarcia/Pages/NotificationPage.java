@@ -16,14 +16,14 @@ public class NotificationPage extends AbstractPage{
 
 
     Actions actions;
-    DevTools devTools;
+    //DevTools devTools;
     JavascriptExecutor js;
 
     public NotificationPage(WebDriver driver, WebDriverWait wait) {
         super();
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
-        devTools = ((HasDevTools) driver).getDevTools();
+        //devTools = ((HasDevTools) driver).getDevTools();
         js = (JavascriptExecutor) driver;
     }
 

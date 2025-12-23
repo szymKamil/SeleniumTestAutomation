@@ -2,6 +2,7 @@ package Base.Drivers;
 
 import Base.Listeners.TestStepsListener;
 import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
 import org.openqa.selenium.WebDriver;
@@ -21,10 +22,13 @@ import java.io.BufferedReader;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.net.*;
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import static Base.Utils.FileDownloadUtils.getDownloadDirectory;
@@ -50,7 +54,7 @@ public final class DriverFactory {
 					System.setProperty("LocalTest", "false");
 					driver = RemoteWebDriver.builder().oneOf(loadOptionsFromFile(browser)).address(url).build();
 				// driver = new RemoteWebDriver(url, loadOptionsFromFile(browser, true));
-					logger.info("Uruchamiam testy zdalnie, środowisko zdalne ma sttaus: {}", isURLup(url));
+					logger.info("Uruchamiam testy zdalnie, środowisko zdalne ma status: {}", isURLup(url));
 			} else {
                 System.setProperty("LocalTest", "true");
 				switch (browser.toLowerCase()) {
@@ -96,29 +100,37 @@ public final class DriverFactory {
 					throw new IllegalArgumentException("Błędna nazwa przeglądarki ->'%s'. Użyj jednej z następujących: chrome, firefox, edge.".formatted(browser));
 		}
 		Path optionPath = Path.of("src/main/resources/options.properties");
-		try (BufferedReader bufferedReader = new BufferedReader(new FileReader(optionPath.toFile()))) {
-			String optionsLine;
-			while ((optionsLine = bufferedReader.readLine()) != null) {
-				String[] optionSplit = optionsLine.split(">");
-				if (optionSplit.length == 2) {
-					String key = optionSplit[0].trim();
-					String value = optionSplit[1].trim();
-					if (!value.equals("false") && !key.contains("local")) {
-						addOptionsToDriver(options, key, value);
+		Path firefoxOptionPath = Path.of("src/main/resources/firefoxOptions.properties");
+
+		List<Path> paths = new ArrayList<>(List.of(optionPath, firefoxOptionPath));
+		boolean firefoxPropertiesFlag;
+
+		for (Path path : paths) {
+				firefoxPropertiesFlag = path.getFileName().toString().equals("firefoxOptions.properties");
+				try (BufferedReader bufferedReader = new BufferedReader(new FileReader(path.toFile()))) {
+					String optionsLine;
+					while ((optionsLine = bufferedReader.readLine()) != null) {
+						String[] optionSplit = optionsLine.split(">");
+						if (optionSplit.length == 2) {
+							String key = optionSplit[0].trim();
+							String value = optionSplit[1].trim();
+							if (/*!value.equals("false") &&*/ !key.contains("local")) {
+								addOptionsToDriver(options, key, value, firefoxPropertiesFlag);
+							}
+						}
 					}
+				} catch (IOException e) {
+					System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
 				}
-			}
-		} catch (IOException e) {
-			System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
 		}
-        options.setEnableDownloads(true);
-        System.out.println("Dodane zostaną następujące ustawienia eksperymentalne: " + options.asMap());
-        System.out.println("Opcje zostały poprawnie dodane do drivera");
+		logger.info("Uruchamiam testy z następującymi opcjami: " + options.asMap());
 		return options;
 	}
-	private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value) throws IOException {
-		if (options instanceof ChromeOptions chromeOptions) {
-			if (value.equalsIgnoreCase("true")) {
+
+
+	private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value, boolean firefoxPropertiesFlag) throws IOException {
+		if (options instanceof ChromeOptions chromeOptions && !firefoxPropertiesFlag) {
+			if (value.contains("true")) {
 				chromeOptions.addArguments("--" + key);
 			} else if (value.contains(",")) {
 				chromeOptions.addArguments("--" + key + "=" + value);
@@ -132,33 +144,53 @@ public final class DriverFactory {
 				chromeOptions.setExperimentalOption("prefs", prefs);
 			}
 		}
+		//TODO: zrobić jakiś bardziej elegancką weryfikację plików z firefoxOptions
 		if (options instanceof FirefoxOptions firefoxOptions) {
-			if (value.equalsIgnoreCase("true")) {
+			if (value.contains("true") && !firefoxPropertiesFlag) {
 				firefoxOptions.addArguments("--" + key);
-
-			} else if (value.contains(",")) {
+			} else if (value.contains(",") && !firefoxPropertiesFlag) {
 				firefoxOptions.addArguments("--" + key + "=" + value);
+			} else if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+				firefoxOptions.addPreference(key, Boolean.parseBoolean(value));
+			} else if (firefoxPropertiesFlag) {
+				if (value.contains("${DownloadPath}")){
+					value = value.replace("${DownloadPath}", getDownloadDirectory().toString());
+					firefoxOptions.addPreference(key, value);
+				} else if (Character.isDigit(value.charAt(0))){
+					int intValue = Integer.parseInt(value);
+					firefoxOptions.addPreference(key, intValue);
+				} else {
+					firefoxOptions.addPreference(key, value);
+				}
 			}
-			firefoxOptions.setCapability("webSocketUrl", true);
+			firefoxOptions.enableBiDi();
+			firefoxOptions.setCapability("se:downloadsEnabled", true);
+			//firefoxOptions.addPreference("media.navigator.streams.fake", true);
 		}
-		if (options instanceof EdgeOptions edgeOptions) {
-			if (value.equalsIgnoreCase("true")) {
+		if (options instanceof EdgeOptions edgeOptions && !firefoxPropertiesFlag) {
+			if (value.contains("true")) {
 				edgeOptions.addArguments("--" + key);
 			} else if (value.contains(",")) {
 				edgeOptions.addArguments("--" + key + "=" + value);
 			}
+			Map<String, Object> prefs = addExperimentalOptions();
+			if (!prefs.isEmpty()) {
+				edgeOptions.setExperimentalOption("prefs", prefs);
+			}
+			//edgeOptions.setCapability("webSocketUrl", true);
+			edgeOptions.setCapability("se:downloadsEnabled", true);
+
 		}
 	}
 
 	static Map<String, Object> addExperimentalOptions() throws IOException {
 		Map<String, Object> prefs = new HashMap<>();
-		Path expPropFile = Path.of("src/main/resources/experimentalOptions.properties");
+		Path expPropFile = java.nio.file.Path.of("src/main/resources/experimentalOptions.properties");
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(expPropFile.toFile()));
 			String optionLine;
 			while ((optionLine = bufferedReader.readLine()) != null) {
 				if(optionLine.contains("${DownloadPath}")){
-					getDownloadDirectory();
 					optionLine = optionLine.replace("${DownloadPath}", getDownloadDirectory().toString());
 				}
 				String[] optionSplit = optionLine.split("=");
