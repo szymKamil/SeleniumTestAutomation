@@ -1,5 +1,7 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
+import Base.Utils.JavaScriptUtils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -52,9 +54,11 @@ public class LongPage extends AbstractPage{
     }
 
     public void scrollToLastParagraph(){
-        By lastParagraph = By.cssSelector("p:last-of-type");
-        wait.until(ExpectedConditions.presenceOfElementLocated(lastParagraph));
-        actions.scrollToElement(driver.findElement(lastParagraph)).perform();
+        WebDriver webDriver = DriverFactory.getDriver();
+        WebElement lastParagraph = webDriver.findElement(By.cssSelector("p:last-of-type"));
+        wait.until(ExpectedConditions.visibilityOf(lastParagraph));
+        //actions.scrollToElement(driver.findElement(lastParagraph)).perform();
+        JavaScriptUtils.scrollToElementJS(webDriver, lastParagraph);
     }
 
 

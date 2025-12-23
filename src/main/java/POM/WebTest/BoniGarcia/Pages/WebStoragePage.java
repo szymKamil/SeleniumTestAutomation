@@ -21,7 +21,6 @@ public class WebStoragePage extends AbstractPage{
 
     public WebStoragePage(WebDriver driver, WebDriverWait wait) {
         super();
-        devTools = ((HasDevTools) driver).getDevTools();
         PageFactory.initElements(driver, this);
         js = (JavascriptExecutor) driver;
     }
@@ -49,9 +48,14 @@ public class WebStoragePage extends AbstractPage{
     }
 
     public void clearLocalStorage(){
-        devTools.createSession();
-        devTools.send(Storage.clearDataForOrigin(Objects.requireNonNull(driver.getCurrentUrl()), "local_storage"));
-        devTools.close();
+        if (driver instanceof HasDevTools hasDevTools) {
+            devTools = hasDevTools.getDevTools();
+            devTools.createSession();
+            devTools.send(Storage.clearDataForOrigin(Objects.requireNonNull(driver.getCurrentUrl()), "local_storage"));
+            devTools.close();
+        } else {
+            js.executeScript("localStorage.clear();");
+        }
     }
 
     public void clearSessionStorage(){

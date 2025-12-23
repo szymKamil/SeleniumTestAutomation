@@ -29,6 +29,7 @@ public class UserMediaPage extends AbstractPage{
     //Metody testowe
     public void runUserMedia(){
         wait.until(ExpectedConditions.elementToBeClickable(startBtn)).click();
+
     }
 
     public String getVideoDeviceInfo(){

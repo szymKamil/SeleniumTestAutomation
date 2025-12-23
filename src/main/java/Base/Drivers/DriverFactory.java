@@ -103,7 +103,6 @@ public final class DriverFactory {
 		Path firefoxOptionPath = Path.of("src/main/resources/firefoxOptions.properties");
 
 		List<Path> paths = new ArrayList<>(List.of(optionPath, firefoxOptionPath));
-		boolean isFirefox = options instanceof FirefoxOptions;
 		boolean firefoxPropertiesFlag;
 
 		for (Path path : paths) {
@@ -130,7 +129,7 @@ public final class DriverFactory {
 
 
 	private static void addOptionsToDriver(AbstractDriverOptions<?> options, String key, String value, boolean firefoxPropertiesFlag) throws IOException {
-		if (options instanceof ChromeOptions chromeOptions) {
+		if (options instanceof ChromeOptions chromeOptions && !firefoxPropertiesFlag) {
 			if (value.contains("true")) {
 				chromeOptions.addArguments("--" + key);
 			} else if (value.contains(",")) {
@@ -151,11 +150,13 @@ public final class DriverFactory {
 				firefoxOptions.addArguments("--" + key);
 			} else if (value.contains(",") && !firefoxPropertiesFlag) {
 				firefoxOptions.addArguments("--" + key + "=" + value);
+			} else if (value.equalsIgnoreCase("true") || value.equalsIgnoreCase("false")) {
+				firefoxOptions.addPreference(key, Boolean.parseBoolean(value));
 			} else if (firefoxPropertiesFlag) {
 				if (value.contains("${DownloadPath}")){
 					value = value.replace("${DownloadPath}", getDownloadDirectory().toString());
 					firefoxOptions.addPreference(key, value);
-				} else if (value.length() == 1){
+				} else if (Character.isDigit(value.charAt(0))){
 					int intValue = Integer.parseInt(value);
 					firefoxOptions.addPreference(key, intValue);
 				} else {
@@ -163,8 +164,10 @@ public final class DriverFactory {
 				}
 			}
 			firefoxOptions.enableBiDi();
+			firefoxOptions.setCapability("se:downloadsEnabled", true);
+			//firefoxOptions.addPreference("media.navigator.streams.fake", true);
 		}
-		if (options instanceof EdgeOptions edgeOptions) {
+		if (options instanceof EdgeOptions edgeOptions && !firefoxPropertiesFlag) {
 			if (value.contains("true")) {
 				edgeOptions.addArguments("--" + key);
 			} else if (value.contains(",")) {
@@ -175,6 +178,7 @@ public final class DriverFactory {
 				edgeOptions.setExperimentalOption("prefs", prefs);
 			}
 			//edgeOptions.setCapability("webSocketUrl", true);
+			edgeOptions.setCapability("se:downloadsEnabled", true);
 
 		}
 	}
@@ -187,7 +191,6 @@ public final class DriverFactory {
 			String optionLine;
 			while ((optionLine = bufferedReader.readLine()) != null) {
 				if(optionLine.contains("${DownloadPath}")){
-					//getDownloadDirectory();
 					optionLine = optionLine.replace("${DownloadPath}", getDownloadDirectory().toString());
 				}
 				String[] optionSplit = optionLine.split("=");
