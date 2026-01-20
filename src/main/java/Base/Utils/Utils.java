@@ -15,6 +15,4 @@ public class Utils {
         boolean dockerEnv = Boolean.parseBoolean(System.getProperty("LocalTest"));
         return dockerEnv;
     }
-
-
 }

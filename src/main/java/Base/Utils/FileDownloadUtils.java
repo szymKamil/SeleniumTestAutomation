@@ -2,7 +2,6 @@ package Base.Utils;
 
 import Base.Drivers.DriverFactory;
 import org.openqa.selenium.HasDownloads;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
