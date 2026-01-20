@@ -89,7 +89,7 @@ public final class DriverFactory {
 			logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
 		} catch (WebDriverException | IOException | NoSuchFieldException e) {
 			logger.error("Błąd podczas inicjalizacji drivera: {}", e.getMessage());
-			throw new WebDriverException("Nie udało się uruchomić drivera", e);
+			throw new WebDriverException("Nie udało się uruchomić drivera", e.getCause());
 		}
 		logger.info("Test został uruchomiony w wątku {}", Thread.currentThread().getName());
 	}
@@ -136,15 +136,15 @@ public final class DriverFactory {
 		} catch (IOException e) {
 			System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
 		}
-		logger.info("Uruchamiam testy z następującymi opcjami: " + options.asMap());
+		logger.info("Uruchamiam testy z następującymi ustawieniami: " + options.asMap());
 		return options;
 	}
 
 	private static Path getSettingsFilePath(AbstractDriverOptions<?> options, String arg) throws NoSuchFieldException {
 		logger.info("Uruchamiam pobranie pliku");
-		if (options instanceof ChromeOptions || options instanceof EdgeOptions && arg.contains("arg")){
+		if ((options instanceof ChromeOptions || options instanceof EdgeOptions) && arg.contains("arg")){
 			return Path.of("src/main/resources/argumentsChromeEdge.properties");
-		} else if (options instanceof ChromeOptions || options instanceof EdgeOptions && arg.contains("pref")){
+		} else if ((options instanceof ChromeOptions || options instanceof EdgeOptions) && arg.contains("pref")){
 			return Path.of("src/main/resources/chromiumPrefs.properties");
 		} else if (options instanceof FirefoxOptions && arg.contains("arg")) {
 			return Path.of("src/main/resources/argumentsFirefox.properties");

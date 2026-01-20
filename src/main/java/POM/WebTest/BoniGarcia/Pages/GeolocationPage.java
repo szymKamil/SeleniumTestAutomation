@@ -1,27 +1,21 @@
 package POM.WebTest.BoniGarcia.Pages;
 
 import Base.Drivers.DriverFactory;
-import io.cucumber.java.hu.Ha;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.bidi.BiDi;
 import org.openqa.selenium.bidi.HasBiDi;
-import org.openqa.selenium.bidi.browsingcontext.BrowsingContext;
 import org.openqa.selenium.bidi.emulation.GeolocationCoordinates;
 import org.openqa.selenium.bidi.emulation.SetGeolocationOverrideParameters;
-import org.openqa.selenium.bidi.module.BrowsingContextInspector;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.v142.emulation.Emulation;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.interactions.Coordinates;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.slf4j.Logger;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,7 +70,6 @@ public class GeolocationPage extends AbstractPage {
                     Optional.of(altitudeAccuracy),
                     Optional.of(heading),
                     Optional.of(speed)));
-            devTools.close();
         } else if (bidi != null) {
             var contextDriver = DriverFactory.getDriver();
             String userContextId = "default";
