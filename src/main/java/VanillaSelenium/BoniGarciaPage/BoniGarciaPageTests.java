@@ -52,7 +52,6 @@ import java.util.function.Function;
 
 public class BoniGarciaPageTests {
 
-
     WebDriver driver;
     WebDriverWait wait;
     Logger logger = LoggerFactory.getLogger(BoniGarciaPageTests.class);
@@ -68,7 +67,7 @@ public class BoniGarciaPageTests {
 
     @BeforeClass
     public void webDriverInitialize() {
-        //Opcje
+        //Konfiguracja
         ChromeOptions options = new ChromeOptions();
         Map<String, Object> prefs = new HashMap<>();
         prefs.put("profile.default_content_setting_values.geolocation", 1);
@@ -97,7 +96,6 @@ public class BoniGarciaPageTests {
 
     @AfterClass
     public void end() {
-        //Akcje po teście
         driver.quit();
     }
 
@@ -808,9 +806,7 @@ public class BoniGarciaPageTests {
         driver.get("https://bonigarcia.dev/selenium-webdriver-java/data-types.html");
         WebElement header = driver.findElement(By.xpath("//h1[text()='Data types']"));
         wait.until(ExpectedConditions.visibilityOf(header));
-
         Faker faker = new Faker();
-
         driver.findElement(By.name("first-name"))
                 .sendKeys(faker.name().firstName());
         driver.findElement(By.name("last-name"))

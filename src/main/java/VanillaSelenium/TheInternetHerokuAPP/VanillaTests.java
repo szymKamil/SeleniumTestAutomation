@@ -20,7 +20,6 @@ import org.testng.annotations.Test;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.time.Duration;
 
 import static io.github.bonigarcia.wdm.WebDriverManager.isOnline;
@@ -49,7 +48,12 @@ public class VanillaTests {
                 .addArguments("--disable-gpu"), new FirefoxOptions()).addAlternative(firefoxOptions).config(clientConfig).address(uri).build();
 
         wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    }
 
+    @AfterTest
+    public void quitTest(){
+        assert driver != null;
+        driver.quit();
     }
 
     @Test
@@ -64,11 +68,7 @@ public class VanillaTests {
 
     }
 
-    @AfterTest
-    public void quitTest(){
-        assert driver != null;
-        driver.quit();
-    }
+
 
 
 

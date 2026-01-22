@@ -373,7 +373,7 @@ public class MainTest extends BaseTest {
 
 	/** Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Dialog boxes, następnie uruchomienie każdego
-	 z aletrów i weryfikację poprawności ich wyświetlania i działania, w kontekście przesłanego tekstu.
+	 z alertów i weryfikację poprawności ich wyświetlania i działania, w kontekście przesłanego tekstu.
 	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Alert test")

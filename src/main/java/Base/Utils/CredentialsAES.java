@@ -9,11 +9,10 @@ public class CredentialsAES extends Utils {
 
     static Scanner scanner;
 
-    public static void main(String[] args) throws Exception {
-        //System.out.println(encrypt(getTextFromScanner()));
-        System.out.println(decrypt(getTextFromScanner()));
-
-    }
+//    public static void main(String[] args) throws Exception {
+//        System.out.println(encrypt(getTextFromScanner()));
+//
+//    }
 
 
     public static String encrypt(String strToEncode) throws Exception{

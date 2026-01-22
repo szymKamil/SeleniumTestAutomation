@@ -1,5 +1,6 @@
 package POM.WebTest.BoniGarcia.BaseTest;
 
+import Base.BiDi.BiDiFactory;
 import Base.Drivers.DriverFactory;
 import io.qameta.allure.Story;
 import org.slf4j.LoggerFactory;
@@ -10,7 +11,8 @@ import java.net.URL;
 
 public abstract class BaseTest {
 
-	Logger log = LoggerFactory.getLogger(BaseTest.class);;
+	Logger log = LoggerFactory.getLogger(BaseTest.class);
+	BiDiFactory biDiFactory ;
 
 	@Parameters({"browser", "timeout", "url"})
 	@BeforeMethod(alwaysRun = true)
@@ -24,12 +26,16 @@ public abstract class BaseTest {
 		}
 		Story story = method.getAnnotation(Story.class);
 		log.info("Rozpoczynam test: {}, {}", method.getName(), story != null ? story : "Brak adnotacji @Story dla testu.");
+		biDiFactory = new BiDiFactory();
+		biDiFactory.bidiStartLogging(DriverFactory.getDriver());
 	}
 
 
     @AfterMethod(alwaysRun = true)
-    public void shutDown() {
-        log.info("Testy zostały ukończone.");
+    public void shutDown(Method method) {
+		log.info("Console logs [{}]: {}", method.getName(), biDiFactory.snapshotConsoleLogs());
+		log.info("JS logs [{}]: {}", method.getName(), biDiFactory.snapshotJSLogs());
+        log.info("Test został ukończony.");
         DriverFactory.quit();
     }
 

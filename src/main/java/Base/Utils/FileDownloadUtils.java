@@ -2,12 +2,16 @@ package Base.Utils;
 
 import Base.Drivers.DriverFactory;
 import org.openqa.selenium.HasDownloads;
+import org.slf4j.Logger;
+
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class FileDownloadUtils {
 
+	static  Logger logger = DriverFactory.getLogger();
 
 	/***
 	 * Metoda weryfikuje środowisko, na którym wykonywany jest test. W zależności od parametru, folder zapisu plików określany jest:
@@ -37,14 +41,14 @@ public class FileDownloadUtils {
 		boolean localTest = Utils.testIsInLocalEnv();
 		if (localTest) {
 			var downloadFolder = getDownloadDirectory();
-			System.out.println("Czyszczę folder: " + downloadFolder.toAbsolutePath());
+			logger.info("Czyszczę folder: {}",  downloadFolder.toAbsolutePath());
 			if (Files.exists(downloadFolder) && Files.isDirectory(downloadFolder)) {
 				try (var files = Files.list(downloadFolder)) {
 					files.forEach(f -> {
 						try {
 							Files.deleteIfExists(f);
 						} catch (IOException e) {
-							throw new RuntimeException("Nie udało się usunąć pliku: " + f + " " + e);
+							logger.info("Nie udało się usunąć pliku {}, błąd: {}", f, e.getMessage());
 						}
 					});
 				}
@@ -52,6 +56,6 @@ public class FileDownloadUtils {
 		} else {
 			((HasDownloads) DriverFactory.getDriver()).deleteDownloadableFiles();
 		}
-			System.out.println("Wszystkie pliki z folderu pobierania zostały usunięte.");
+		logger.info("Wszystkie pliki z folderu pobierania zostały usunięte.");
 	}
 }

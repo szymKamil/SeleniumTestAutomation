@@ -77,19 +77,15 @@ public final class DriverFactory {
 			var decoratedDriver = Objects.requireNonNull(decorate(driver, new TestStepsListener()), "Udekorowany driver jest null, wystąpił błąd!");
 			Augmenter augmenter = new Augmenter();
 			var augmentedDriver = Objects.requireNonNull(augmenter.augment(decoratedDriver));
-			try {
 				augmentedDriver.manage()
 						.window()
 						.maximize();
-			} catch (WebDriverException e) {
-				logger.warn("Nie udało się zmaksymalizować okna: {}", e.getMessage());
-			}
 			DRIVER_THREAD.set(augmentedDriver);
 			WAIT_THREAD.set(new WebDriverWait(augmentedDriver, Duration.ofSeconds(time)));
-			logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().getId());
+			logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().threadId());
 		} catch (WebDriverException | IOException | NoSuchFieldException e) {
 			logger.error("Błąd podczas inicjalizacji drivera: {}", e.getMessage());
-			throw new WebDriverException("Nie udało się uruchomić drivera", e.getCause());
+			throw new WebDriverException("Nie udało się uruchomić drivera: " + e.getMessage());
 		}
 		logger.info("Test został uruchomiony w wątku {}", Thread.currentThread().getName());
 	}
@@ -134,9 +130,9 @@ public final class DriverFactory {
 			}
 			addPreferencesToDriver(options, argumentList);
 		} catch (IOException e) {
-			System.out.println("Błąd podczas wczytywania danych z pliku: " + e);
+			logger.error("Błąd podczas wczytywania danych z pliku: {}", e.getMessage());
 		}
-		logger.info("Uruchamiam testy z następującymi ustawieniami: " + options.asMap());
+		logger.info("Uruchamiam testy z następującymi ustawieniami: {}",  options.asMap());
 		return options;
 	}
 
@@ -162,12 +158,14 @@ public final class DriverFactory {
 			 var pref = getBrowserPreferences(options);
 			if (!pref.isEmpty()) {
 				chromeOptions.setExperimentalOption("prefs", pref);
+				chromeOptions.enableBiDi();
 			}
 		} else if (options instanceof EdgeOptions edgeOptions) {
 			edgeOptions.addArguments(argumentsList);
 			var pref = getBrowserPreferences(options);
 			if (!pref.isEmpty()) {
 				edgeOptions.setExperimentalOption("prefs", pref);
+				edgeOptions.enableBiDi();
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);
@@ -231,7 +229,7 @@ public final class DriverFactory {
 		if (logger != null) {
 			return logger;
 		} else {
-			throw new RuntimeException("Problem z uruchomieniem loggera");
+			throw new NullPointerException("Problem z uruchomieniem loggera");
 		}
 	}
 
@@ -256,7 +254,7 @@ public final class DriverFactory {
 			connection.setReadTimeout(2000);
 			connection.setRequestMethod("GET");
 			int responseCode = connection.getResponseCode();
-			System.out.println("Status połączenia to: " + responseCode);
+			logger.info("Status połączenia to: {}", responseCode);
 			return (200 <= responseCode && responseCode <= 399);
 		} catch (Exception e) {
 			return false;

@@ -27,7 +27,7 @@ public class VegetablesShopSteps {
 	Map<String, Integer> mapOfProducts;
 
 	@Before()
-	public void setUp() throws InterruptedException {
+	public void setUp()  {
 		DriverFactory.initDriver("chrome", 15);
 		driver = DriverFactory.getDriver();
 		wait = DriverFactory.getWait();

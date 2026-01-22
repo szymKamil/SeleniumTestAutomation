@@ -7,10 +7,19 @@ import java.util.function.Supplier;
 public class GenerateRandomText extends Utils{
 
 
+    /**
+     * Domyśla metoda generująca tekst na 60 znaków.
+     * @return Zwraca losowy tekst 60-znakowy.
+     */
     public static String randomGeneratedText() {
         return randomGeneratedText(60);
     }
 
+    /**
+     * Metoda generująca tekst od długości przekazanej w parametrze.
+     * @param textSize długość stringa do wygenerowania (w formie int).
+     * @return Zwraca losowy o długości wskazanej w parametrze.
+     */
     public static String randomGeneratedText(int textSize) {
         Random random = new Random(2);
         ArrayList<Character> randomTextInput = new ArrayList<>();
