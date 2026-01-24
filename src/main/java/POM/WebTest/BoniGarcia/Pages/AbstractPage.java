@@ -7,11 +7,15 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import javax.swing.text.html.Option;
+
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 
 /***
- * Klasa zawierająca abstrakcyjne elementy, występujące na każdej ze stron testowych Boni Garciego.
+ * Klasa bazowa, zbierająca abstrakcyjne elementy, występujące na każdej ze stron testowych.
  */
 public class AbstractPage {
 
@@ -41,17 +45,26 @@ public class AbstractPage {
 
 
     public void verifyCopyrights() {
-        assertThat(getCopySpan().getText()).contains(COPYRIGHTS);
+        Optional.of(getCopySpan()).map(WebElement::getText)
+                .ifPresent(text -> assertThat(text).contains(COPYRIGHTS));
     }
 
     public void verifyMainHeader() {
         WebElement header = getMainHeader();
-        assertThat(header.isDisplayed()).isTrue();
-        assertThat(header.getText()).isEqualTo(AbstractPage.PAGE_TITLE);
+        if (header != null) {
+            assertThat(header.isDisplayed()).isTrue();
+            assertThat(header.getText()).isEqualTo(AbstractPage.PAGE_TITLE);
+        }
     }
 
     public void verifyImage() {
-        assertThat(getImage().isDisplayed()).isTrue();
+        var image = getImage();
+        assertThat(image)
+                .withFailMessage("Nie znaleziono obrazu na stronie!")
+                .isNotNull();
+        assertThat(image.isDisplayed())
+                .withFailMessage("Obraz jest niewidoczny na stronie!")
+                .isTrue();
     }
 
     // Gettery
@@ -67,7 +80,5 @@ public class AbstractPage {
     private WebElement getCopySpan() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(COPYRIGHTS_SELECTOR));
     }
-
-
 
 }

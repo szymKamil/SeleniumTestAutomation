@@ -7,7 +7,7 @@ public enum DropdownOptions {
     OPTION_D("Los Angeles"),
     OPTION_E("Chicago");
 
-    private String value;
+    private final String value;
 
     DropdownOptions(String value) {
         this.value = value;

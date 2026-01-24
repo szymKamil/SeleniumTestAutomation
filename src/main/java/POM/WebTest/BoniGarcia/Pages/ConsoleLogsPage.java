@@ -1,21 +1,21 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
+import org.apache.commons.exec.ExecuteException;
 import org.openqa.selenium.JavascriptException;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.bidi.BiDi;
 import org.openqa.selenium.bidi.HasBiDi;
 import org.openqa.selenium.bidi.log.*;
 import org.openqa.selenium.bidi.log.Log;
-import org.openqa.selenium.bidi.script.ExceptionDetails;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
 import org.openqa.selenium.devtools.events.ConsoleEvent;
 import org.openqa.selenium.support.PageFactory;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import java.util.Objects;
 import java.util.concurrent.*;
 
 public class ConsoleLogsPage extends AbstractPage {
@@ -31,19 +31,21 @@ public class ConsoleLogsPage extends AbstractPage {
 	Logger log = LoggerFactory.getLogger(ConsoleLogsPage.class);
 	BiDi biDi;
 
-	public ConsoleLogsPage(WebDriver driver, WebDriverWait wait) {
+	public ConsoleLogsPage() {
 		super();
-		PageFactory.initElements(driver, this);
-		if (driver instanceof HasDevTools hasDevTools) {
-			devTools = hasDevTools.getDevTools();
-			log.info("Uruchamiamy nasłuchiwanie w DevTools");
-		} else if (driver instanceof HasBiDi hasBiDi) {
-			biDi = hasBiDi.getBiDi();
-			log.info("Uruchamiamy nasłuchiwanie w BiDi");
-		} else {
-			log.error("Test nie może zostać uruchomiony, driver nie obsługuje narzędzi nasłuchujących logów.");
+		PageFactory.initElements(DriverFactory.getDriver(), this);
+		switch (driver) {
+			case HasDevTools hasDevTools -> {
+				devTools = hasDevTools.getDevTools();
+				log.info("Uruchamiamy nasłuchiwanie w DevTools");
+			}
+			case HasBiDi hasBiDi -> {
+				biDi = hasBiDi.getBiDi();
+				log.info("Uruchamiamy nasłuchiwanie w BiDi");
+			}
+			default ->
+					log.error("Test nie może zostać uruchomiony, driver nie obsługuje narzędzi nasłuchujących logów.");
 		}
-
 	}
 
 	//Metody testowe
@@ -69,7 +71,7 @@ public class ConsoleLogsPage extends AbstractPage {
 			devTools.getDomains()
 					.events()
 					.addJavascriptExceptionListener(e -> {
-						if (!e.getMessage()
+						if (!Objects.requireNonNull(e.getMessage())
 								.isEmpty()) {
 							javascriptExceptions.add(e);
 							log.info("{}", e.getMessage());
@@ -110,8 +112,8 @@ public class ConsoleLogsPage extends AbstractPage {
 						.getCause(), jsEvent.get()
 						.getStackTrace());
 			}
-		} catch (Exception e) {
-			log.info("CompletableFuture nie złapało żadnego z logów.");
+		} catch (InterruptedException | ExecutionException e) {
+			log.error("CompletableFuture nie złapało żadnego z logów.");
 		}
 
 		logIterator(consoleEventList);
@@ -124,24 +126,23 @@ public class ConsoleLogsPage extends AbstractPage {
 	void logIterator(CopyOnWriteArrayList<?> logArray) {
 		try {
 			for (Object browserLog : logArray) {
-				if (browserLog instanceof LogEntry entry) {
-					log.info("Log z konsoli: {}, typ: {}, metoda: {}", entry.getConsoleLogEntry()
+				switch (browserLog) {
+					case LogEntry entry -> log.info("Log z konsoli: {}, typ: {}, metoda: {}", entry.getConsoleLogEntry()
 							.get()
 							.getText(), entry.getConsoleLogEntry()
 							.get()
 							.getType(), entry.getConsoleLogEntry()
 							.get()
 							.getMethod());
-				} else if (browserLog instanceof ConsoleEvent event) {
-					log.info("W teście znaleziono następujące błędy z konsoli: {}, {}, {}", event.getMessages(), event.getType(), event.getTimestamp());
-				} else if (browserLog instanceof JavascriptException exception) {
-					log.info("Log z konsoli JS: {}", exception.getMessage());
-				} else {
-					log.info("Nie znaleziono logów.");
+					case ConsoleEvent event ->
+							log.info("W teście znaleziono następujące błędy z konsoli: {}, {}, {}", event.getMessages(), event.getType(), event.getTimestamp());
+					case JavascriptException exception -> log.info("Log z konsoli JS: {}", exception.getMessage());
+					default -> log.info("Nie znaleziono logów.");
 				}
 			}
-		} catch (Exception e){
-			log.info("Nie znaleziono logów w tablicy {}", logArray.getClass().getSimpleName());
+		} catch (Exception e) {
+			log.info("Nie znaleziono logów w tablicy {}", logArray.getClass()
+					.getSimpleName());
 		}
 	}
 }

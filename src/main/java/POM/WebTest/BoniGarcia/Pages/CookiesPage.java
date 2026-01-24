@@ -1,14 +1,13 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
 import POM.WebTest.BoniGarcia.Utils.CookieEntry;
 import org.openqa.selenium.Cookie;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -17,9 +16,9 @@ public class CookiesPage extends AbstractPage{
     Logger log = LoggerFactory.getLogger(CookiesPage.class);
     Actions actions;
 
-    public CookiesPage(WebDriver driver, WebDriverWait wait) {
+    public CookiesPage() {
         super();
-        PageFactory.initElements(driver, this);
+        PageFactory.initElements(DriverFactory.getDriver(), this);
         actions = new Actions(driver);
     }
 
@@ -52,7 +51,12 @@ public class CookiesPage extends AbstractPage{
     }
 
     public void refreshCookiesBtn(){
-        wait.until(ExpectedConditions.elementToBeClickable(refreshCookiesBtn)).click();
+            var element = wait.until(ExpectedConditions.elementToBeClickable(refreshCookiesBtn));
+            if (element != null){
+                element.click();
+            } else {
+                log.error("Nie mona odnaleźć przycisku {}", element);
+        }
     }
 
     public String getCookiesText(){

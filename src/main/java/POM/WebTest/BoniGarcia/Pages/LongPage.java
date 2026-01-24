@@ -9,11 +9,14 @@ import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 public class LongPage extends AbstractPage{
 
@@ -55,9 +58,16 @@ public class LongPage extends AbstractPage{
 
     public void scrollToLastParagraph(){
         WebDriver webDriver = DriverFactory.getDriver();
-        WebElement lastParagraph = webDriver.findElement(By.cssSelector("p:last-of-type"));
+        FluentWait<WebDriver> fluentWait = new FluentWait<>(DriverFactory.getDriver()).ignoring(NoSuchElementException.class).pollingEvery(Duration.ofSeconds(1)).withTimeout(Duration.ofSeconds(15));
+        WebElement lastParagraph = fluentWait.until(driver -> {
+           var el = driver.findElement(By.cssSelector("p:last-of-type"));
+           if (el.isDisplayed()){
+               return el;
+           } else {
+               return null;
+           }
+        });
         wait.until(ExpectedConditions.visibilityOf(lastParagraph));
-        //actions.scrollToElement(driver.findElement(lastParagraph)).perform();
         JavaScriptUtils.scrollToElementJS(webDriver, lastParagraph);
     }
 

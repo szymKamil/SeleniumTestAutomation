@@ -1,7 +1,10 @@
 package Base.BiDi;
 
+import Base.Drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.bidi.HasBiDi;
+import org.openqa.selenium.bidi.emulation.GeolocationCoordinates;
+import org.openqa.selenium.bidi.emulation.SetGeolocationOverrideParameters;
 import org.openqa.selenium.bidi.log.*;
 
 import java.util.List;
@@ -16,6 +19,7 @@ public class BiDiFactory {
 
 	private final Queue<ConsoleLogEntry> consoleLogEntries = new ConcurrentLinkedQueue<>();
 	private final Queue<JavascriptLogEntry> javascriptLogEntries = new ConcurrentLinkedQueue<>();
+
 
 	public  void bidiStartLogging(WebDriver driver){
 		if (driver instanceof HasBiDi biDi) {
@@ -37,4 +41,17 @@ public class BiDiFactory {
 	public Map<String, String> snapshotJSLogs() {
 			return javascriptLogEntries.stream().collect(Collectors.toMap(JavascriptLogEntry::getType, BaseLogEntry::getText,  (existing, replacement) -> existing));
 	}
+
+
+	/* TODO:
+	if (bidi != null) {
+		var contextDriver = DriverFactory.getDriver();
+		String userContextId = "default";
+		org.openqa.selenium.bidi.emulation.Emulation emulation = new org.openqa.selenium.bidi.emulation.Emulation(contextDriver);
+		GeolocationCoordinates coordinates = new GeolocationCoordinates(latitude, longitude);
+		SetGeolocationOverrideParameters params = new SetGeolocationOverrideParameters(coordinates)
+				.userContexts(List.of(userContextId));
+		emulation.setGeolocationOverride(params);
+		*/
+
 }

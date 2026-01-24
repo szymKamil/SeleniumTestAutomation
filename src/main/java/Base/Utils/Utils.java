@@ -1,11 +1,10 @@
 package Base.Utils;
 
-import Base.Drivers.DriverFactory;
-import org.openqa.selenium.WebDriver;
 
+import org.openqa.selenium.WebDriver;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
+
 
 public class Utils {
 
@@ -18,7 +17,7 @@ public class Utils {
     }
 
     public static String getCurrentDate(){
-        var format =DateTimeFormatter.ofPattern("yyyy-MM-dd--HH:mm:ss");
+        var format =DateTimeFormatter.ofPattern("yyyy-MM-dd--HH_mm_ss");
         return LocalDateTime.now().format(format);
     }
 

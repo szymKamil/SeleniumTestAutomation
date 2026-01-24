@@ -159,6 +159,8 @@ public final class DriverFactory {
 			if (!pref.isEmpty()) {
 				chromeOptions.setExperimentalOption("prefs", pref);
 				chromeOptions.enableBiDi();
+				//Zostawiam jako pojedyńczy wpis, gdy dojdzie więcej ustawień przeniosę do osobnego pliku
+				chromeOptions.setCapability("unhandledPromptBehavior", "ignore");
 			}
 		} else if (options instanceof EdgeOptions edgeOptions) {
 			edgeOptions.addArguments(argumentsList);
@@ -166,6 +168,8 @@ public final class DriverFactory {
 			if (!pref.isEmpty()) {
 				edgeOptions.setExperimentalOption("prefs", pref);
 				edgeOptions.enableBiDi();
+				edgeOptions.setCapability("unhandledPromptBehavior", "ignore");
+				
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);

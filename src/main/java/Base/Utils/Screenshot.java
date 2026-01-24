@@ -1,7 +1,6 @@
 package Base.Utils;
 
 import Base.Drivers.DriverFactory;
-import POM.WebTest.BoniGarcia.Utils.TimeStampGenerator;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;

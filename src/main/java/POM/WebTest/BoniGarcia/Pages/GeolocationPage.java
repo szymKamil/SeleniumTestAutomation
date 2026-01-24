@@ -1,5 +1,6 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.DevTools.DevToolsFactory;
 import Base.Drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -9,28 +10,27 @@ import org.openqa.selenium.bidi.emulation.GeolocationCoordinates;
 import org.openqa.selenium.bidi.emulation.SetGeolocationOverrideParameters;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
-import org.openqa.selenium.devtools.v142.emulation.Emulation;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import java.util.List;
-import java.util.Optional;
+
 
 public class GeolocationPage extends AbstractPage {
 
 
+    private static final Logger log = LoggerFactory.getLogger(GeolocationPage.class);
     Actions actions;
-    DevTools devTools;
     BiDi bidi;
+    DevTools devtools;
 
-    public GeolocationPage(WebDriver driver, WebDriverWait wait) {
+    public GeolocationPage() {
         super();
         PageFactory.initElements(driver, this);
         actions = new Actions(driver);
-        //devTools = ((HasDevTools) driver).getDevTools();
     }
 
     //Elementy strony
@@ -44,10 +44,12 @@ public class GeolocationPage extends AbstractPage {
     //Metody testowe
     public void setDevToolsOrBidi(){
         WebDriver instancedDriver = DriverFactory.getDriver();
-        if (instancedDriver instanceof HasDevTools instance){
-            devTools = instance.getDevTools();
-        } else if (instancedDriver instanceof HasBiDi instance) {
-            bidi = instance.getBiDi();
+        if (instancedDriver instanceof HasDevTools){
+            log.info("DevTools");
+            devtools = DevToolsFactory.createSession(DriverFactory.getDriver());
+        } else if (instancedDriver instanceof HasBiDi hasBiDi) {
+            log.info("Bidi");
+            bidi = hasBiDi.getBiDi();
         }
     }
 
@@ -61,15 +63,9 @@ public class GeolocationPage extends AbstractPage {
     }
 
 
-    public void setCoordinates(double latitude, double longitude, int accuracy, int altitude, int altitudeAccuracy, int heading, int speed){
-        if (devTools != null) {
-            devTools.createSession();
-            devTools.send(Emulation.setGeolocationOverride(Optional.of(latitude), Optional.of(longitude),
-                    Optional.of(accuracy),
-                    Optional.of(altitude),
-                    Optional.of(altitudeAccuracy),
-                    Optional.of(heading),
-                    Optional.of(speed)));
+    public void setCoordinates(double latitude, double longitude, int accuracy, int altitude, int altitudeAccuracy, int heading, int speed) {
+        if (devtools != null) {
+            DevToolsFactory.setCoordinates(latitude, longitude, accuracy, altitude, altitudeAccuracy, heading, speed);
         } else if (bidi != null) {
             var contextDriver = DriverFactory.getDriver();
             String userContextId = "default";
@@ -79,8 +75,8 @@ public class GeolocationPage extends AbstractPage {
                     .userContexts(List.of(userContextId));
             emulation.setGeolocationOverride(params);
         }
-
     }
+
 
     public  String returnCoordinates(){
         String coordinates = coordinatesParagraph.getText();

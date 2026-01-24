@@ -1,15 +1,14 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
 import net.datafaker.Faker;
 import net.datafaker.providers.base.Company;
 import net.datafaker.providers.base.Job;
 import net.datafaker.providers.base.PhoneNumber;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -20,9 +19,9 @@ public class DataTypesPage extends AbstractPage{
 
     Faker faker;
 
-    public DataTypesPage(WebDriver driver, WebDriverWait wait) {
+    public DataTypesPage() {
         super();
-        PageFactory.initElements(driver, this);
+        PageFactory.initElements(DriverFactory.getDriver(), this);
         faker = new Faker();
     }
 
@@ -60,15 +59,15 @@ public class DataTypesPage extends AbstractPage{
     @FindBy(css = "button[type=submit]")
     WebElement submitBtn;
 
-    final String ATTRIBUTE = "class";
-    final String VALUE = "alert-success";
+    static final String ATTRIBUTE = "class";
+    static final String VALUE = "alert-success";
 
 
     //Metody testowe
     //Pobieramy wartości z metody, umieszczamy je w polach na stronie i weryfikujemy, czy zostały one poprawnie wpisane
     public void insertDataToForm(Optional<String> firstName, Optional<String> lastName, Optional<String> address, Optional<String> zipCode,
                                  Optional<String> city, Optional<String> country, Optional<String> email, Optional<PhoneNumber> phone, Optional<Job> job,
-                                 Optional<Company> company ){
+                                 Optional<Company> company){
         wait.until(ExpectedConditions.visibilityOf(inputFirstName)).sendKeys(firstName.orElse("Jan"));
         assertThat(inputFirstName.getDomProperty("value")).isEqualTo(firstName.get());
         wait.until(ExpectedConditions.visibilityOf(inputLastName)).sendKeys(lastName.orElse("Nowak"));
@@ -113,10 +112,6 @@ public class DataTypesPage extends AbstractPage{
         wait.until(ExpectedConditions.attributeContains(inputPhone, ATTRIBUTE, VALUE));
         wait.until(ExpectedConditions.attributeContains(inputJob, ATTRIBUTE, VALUE));
         wait.until(ExpectedConditions.attributeContains(inputCompany, ATTRIBUTE, VALUE));
-
     }
-
-
-
 
 }

@@ -19,7 +19,7 @@ public class FileDownloadUtils {
 	 * b) w przypadku innego systemu, np. Linux, przyjmowane jest zdalne uruchomienie kontenerowe w Dokerze, przez co konfigurowany jest domyślny katalog pobierania,.
 	 * W przypadku nieznalezienia katalogu jest on tworzony.
 	 */
-	public static Path getDownloadDirectory(){
+	public static Path getDownloadDirectory() throws IOException {
 		boolean localTest = Utils.testIsInLocalEnv();
 		Path dir;
 		if (localTest) {
@@ -28,8 +28,8 @@ public class FileDownloadUtils {
 				if (!Files.exists(dir)) {
 					Files.createDirectories(dir);
 				}
-			} catch (Exception e) {
-				throw new RuntimeException("Błąd przy tworzeniu folderu " + e.getMessage());
+			} catch (IOException e) {
+				throw new IOException("Błąd przy tworzeniu folderu " + e.getMessage());
 			}
 		} else {
 			dir = Path.of("/home/seluser/Downloads/");

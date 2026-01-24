@@ -1,5 +1,6 @@
 package Selenium.BoniGarcia;
 
+import Base.DevTools.DevToolsFactory;
 import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.Screenshot;
@@ -182,7 +183,7 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Draw in canvas");
-		CanvasPage canvasPage = new CanvasPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		CanvasPage canvasPage = new CanvasPage();
 		canvasPage.verifyAbstractPage();
 		canvasPage.paintInCanvas();
 		canvasPage.paintInCanvas(new PointForCanvas(50, 20), new PointForCanvas(30, 10), new PointForCanvas(-20, -15));
@@ -312,16 +313,18 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Cookies");
-		CookiesPage cookiesPage = new CookiesPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		CookiesPage cookiesPage = new CookiesPage();
 		cookiesPage.verifyAbstractPage();
 		cookiesPage.refreshCookiesBtn();
-		cookiesPage.getCookiesText();
+		var cookiesText = cookiesPage.getCookiesText();
+		log.info("Tekst z 1 ciasteczka {}", cookiesText);
 		cookiesPage.deleteAllCookies();
 		cookiesPage.addCookie("Username", "RobertZamojski");
 		cookiesPage.addCookie("data", LocalDateTime.now()
 				.format(DateTimeFormatter.ISO_DATE));
 		cookiesPage.refreshCookiesBtn();
-		cookiesPage.getCookiesText();
+		cookiesText = cookiesPage.getCookiesText();
+		log.info("Tekst z 2 ciasteczka {}", cookiesText);
 	}
 
 	/**
@@ -446,7 +449,7 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Geolocation");
-		GeolocationPage geolocationPage = new GeolocationPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		GeolocationPage geolocationPage = new GeolocationPage();
 		geolocationPage.verifyAbstractPage();
 		geolocationPage.setDevToolsOrBidi();
 		geolocationPage.setCoordinates(4.323, 4.53);
@@ -524,7 +527,7 @@ public class MainTest extends BaseTest {
 
 	/**
 	 *Test ma na celu uruchomienie przeglądarki i uruchomienie nasłuchiwania logów, przejście do głównej strony,
-	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Console logs, i wydrukowanie logówz konsoli.
+	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Console logs, i wydrukowanie logów z konsoli.
 	 */
 	@Epic("Boni Garcia WebPageTest")
 	@Story("Console test")
@@ -533,7 +536,7 @@ public class MainTest extends BaseTest {
 	@Owner("Kamil")
 	@Test(groups = {"devTools, interface"}, priority = 1)
 	public void consoleLogsTest() {
-		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		ConsoleLogsPage consoleLogsPage = new ConsoleLogsPage();
 		consoleLogsPage.startListening();
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
@@ -611,10 +614,10 @@ public class MainTest extends BaseTest {
 		for (int i = 1; i < 10; i++) {
 			randomCalculator.setPercentOfCorrectResults("15");
 			String result = randomCalculator.calculate("2+2=");
-			log.info("Wynik działania uruchomienia numer {} to: {}", i, result);
-			randomCalculator.setPercentOfCorrectResults("99");
+			log.info("Wynik działania uruchomienia numer {} przy 15% poprawności to: {}", i, result);
+			randomCalculator.setPercentOfCorrectResults("95");
 			result = randomCalculator.calculate("2+2=");
-			log.info("Wynik działania uruchomienia numer {} to: {}", i, result);
+			log.info("Wynik działania uruchomienia numer {} przy 95% poprawności to: {}", i, result);
 		}
 	}
 
@@ -660,7 +663,7 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("A/B Testing");
-		ABTestingPage abTestingPage = new ABTestingPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		ABTestingPage abTestingPage = new ABTestingPage();
 		abTestingPage.verifyAbstractPage();
 		abTestingPage.verifyTypeOfVariation();
 	}
@@ -680,7 +683,7 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Data types");
-		DataTypesPage dataTypesPage = new DataTypesPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		DataTypesPage dataTypesPage = new DataTypesPage();
 		dataTypesPage.verifyAbstractPage();
 		dataTypesPage.insertDataToForm();
 		dataTypesPage.submitForm();
