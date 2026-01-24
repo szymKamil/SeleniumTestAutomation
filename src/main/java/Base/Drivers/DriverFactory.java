@@ -1,13 +1,10 @@
 package Base.Drivers;
 
 import Base.Listeners.TestStepsListener;
-import org.openqa.selenium.PageLoadStrategy;
-import org.openqa.selenium.UnexpectedAlertBehaviour;
-import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.*;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.support.events.WebDriverListener;
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.edge.EdgeDriver;
@@ -132,7 +129,8 @@ public final class DriverFactory {
 		} catch (IOException e) {
 			logger.error("Błąd podczas wczytywania danych z pliku: {}", e.getMessage());
 		}
-		logger.info("Uruchamiam testy z następującymi ustawieniami: {}",  options.asMap());
+
+		logger.info("Uruchamiam testy z następującymi ustawieniami: {}", options.asMap());
 		return options;
 	}
 
@@ -169,7 +167,7 @@ public final class DriverFactory {
 				edgeOptions.setExperimentalOption("prefs", pref);
 				edgeOptions.enableBiDi();
 				edgeOptions.setCapability("unhandledPromptBehavior", "ignore");
-				
+
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);

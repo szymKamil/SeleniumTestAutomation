@@ -2,21 +2,30 @@ package POM.WebTest.BoniGarcia.Pages;
 
 import Base.DevTools.DevToolsFactory;
 import Base.Drivers.DriverFactory;
+import org.openqa.selenium.HasCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.bidi.BiDi;
+import org.openqa.selenium.bidi.Command;
 import org.openqa.selenium.bidi.HasBiDi;
 import org.openqa.selenium.bidi.emulation.GeolocationCoordinates;
 import org.openqa.selenium.bidi.emulation.SetGeolocationOverrideParameters;
 import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.devtools.HasDevTools;
+import org.openqa.selenium.devtools.v142.browser.Browser;
+import org.openqa.selenium.devtools.v142.browser.model.PermissionType;
+import org.openqa.selenium.devtools.v142.emulation.Emulation;
+import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 public class GeolocationPage extends AbstractPage {
@@ -45,10 +54,8 @@ public class GeolocationPage extends AbstractPage {
     public void setDevToolsOrBidi(){
         WebDriver instancedDriver = DriverFactory.getDriver();
         if (instancedDriver instanceof HasDevTools){
-            log.info("DevTools");
             devtools = DevToolsFactory.createSession(DriverFactory.getDriver());
         } else if (instancedDriver instanceof HasBiDi hasBiDi) {
-            log.info("Bidi");
             bidi = hasBiDi.getBiDi();
         }
     }
@@ -59,7 +66,18 @@ public class GeolocationPage extends AbstractPage {
     }
 
     public void setCoordinates(double latitude, double longitude){
+        String browserName = ((HasCapabilities) driver).getCapabilities().getBrowserName().toLowerCase();
+        //Driver może być opakowany, stąd ten sposób
+        if (browserName.contains("edge") || browserName.contains("msedge")) {
+            ArrayList<PermissionType> permissions = new ArrayList<>(List.of(PermissionType.GEOLOCATION));
+            devtools.send(Browser.grantPermissions(
+                    permissions,
+                    Optional.empty(),
+                    Optional.empty()
+            ));
+        }
         setCoordinates(latitude, longitude, 1, 0, 0, 0, 0);
+
     }
 
 
