@@ -27,8 +27,9 @@ pipeline {
             steps {
                 script {
                     // Sprawdzamy czy Grid żyje, zanim pobierzemy kod
+                    def response
                     try {
-                        def response = sh(script: "docker exec jenkins curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
+                        response = sh(script: "docker exec jenkins curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
                     } catch (Exception e){
                         echo 'Błąd podczas połączenia z selenium grid ' + e.message
                     }
