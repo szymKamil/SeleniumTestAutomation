@@ -89,7 +89,7 @@ public final class DriverFactory {
 
 	/**
 	 * Metoda dekorująca drivera klasami nasłuchującymi.
-	 * @param rawDriver "czysty" driver który ma zostać "udekorowany".
+	 * @param rawDriver "czysty" driver, który ma zostać "udekorowany".
 	 * @param listeners nasłuchiwacze, które mają zostać dodane. Dodajemy je kolejno po przecinku.
 	 * @return zwracany jest udekorowany WebDriver.
 	 */
@@ -156,9 +156,11 @@ public final class DriverFactory {
 			 var pref = getBrowserPreferences(options);
 			if (!pref.isEmpty()) {
 				chromeOptions.setExperimentalOption("prefs", pref);
-				chromeOptions.enableBiDi();
 				//Zostawiam jako pojedyńczy wpis, gdy dojdzie więcej ustawień przeniosę do osobnego pliku
 				chromeOptions.setCapability("unhandledPromptBehavior", "ignore");
+				chromeOptions.enableBiDi();
+				chromeOptions.setCapability("se:downloadsEnabled", true);
+
 			}
 		} else if (options instanceof EdgeOptions edgeOptions) {
 			edgeOptions.addArguments(argumentsList);
@@ -167,13 +169,13 @@ public final class DriverFactory {
 				edgeOptions.setExperimentalOption("prefs", pref);
 				edgeOptions.enableBiDi();
 				edgeOptions.setCapability("unhandledPromptBehavior", "ignore");
-
+				edgeOptions.setCapability("se:downloadsEnabled", true);
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);
 			firefoxOptions.enableBiDi();
 			iterateMap(getBrowserPreferences(options), firefoxOptions::addPreference);
-
+			firefoxOptions.setCapability("se:downloadsEnabled", true);
 		}
 	}
 

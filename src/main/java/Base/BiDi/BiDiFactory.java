@@ -22,9 +22,9 @@ public class BiDiFactory {
 
 
 	public  void bidiStartLogging(WebDriver driver){
-		/*if (driver instanceof HasBiDi biDi) {
+		if (driver instanceof HasBiDi biDi) {
 			biDi.getBiDi().addListener(Log.entryAdded(), this::handleLogs);
-		}*/
+		}
 	}
 
 	private void handleLogs(LogEntry logEntry){
