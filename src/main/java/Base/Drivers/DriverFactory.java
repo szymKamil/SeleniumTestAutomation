@@ -20,6 +20,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.net.*;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
@@ -157,9 +158,7 @@ public final class DriverFactory {
 			if (!pref.isEmpty()) {
 				chromeOptions.setExperimentalOption("prefs", pref);
 				//Zostawiam jako pojedyńczy wpis, gdy dojdzie więcej ustawień przeniosę do osobnego pliku
-				chromeOptions.setCapability("unhandledPromptBehavior", "ignore");
 				chromeOptions.enableBiDi();
-				chromeOptions.setCapability("se:downloadsEnabled", true);
 
 			}
 		} else if (options instanceof EdgeOptions edgeOptions) {
@@ -168,14 +167,12 @@ public final class DriverFactory {
 			if (!pref.isEmpty()) {
 				edgeOptions.setExperimentalOption("prefs", pref);
 				edgeOptions.enableBiDi();
-				edgeOptions.setCapability("unhandledPromptBehavior", "ignore");
-				edgeOptions.setCapability("se:downloadsEnabled", true);
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);
 			firefoxOptions.enableBiDi();
 			iterateMap(getBrowserPreferences(options), firefoxOptions::addPreference);
-			firefoxOptions.setCapability("se:downloadsEnabled", true);
+
 		}
 	}
 
@@ -193,11 +190,7 @@ public final class DriverFactory {
 				}
 				String[] optionSplit = prefLine.split("=", 2);
 				if (optionSplit[1] != null) {
-					try {
-						prefs.put(optionSplit[0].trim(), Integer.valueOf(optionSplit[1].trim()));
-					} catch (NumberFormatException e) {
-						prefs.put(optionSplit[0].trim(), optionSplit[1].trim());
-					}
+					prefs.put(optionSplit[0].trim(), parseValue(optionSplit[1]));
 				}
 			}
 		} catch (FileNotFoundException e) {
@@ -205,6 +198,24 @@ public final class DriverFactory {
 		}
 		return prefs;
 	}
+
+	private static Object parseValue(String raw) {
+		String v = raw.trim();
+
+		if ("true".equalsIgnoreCase(v)) return true;
+		if ("false".equalsIgnoreCase(v)) return false;
+
+		try {
+			return Integer.parseInt(v);
+		} catch (NumberFormatException ignored) {}
+
+		try {
+			return Double.parseDouble(v);
+		} catch (NumberFormatException ignored) {}
+
+		return v;
+	}
+
 
 	static void iterateMap(Map<String, Object> map, BiConsumer<String, Object> consumer){
 		for (Map.Entry<String, Object> entry : map.entrySet()){
