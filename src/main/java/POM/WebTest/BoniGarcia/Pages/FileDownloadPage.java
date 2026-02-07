@@ -80,7 +80,8 @@ public class FileDownloadPage extends AbstractPage {
 		} else if (driver instanceof RemoteWebDriver remoteWebDriver && !Utils.testIsInLocalEnv()) {
 			var dir = FileDownloadUtils.getDownloadDirectory();
 			remoteWebDriver.downloadFile("webdrivermanager.png", dir);
-			Assert.assertTrue(Files.exists(dir));
+			Path file = dir.resolve("webdrivermanager.png");
+			Assert.assertTrue(Files.exists(file));
 		} else if (Utils.testIsInLocalEnv()) {
 			log.info("Test uruchomiony lokalnie.");
 			var downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
