@@ -67,7 +67,7 @@ public class LoginFormPage extends AbstractPage{
 
     }
     public void verifySuccessLogin(){
-        wait.until(PageLoadedVerification.pageIsLoaded());
+        wait.until(ExpectedConditions.urlContains(LOGGED_SUCESS_URL));
         assertThat(driver.getCurrentUrl()).contains(LOGGED_SUCESS_URL);
         assertThat(loginSucessDiv.getText()).isEqualTo("Login successful");
     }
