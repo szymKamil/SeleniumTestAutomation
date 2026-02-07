@@ -1,6 +1,5 @@
 package Selenium.BoniGarcia;
 
-import Base.DevTools.DevToolsFactory;
 import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.Screenshot;
@@ -612,12 +611,12 @@ public class MainTest extends BaseTest {
 		randomCalculator.verifyAbstractPage();
 		randomCalculator.setCorrectTimesToRun("20");
 		for (int i = 1; i < 10; i++) {
-			randomCalculator.setPercentOfCorrectResults("15");
+			randomCalculator.setPercentOfIncorrectResults("15");
 			String result = randomCalculator.calculate("2+2=");
-			log.info("Wynik działania uruchomienia numer {} przy 15% poprawności to: {}", i, result);
-			randomCalculator.setPercentOfCorrectResults("95");
+			log.info("Wynik działania uruchomienia numer {} przy 85% poprawności to: {}", i, result);
+			randomCalculator.setPercentOfIncorrectResults("95");
 			result = randomCalculator.calculate("2+2=");
-			log.info("Wynik działania uruchomienia numer {} przy 95% poprawności to: {}", i, result);
+			log.info("Wynik działania uruchomienia numer {} przy 5% poprawności to: {}", i, result);
 		}
 	}
 

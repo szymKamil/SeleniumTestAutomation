@@ -33,7 +33,7 @@ public class RandomCalculatorPage extends AbstractPage{
 
 
     //Metody testowe
-    public void setPercentOfCorrectResults(String setPercent){
+    public void setPercentOfIncorrectResults(String setPercent){
         wait.until(ExpectedConditions.elementToBeClickable(percentInput)).clear();
         percentInput.sendKeys(setPercent);
     }

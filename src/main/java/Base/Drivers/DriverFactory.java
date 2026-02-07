@@ -17,10 +17,8 @@ import org.openqa.selenium.support.events.EventFiringDecorator;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
 import java.io.*;
 import java.net.*;
-import java.nio.charset.StandardCharsets;
 import java.nio.file.Path;
 import java.time.Duration;
 import java.util.*;
@@ -31,7 +29,7 @@ import static Base.Utils.FileDownloadUtils.getDownloadDirectory;
 public final class DriverFactory {
 	private static final ThreadLocal<WebDriver> DRIVER_THREAD = new ThreadLocal<>();
 	private static final ThreadLocal<WebDriverWait> WAIT_THREAD = new ThreadLocal<>();
-	public static Logger logger = LoggerFactory.getLogger(DriverFactory.class);
+	public static final Logger logger = LoggerFactory.getLogger("Selenium test");
 
 	//Na wszelki wypadek, by nikt nie tworzył konstruktora
 	private DriverFactory() {
@@ -136,7 +134,6 @@ public final class DriverFactory {
 	}
 
 	private static Path getSettingsFilePath(AbstractDriverOptions<?> options, String arg) throws NoSuchFieldException {
-		logger.info("Uruchamiam pobranie pliku");
 		if ((options instanceof ChromeOptions || options instanceof EdgeOptions) && arg.contains("arg")){
 			return Path.of("src/main/resources/argumentsChromeEdge.properties");
 		} else if ((options instanceof ChromeOptions || options instanceof EdgeOptions) && arg.contains("pref")){
@@ -159,7 +156,7 @@ public final class DriverFactory {
 				chromeOptions.setExperimentalOption("prefs", pref);
 				//Zostawiam jako pojedyńczy wpis, gdy dojdzie więcej ustawień przeniosę do osobnego pliku
 				chromeOptions.enableBiDi();
-
+				chromeOptions.setEnableDownloads(true);
 			}
 		} else if (options instanceof EdgeOptions edgeOptions) {
 			edgeOptions.addArguments(argumentsList);
@@ -167,22 +164,21 @@ public final class DriverFactory {
 			if (!pref.isEmpty()) {
 				edgeOptions.setExperimentalOption("prefs", pref);
 				edgeOptions.enableBiDi();
+				edgeOptions.setEnableDownloads(true);
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);
 			firefoxOptions.enableBiDi();
 			iterateMap(getBrowserPreferences(options), firefoxOptions::addPreference);
-
+			firefoxOptions.setEnableDownloads(true);
 		}
 	}
 
 	static Map<String, Object> getBrowserPreferences(AbstractDriverOptions<?> options) throws IOException, NoSuchFieldException {
 		Map<String, Object> prefs = new HashMap<>();
 		Path prefPath = getSettingsFilePath(options, "pref");
-		logger.info("Ścieżka do pliku z preferencjami to {}", prefPath);
 		try {
 			BufferedReader bufferedReader = new BufferedReader(new FileReader(prefPath.toFile()));
-			logger.info("Buffered reader: {}", bufferedReader);
 			String prefLine;
 			while ((prefLine = bufferedReader.readLine()) != null) {
 				if(prefLine.contains("${DownloadPath}")){
@@ -201,10 +197,8 @@ public final class DriverFactory {
 
 	private static Object parseValue(String raw) {
 		String v = raw.trim();
-
 		if ("true".equalsIgnoreCase(v)) return true;
 		if ("false".equalsIgnoreCase(v)) return false;
-
 		try {
 			return Integer.parseInt(v);
 		} catch (NumberFormatException ignored) {}
@@ -212,7 +206,6 @@ public final class DriverFactory {
 		try {
 			return Double.parseDouble(v);
 		} catch (NumberFormatException ignored) {}
-
 		return v;
 	}
 
