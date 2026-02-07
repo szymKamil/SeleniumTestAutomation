@@ -636,7 +636,7 @@ public class MainTest extends BaseTest {
 		MainPage mainPage = new MainPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		mainPage.openMainPage();
 		mainPage.goToSubPage("Download files");
-		FileDownloadPage fileDownloadPage = new FileDownloadPage(DriverFactory.getDriver(), DriverFactory.getWait());
+		FileDownloadPage fileDownloadPage = new FileDownloadPage();
 		fileDownloadPage.verifyAbstractPage();
 		try {
 			fileDownloadPage.downloadFile();

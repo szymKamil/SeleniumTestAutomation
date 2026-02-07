@@ -1,13 +1,20 @@
 package POM.WebTest.BoniGarcia.Pages;
 
+import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.Utils;
+import org.apache.maven.rtinfo.internal.DefaultRuntimeInformation;
 import org.openqa.selenium.HasDownloads;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.bidi.BiDi;
+import org.openqa.selenium.bidi.BiDiProvider;
+import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.FluentWait;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,7 +23,10 @@ import org.testng.Assert;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
+import java.time.Duration;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -25,6 +35,9 @@ import java.util.List;
 public class FileDownloadPage extends AbstractPage {
 
 	Logger log = LoggerFactory.getLogger(FileDownloadPage.class);
+	WebDriver driver = DriverFactory.getDriver();
+	FluentWait<WebDriver> fluentWait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(1))
+			.ignoring(NoSuchFileException.class);
 
 	//Elementy na stronie
 	@FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.png']")
@@ -36,7 +49,7 @@ public class FileDownloadPage extends AbstractPage {
 	@FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='selenium-jupiter.pdf']")
 	WebElement downloadWseleniumLogoPdfBtn;
 
-	public FileDownloadPage(WebDriver driver, WebDriverWait wait) {
+	public FileDownloadPage() {
 		super();
 		PageFactory.initElements(this.driver, this);
 	}
@@ -61,12 +74,19 @@ public class FileDownloadPage extends AbstractPage {
 		Path downloadFolder = FileDownloadUtils.getDownloadDirectory();
 		log.info("Ścieżka do przeszukania to: {}", downloadFolder);
 		if (driver instanceof HasDownloads downloader && !Utils.testIsInLocalEnv()) {
+			//TODO: Hardcodowana nazwa pliku, do udoskonalenia w przyszłości
 			log.info("Test uruchomiony zdalnie. Pobieram plik za pomocą (HasDownloads)");
 			downloader.downloadFile("webdrivermanager.png", Path.of("DownloadFolder"));
+		} else if (driver instanceof RemoteWebDriver remoteWebDriver && !Utils.testIsInLocalEnv()) {
+			var dir = FileDownloadUtils.getDownloadDirectory();
+			remoteWebDriver.downloadFile("webdrivermanager.png", dir);
+			Assert.assertTrue(Files.exists(dir));
 		} else if (Utils.testIsInLocalEnv()) {
 			log.info("Test uruchomiony lokalnie.");
 			var downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
 			Assert.assertNotNull(downloadedFile);
+		} else {
+			log.error("Problem z działaniem pobierania plików w teście!!!");
 		}
 	}
 
