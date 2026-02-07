@@ -157,6 +157,7 @@ public final class DriverFactory {
 				//Zostawiam jako pojedyńczy wpis, gdy dojdzie więcej ustawień przeniosę do osobnego pliku
 				chromeOptions.enableBiDi();
 				chromeOptions.setEnableDownloads(true);
+				chromeOptions.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
 			}
 		} else if (options instanceof EdgeOptions edgeOptions) {
 			edgeOptions.addArguments(argumentsList);
@@ -165,6 +166,7 @@ public final class DriverFactory {
 				edgeOptions.setExperimentalOption("prefs", pref);
 				edgeOptions.enableBiDi();
 				edgeOptions.setEnableDownloads(true);
+				edgeOptions.setUnhandledPromptBehaviour(UnexpectedAlertBehaviour.IGNORE);
 			}
 		} else if (options instanceof FirefoxOptions firefoxOptions) {
 			firefoxOptions.addArguments(argumentsList);

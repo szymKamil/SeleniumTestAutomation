@@ -15,7 +15,7 @@
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
 <!--                <methods>-->
-<!--                    <include name="downloadFileTest"/>-->
+<!--                    <include name="alertPageTest"/>-->
 <!--                </methods>-->
             </class>
         </classes>
@@ -29,7 +29,7 @@
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
 <!--                <methods>-->
-<!--                    <include name="downloadFileTest"/>-->
+<!--                    <include name="alertPageTest"/>-->
 <!--                </methods>-->
             </class>
         </classes>
@@ -38,12 +38,10 @@
         <parameter name="browser" value="edge"/>
         <parameter name="timeout" value="30"/>
         <parameter name="url" value="http://selenium-hub-env:4444"/>
-        <groups>
-        </groups>
         <classes>
             <class name="Selenium.BoniGarcia.MainTest">
 <!--                <methods>-->
-<!--                    <include name="downloadFileTest"/>-->
+<!--                    <include name="alertPageTest"/>-->
 <!--                </methods>-->
             </class>
         </classes>
