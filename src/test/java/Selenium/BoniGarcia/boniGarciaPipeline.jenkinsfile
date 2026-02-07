@@ -6,7 +6,7 @@ pipeline {
     }
 
     tools {
-        maven 'Maven' // nazwa z Manage Jenkins → Global Tool Configuration
+        maven 'Maven'
         jdk 'JDK'
     }
 
@@ -15,31 +15,8 @@ pipeline {
         skipDefaultCheckout()
     }
     stages {
-        stage('Debug Network') {
-            steps {
-                sh '''
-            echo "=== Test DNS z kontenera Jenkins ==="
-            docker exec jenkins ping -c 2 host.docker.internal || echo "host.docker.internal NIE DZIAŁA"
-            docker exec jenkins ping -c 2 selenium-hub-env || echo "selenium-hub-env NIE DZIAŁA"
-            docker exec jenkins curl -v http://selenium-hub-env:4444/wd/hub/status || echo "CURL FAIL"
-            
-            echo "=== Sieci Docker ==="
-            docker network ls
-            
-            echo "=== Jakie sieci ma Jenkins? ==="
-            docker inspect jenkins | grep -A 20 "Networks"
-            
-            echo "=== Jakie sieci ma Selenium Hub? ==="
-            docker inspect selenium-hub-env | grep -A 20 "Networks"
-        '''
-            }
-        }
-
-
-
         stage('Clean') {
             steps {
-                // Teraz to zadziała jako pierwsze i naprawi uszkodzony folder
                 echo "Czyszczenie przestrzeni roboczej..."
                 cleanWs()
             }
