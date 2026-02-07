@@ -6,6 +6,7 @@ import Base.Utils.Utils;
 import org.apache.maven.rtinfo.internal.DefaultRuntimeInformation;
 import org.openqa.selenium.HasDownloads;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.bidi.BiDi;
 import org.openqa.selenium.bidi.BiDiProvider;
@@ -30,6 +31,7 @@ import java.time.Duration;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Objects;
 
 
 public class FileDownloadPage extends AbstractPage {
@@ -58,9 +60,9 @@ public class FileDownloadPage extends AbstractPage {
 	public void downloadFile(int choseFileToDownload) throws IOException, InterruptedException {
 		int baseNumberOfFiles = 0;
 		if (Utils.testIsInLocalEnv()) {
-			baseNumberOfFiles = FileDownloadUtils.getDownloadDirectory()
+			baseNumberOfFiles = Objects.requireNonNull(FileDownloadUtils.getDownloadDirectory()
 					.toFile()
-					.listFiles().length;
+					.listFiles()).length;
 		}
 		if (choseFileToDownload >= 0 && choseFileToDownload <= 4) {
 			List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
@@ -78,10 +80,13 @@ public class FileDownloadPage extends AbstractPage {
 			log.info("Test uruchomiony zdalnie. Pobieram plik za pomocą (HasDownloads)");
 			downloader.downloadFile("webdrivermanager.png", Path.of("DownloadFolder"));
 		} else if (driver instanceof RemoteWebDriver remoteWebDriver && !Utils.testIsInLocalEnv()) {
-			var dir = FileDownloadUtils.getDownloadDirectory();
-			remoteWebDriver.downloadFile("webdrivermanager.png", dir);
-			Path file = dir.resolve("webdrivermanager.png");
-			Assert.assertTrue(Files.exists(file));
+			try {
+				remoteWebDriver.downloadFile("webdrivermanager.png", downloadFolder);
+				Path file = downloadFolder.resolve("webdrivermanager.png");
+				Assert.assertTrue(Files.exists(file));
+			} catch (WebDriverException e) {
+				waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
+			}
 		} else if (Utils.testIsInLocalEnv()) {
 			log.info("Test uruchomiony lokalnie.");
 			var downloadedFile = waitForDownloadedFile(downloadFolder.toFile(), 30, baseNumberOfFiles);
