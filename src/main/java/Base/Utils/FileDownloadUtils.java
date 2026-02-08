@@ -50,12 +50,7 @@ public class FileDownloadUtils {
 
 	public static void downloadFile(WebDriver driver) throws IOException, InterruptedException {
 		String fileName = "webdrivermanager.png";
-		Path downloadFolder;
-		if (driver instanceof HasDownloads) {
-			downloadFolder = Path.of("DownloadFolder").toAbsolutePath();
-		} else {
-			downloadFolder = FileDownloadUtils.getDownloadDirectory();
-		}
+		Path downloadFolder = getDownloadDirectory();
 		Path targetFile = downloadFolder.resolve(fileName);
 		logger.info("Ścieżka do przeszukania to: {}", downloadFolder);
 		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(1))
@@ -65,7 +60,7 @@ public class FileDownloadUtils {
 			wait.until(d -> {
 				try {
 					hasDownloads.downloadFile(fileName, downloadFolder);
-					return Files.exists(targetFile);
+					return Files.exists(downloadFolder.resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
 					return false;
@@ -78,7 +73,7 @@ public class FileDownloadUtils {
 			wait.until(d -> {
 				try {
 					remote.downloadFile(fileName, downloadFolder);
-					return Files.exists(targetFile);
+					return Files.exists(downloadFolder.resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
 					return false;
