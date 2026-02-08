@@ -639,7 +639,7 @@ public class MainTest extends BaseTest {
 		FileDownloadPage fileDownloadPage = new FileDownloadPage();
 		fileDownloadPage.verifyAbstractPage();
 		try {
-			fileDownloadPage.downloadFile();
+			fileDownloadPage.downloadFile(0);
 		} catch (InterruptedException | IOException e) {
 			throw new FileNotFoundException(e.getMessage());
 		}
