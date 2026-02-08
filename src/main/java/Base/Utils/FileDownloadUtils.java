@@ -43,7 +43,7 @@ public class FileDownloadUtils {
 				throw new IOException("Błąd przy tworzeniu folderu " + e.getMessage());
 			}
 		} else {
-			dir = Path.of("/home/seluser/Downloads/");
+			dir = Path.of(System.getProperty("user.dir"), "downloads");
 		}
 		logger.info("Katalog pobierania: {}", dir);
 		return dir;
@@ -61,12 +61,13 @@ public class FileDownloadUtils {
 				try {
 					Path targetFile = downloadFolder.resolve(fileName);
 					if (driver instanceof HasDownloads hasDownloads) {
-						hasDownloads.downloadFile(fileName, targetFile);
+						hasDownloads.downloadFile(fileName, downloadFolder);
 					} else if (driver instanceof RemoteWebDriver remote) {
-						remote.downloadFile(fileName, targetFile);
+						remote.downloadFile(fileName, downloadFolder);
 					}
 				} catch (IOException e) {
 					logger.warn("Retry download", e);
+					return false;
 				}
 				return Files.exists(downloadFolder.resolve(fileName));
 			});
@@ -81,37 +82,6 @@ public class FileDownloadUtils {
 			Assert.fail("Brak strategii downloadu");
 		}
 
-
-
-//		if (driver instanceof RemoteWebDriver remote && !Utils.testIsInLocalEnv()) {
-//			logger.info("Pobieram plik przez RemoteWebDriver");
-//			wait.until(d -> {
-//				try {
-//					remote.downloadFile(fileName, Path.of("DownloadFolder"));
-//					return Files.exists(downloadFolder.resolve(fileName));
-//				} catch (IOException e) {
-//					logger.warn("Download retry: {}", e.getMessage());
-//					return false;
-//				}
-//			});
-//			waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
-//			Assert.assertTrue(Files.exists(targetFile), "Plik nie został pobrany: " + targetFile);
-//			return;
-//		} else if (driver instanceof HasDownloads hasDownloads && !Utils.testIsInLocalEnv()) {
-//			logger.info("Pobieram plik przez HasDownloads");
-//			wait.until(d -> {
-//				try {
-//					hasDownloads.downloadFile(fileName, Path.of("DownloadFolder"));
-//					logger.info("Pobieranie pliku: {}, {}", fileName, downloadFolder);
-//					return Files.exists(Path.of("DownloadFolder").resolve(fileName));
-//				} catch (IOException e) {
-//					logger.warn("Download retry: {}", e.getMessage());
-//					return false;
-//				}
-//			});
-//			Assert.assertTrue(Files.exists(targetFile));
-//			return;
-//		}
 
 
 	public static int getNumOfFilesInDir() throws IOException {
