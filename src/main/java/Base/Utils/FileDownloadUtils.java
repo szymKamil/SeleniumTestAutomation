@@ -59,30 +59,29 @@ public class FileDownloadUtils {
 		if (!Utils.testIsInLocalEnv()) {
 			wait.until(d -> {
 				try {
-					Path targetFile = downloadFolder.resolve(fileName);
 					if (driver instanceof HasDownloads hasDownloads) {
 						hasDownloads.downloadFile(fileName, downloadFolder);
 					} else if (driver instanceof RemoteWebDriver remote) {
 						remote.downloadFile(fileName, downloadFolder);
 					}
+					return Files.exists(downloadFolder.resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Retry download", e);
 					return false;
 				}
-				return Files.exists(downloadFolder.resolve(fileName));
 			});
-		} else if (Utils.testIsInLocalEnv()) {
-				logger.info("Tryb lokalny - pobieram plik");
-				var downloadedFile =
-						waitForDownloadedFile(downloadFolder.toFile(), 30, numOfFiles);
-				Assert.assertNotNull(downloadedFile);
-				return;
-			}
+			return;
+		}
+		if (Utils.testIsInLocalEnv()) {
+			logger.info("Tryb lokalny - pobieram plik");
+			var downloadedFile =
+					waitForDownloadedFile(downloadFolder.toFile(), 30, numOfFiles);
+			Assert.assertNotNull(downloadedFile);
+			return;
+		}
 			logger.error("Nieobsługiwany tryb pobierania plików!");
 			Assert.fail("Brak strategii downloadu");
 		}
-
-
 
 	public static int getNumOfFilesInDir() throws IOException {
 		File[] files = getDownloadDirectory().toFile().listFiles();
