@@ -45,6 +45,7 @@ public class FileDownloadUtils {
 		} else {
 			dir = Path.of("/home/seluser/Downloads/");
 		}
+		logger.info("Katalog pobierania: {}", dir);
 		return dir;
 	}
 
@@ -55,7 +56,7 @@ public class FileDownloadUtils {
 		logger.info("Ścieżka do przeszukania to: {}", downloadFolder);
 		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(1))
 				.ignoring(NoSuchFileException.class, WebDriverException.class);
-		if (driver instanceof RemoteWebDriver remote ) {
+		if (driver instanceof RemoteWebDriver remote && !Utils.testIsInLocalEnv()) {
 			logger.info("Pobieram plik przez RemoteWebDriver");
 			wait.until(d -> {
 				try {
@@ -73,7 +74,8 @@ public class FileDownloadUtils {
 			logger.info("Pobieram plik przez HasDownloads");
 			wait.until(d -> {
 				try {
-					hasDownloads.downloadFile(fileName, downloadFolder);
+					hasDownloads.downloadFile(fileName, Path.of("DownloadFolder"));
+					logger.info("Pobieranie pliku: {}, {}", fileName, downloadFolder);
 					return Files.exists(Path.of("DownloadFolder").resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
