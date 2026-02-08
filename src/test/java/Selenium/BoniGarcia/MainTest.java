@@ -620,7 +620,6 @@ public class MainTest extends BaseTest {
 		}
 	}
 
-
 	/**
 	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
 	 *weryfikację tekstu nagłówka, i następnie przejście do podstrony Download files,
@@ -645,7 +644,6 @@ public class MainTest extends BaseTest {
 		}
 		FileDownloadUtils.clearDownloadFolderFromFiles();
 	}
-
 
 	/**
 	 *Test ma na celu uruchomienie przeglądarki, przejście do głównej strony,
