@@ -50,12 +50,16 @@ public class FileDownloadUtils {
 
 	public static void downloadFile(WebDriver driver) throws IOException, InterruptedException {
 		String fileName = "webdrivermanager.png";
-		Path downloadFolder = FileDownloadUtils.getDownloadDirectory();
+		Path downloadFolder;
+		if (driver instanceof HasDownloads) {
+			downloadFolder = Path.of("DownloadFolder").toAbsolutePath();
+		} else {
+			downloadFolder = FileDownloadUtils.getDownloadDirectory();
+		}
 		Path targetFile = downloadFolder.resolve(fileName);
 		logger.info("Ścieżka do przeszukania to: {}", downloadFolder);
 		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(1))
 				.ignoring(NoSuchFileException.class, WebDriverException.class);
-
 		if (driver instanceof HasDownloads hasDownloads) {
 			logger.info("Pobieram plik przez HasDownloads");
 			wait.until(d -> {
