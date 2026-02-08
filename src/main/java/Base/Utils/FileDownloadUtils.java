@@ -52,49 +52,66 @@ public class FileDownloadUtils {
 	public static void downloadFile(WebDriver driver, int numOfFiles) throws IOException, InterruptedException {
 		String fileName = "webdrivermanager.png";
 		Path downloadFolder = getDownloadDirectory();
-		Path targetFile = downloadFolder.resolve(fileName);
 		logger.info("Ścieżka do przeszukania to: {}", downloadFolder);
-		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(1))
+		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15))
+				.pollingEvery(Duration.ofSeconds(1))
 				.ignoring(NoSuchFileException.class, WebDriverException.class);
-		if (driver instanceof RemoteWebDriver remote && !Utils.testIsInLocalEnv()) {
-			logger.info("Pobieram plik przez RemoteWebDriver");
+		if (!Utils.testIsInLocalEnv()) {
 			wait.until(d -> {
 				try {
-					remote.downloadFile(fileName, Path.of("DownloadFolder"));
-					return Files.exists(downloadFolder.resolve(fileName));
+					if (driver instanceof HasDownloads hasDownloads) {
+						hasDownloads.downloadFile(fileName, downloadFolder);
+					} else if (driver instanceof RemoteWebDriver remote) {
+						remote.downloadFile(fileName, downloadFolder);
+					}
 				} catch (IOException e) {
-					logger.warn("Download retry: {}", e.getMessage());
-					return false;
+					logger.warn("Retry download", e);
 				}
+				return Files.exists(downloadFolder.resolve(fileName));
 			});
-			waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
-			Assert.assertTrue(Files.exists(targetFile), "Plik nie został pobrany: " + targetFile);
-			return;
-		} else if (driver instanceof HasDownloads hasDownloads && !Utils.testIsInLocalEnv()) {
-			logger.info("Pobieram plik przez HasDownloads");
-			wait.until(d -> {
-				try {
-					hasDownloads.downloadFile(fileName, Path.of("DownloadFolder"));
-					logger.info("Pobieranie pliku: {}, {}", fileName, downloadFolder);
-					return Files.exists(Path.of("DownloadFolder").resolve(fileName));
-				} catch (IOException e) {
-					logger.warn("Download retry: {}", e.getMessage());
-					return false;
-				}
-			});
-			Assert.assertTrue(Files.exists(targetFile));
-			return;
+		} else if (Utils.testIsInLocalEnv()) {
+				logger.info("Tryb lokalny - pobieram plik");
+				var downloadedFile =
+						waitForDownloadedFile(downloadFolder.toFile(), 30, numOfFiles);
+				Assert.assertNotNull(downloadedFile);
+				return;
+			}
+			logger.error("Nieobsługiwany tryb pobierania plików!");
+			Assert.fail("Brak strategii downloadu");
 		}
-		if (Utils.testIsInLocalEnv()) {
-			logger.info("Tryb lokalny - pobieram plik");
-			var downloadedFile =
-					waitForDownloadedFile(downloadFolder.toFile(), 30, numOfFiles);
-			Assert.assertNotNull(downloadedFile);
-			return;
-		}
-		logger.error("Nieobsługiwany tryb pobierania plików!");
-		Assert.fail("Brak strategii downloadu");
-	}
+
+
+
+//		if (driver instanceof RemoteWebDriver remote && !Utils.testIsInLocalEnv()) {
+//			logger.info("Pobieram plik przez RemoteWebDriver");
+//			wait.until(d -> {
+//				try {
+//					remote.downloadFile(fileName, Path.of("DownloadFolder"));
+//					return Files.exists(downloadFolder.resolve(fileName));
+//				} catch (IOException e) {
+//					logger.warn("Download retry: {}", e.getMessage());
+//					return false;
+//				}
+//			});
+//			waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
+//			Assert.assertTrue(Files.exists(targetFile), "Plik nie został pobrany: " + targetFile);
+//			return;
+//		} else if (driver instanceof HasDownloads hasDownloads && !Utils.testIsInLocalEnv()) {
+//			logger.info("Pobieram plik przez HasDownloads");
+//			wait.until(d -> {
+//				try {
+//					hasDownloads.downloadFile(fileName, Path.of("DownloadFolder"));
+//					logger.info("Pobieranie pliku: {}, {}", fileName, downloadFolder);
+//					return Files.exists(Path.of("DownloadFolder").resolve(fileName));
+//				} catch (IOException e) {
+//					logger.warn("Download retry: {}", e.getMessage());
+//					return false;
+//				}
+//			});
+//			Assert.assertTrue(Files.exists(targetFile));
+//			return;
+//		}
+
 
 	public static int getNumOfFilesInDir() throws IOException {
 		File[] files = getDownloadDirectory().toFile().listFiles();
