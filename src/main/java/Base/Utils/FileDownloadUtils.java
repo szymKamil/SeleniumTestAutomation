@@ -18,7 +18,7 @@ import java.nio.file.Path;
 import java.time.Duration;
 import java.util.Arrays;
 import java.util.Comparator;
-import java.util.Objects;
+
 
 public class FileDownloadUtils {
 
@@ -59,10 +59,11 @@ public class FileDownloadUtils {
 		if (!Utils.testIsInLocalEnv()) {
 			wait.until(d -> {
 				try {
+					Path targetFile = downloadFolder.resolve(fileName);
 					if (driver instanceof HasDownloads hasDownloads) {
-						hasDownloads.downloadFile(fileName, downloadFolder);
+						hasDownloads.downloadFile(fileName, targetFile);
 					} else if (driver instanceof RemoteWebDriver remote) {
-						remote.downloadFile(fileName, downloadFolder);
+						remote.downloadFile(fileName, targetFile);
 					}
 				} catch (IOException e) {
 					logger.warn("Retry download", e);
