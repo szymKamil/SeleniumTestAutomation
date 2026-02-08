@@ -95,7 +95,8 @@ public class FileDownloadUtils {
 	}
 
 	public static int getNumOfFilesInDir() throws IOException {
-		return getDownloadDirectory().toFile().listFiles().length;
+		File[] files = getDownloadDirectory().toFile().listFiles();
+		return files == null ? 0 : files.length;
 	}
 
 
