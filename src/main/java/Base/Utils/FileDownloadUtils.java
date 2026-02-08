@@ -55,11 +55,11 @@ public class FileDownloadUtils {
 		logger.info("Ścieżka do przeszukania to: {}", downloadFolder);
 		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(1))
 				.ignoring(NoSuchFileException.class, WebDriverException.class);
-		if (driver instanceof HasDownloads hasDownloads) {
+		if (driver instanceof RemoteWebDriver remote ) {
 			logger.info("Pobieram plik przez HasDownloads");
 			wait.until(d -> {
 				try {
-					hasDownloads.downloadFile(fileName, downloadFolder);
+					remote.downloadFile(fileName, downloadFolder);
 					return Files.exists(downloadFolder.resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
@@ -68,11 +68,11 @@ public class FileDownloadUtils {
 			});
 			Assert.assertTrue(Files.exists(targetFile), "Plik nie został pobrany: " + targetFile);
 			return;
-		} else if (driver instanceof RemoteWebDriver remote) {
+		} else if (driver instanceof HasDownloads hasDownloads) {
 			logger.info("Pobieram plik przez RemoteWebDriver");
 			wait.until(d -> {
 				try {
-					remote.downloadFile(fileName, downloadFolder);
+					hasDownloads.downloadFile(fileName, downloadFolder);
 					return Files.exists(downloadFolder.resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
