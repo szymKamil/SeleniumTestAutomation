@@ -94,10 +94,8 @@ public class FileDownloadUtils {
 		Assert.fail("Brak strategii downloadu");
 	}
 
-	public static Integer getNumOfFilesInDir() throws IOException {
-		return Objects.requireNonNull(
-				getDownloadDirectory().toFile().listFiles()
-		).length;
+	public static int getNumOfFilesInDir() throws IOException {
+		return getDownloadDirectory().toFile().listFiles().length;
 	}
 
 
