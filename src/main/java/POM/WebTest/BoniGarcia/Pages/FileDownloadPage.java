@@ -54,18 +54,19 @@ public class FileDownloadPage extends AbstractPage {
 
 	//Metody testowe
 
-
 	public void downloadFile(int choseFileToDownload) throws IOException, InterruptedException {
+		int numOfFiles;
 		if (choseFileToDownload >= 0 && choseFileToDownload <= 4) {
 			List<WebElement> btns = List.of(downloadWebdriverLogoBtn, downloadWebdriverLogoPdfBtn, downloadSeleniumLogoBtn, downloadWseleniumLogoPdfBtn);
 			WebElement btn = btns.get(choseFileToDownload);
+			numOfFiles = FileDownloadUtils.getNumOfFilesInDir();
 			wait.until(ExpectedConditions.elementToBeClickable(btn))
 					.click();
 		} else {
 			log.error("Popraw numer przycisku! Wybierz jeden z przedziału 0-4.");
 			throw new WebDriverException("Błędnie wybrany przycisk w metodzie");
 		}
-		FileDownloadUtils.downloadFile(driver);
+		FileDownloadUtils.downloadFile(driver, numOfFiles);
 	}
 
 

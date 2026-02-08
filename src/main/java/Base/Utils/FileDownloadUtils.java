@@ -48,7 +48,7 @@ public class FileDownloadUtils {
 		return dir;
 	}
 
-	public static void downloadFile(WebDriver driver) throws IOException, InterruptedException {
+	public static void downloadFile(WebDriver driver, int numOfFiles) throws IOException, InterruptedException {
 		String fileName = "webdrivermanager.png";
 		Path downloadFolder = getDownloadDirectory();
 		Path targetFile = downloadFolder.resolve(fileName);
@@ -56,24 +56,25 @@ public class FileDownloadUtils {
 		FluentWait<WebDriver> wait = new FluentWait<>(driver).withTimeout(Duration.ofSeconds(15)).pollingEvery(Duration.ofSeconds(1))
 				.ignoring(NoSuchFileException.class, WebDriverException.class);
 		if (driver instanceof RemoteWebDriver remote ) {
-			logger.info("Pobieram plik przez HasDownloads");
+			logger.info("Pobieram plik przez RemoteWebDriver");
 			wait.until(d -> {
 				try {
-					remote.downloadFile(fileName, downloadFolder);
+					remote.downloadFile(fileName, Path.of("DownloadFolder"));
 					return Files.exists(downloadFolder.resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
 					return false;
 				}
 			});
+			waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
 			Assert.assertTrue(Files.exists(targetFile), "Plik nie został pobrany: " + targetFile);
 			return;
-		} else if (driver instanceof HasDownloads hasDownloads) {
-			logger.info("Pobieram plik przez RemoteWebDriver");
+		} else if (driver instanceof HasDownloads hasDownloads && !Utils.testIsInLocalEnv()) {
+			logger.info("Pobieram plik przez HasDownloads");
 			wait.until(d -> {
 				try {
 					hasDownloads.downloadFile(fileName, downloadFolder);
-					return Files.exists(downloadFolder.resolve(fileName));
+					return Files.exists(Path.of("DownloadFolder").resolve(fileName));
 				} catch (IOException e) {
 					logger.warn("Download retry: {}", e.getMessage());
 					return false;
@@ -83,18 +84,20 @@ public class FileDownloadUtils {
 			return;
 		}
 		if (Utils.testIsInLocalEnv()) {
-			logger.info("Tryb lokalny – klasyczne oczekiwanie");
-			int base = Objects.requireNonNull(
-					downloadFolder.toFile().listFiles()
-			).length;
+			logger.info("Tryb lokalny - pobieram plik");
 			var downloadedFile =
-					waitForDownloadedFile(downloadFolder.toFile(), 30, base);
+					waitForDownloadedFile(downloadFolder.toFile(), 30, numOfFiles);
 			Assert.assertNotNull(downloadedFile);
 			return;
 		}
-
 		logger.error("Nieobsługiwany tryb pobierania plików!");
 		Assert.fail("Brak strategii downloadu");
+	}
+
+	public static Integer getNumOfFilesInDir() throws IOException {
+		return Objects.requireNonNull(
+				getDownloadDirectory().toFile().listFiles()
+		).length;
 	}
 
 
