@@ -4,10 +4,7 @@ import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.Utils;
 import org.apache.maven.rtinfo.internal.DefaultRuntimeInformation;
-import org.openqa.selenium.HasDownloads;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.bidi.BiDi;
 import org.openqa.selenium.bidi.BiDiProvider;
 import org.openqa.selenium.remote.Augmenter;
@@ -38,8 +35,7 @@ public class FileDownloadPage extends AbstractPage {
 
 	Logger log = LoggerFactory.getLogger(FileDownloadPage.class);
 	WebDriver driver = DriverFactory.getDriver();
-	FluentWait<RemoteWebDriver> fluentWait = new FluentWait<>((RemoteWebDriver) driver).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(1))
-			.ignoring(NoSuchFileException.class, WebDriverException.class);
+
 
 	//Elementy na stronie
 	@FindBy(xpath = "//a[@class='btn btn-outline-primary' and @download='webdrivermanager.png']")
@@ -78,10 +74,10 @@ public class FileDownloadPage extends AbstractPage {
 //		if (driver instanceof HasDownloads  || driver instanceof RemoteWebDriver remoteWebDriver) {
 //			//TODO: Hardcodowana nazwa pliku, do udoskonalenia w przyszłości
 //			log.info("Test uruchomiony zdalnie. Pobieram plik za pomocą (HasDownloads)");
-//			fluentWait.until(remoteWebDriver -> {
+//			fluentWait.until(d -> {
 //				var dir = Path.of("DownloadFolder");
 //				try {
-//					remoteWebDriver.downloadFile("webdrivermanager.png", dir);
+//					d.downloadFile("webdrivermanager.png", dir);
 //				} catch (IOException e) {
 //					throw new RuntimeException(e);
 //				}
@@ -89,23 +85,39 @@ public class FileDownloadPage extends AbstractPage {
 //			});
 //			//downloader.downloadFile("webdrivermanager.png", Path.of("DownloadFolder"));
 //		} else
-		if (driver instanceof RemoteWebDriver remoteWebDriver && !Utils.testIsInLocalEnv()) {
+		if (driver instanceof HasDownloads  hasDownloads && !Utils.testIsInLocalEnv()) {
+			log.info("Szukam pliku w interfejsie HasDownloads");
+			FluentWait<HasDownloads> fluentWait = new FluentWait<>(hasDownloads).withTimeout(Duration.ofSeconds(10)).pollingEvery(Duration.ofSeconds(1))
+					.ignoring(NoSuchFileException.class, WebDriverException.class);
 			try {
 				fluentWait.until(d -> {
 					try {
 						//TODO: Hardcodowana nazwa pliku, do udoskonalenia w przyszłości
-						d.downloadFile("webdrivermanager.png", downloadFolder);
-					} catch (IOException e) {
-						throw new RuntimeException(e);
+						log.info("Czekam na plik");
+						try {
+							log.info("Download file");
+							d.downloadFile("webdrivermanager.png", downloadFolder);
+						} catch (IOException e) {
+						}
+						try {
+							log.info("wait for downloaded file");
+							waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
+						} catch (FileNotFoundException e) {
+							log.info("FileNotFoundException");
+						} catch (InterruptedException e) {
+							log.info("InterruptedException");
+						}
+					} catch (Exception e) {
+
 					}
 					var dir = Path.of("DownloadFolder");
 					return Files.exists(dir.resolve("webdrivermanager.png"));
 				});
-				remoteWebDriver.downloadFile("webdrivermanager.png", downloadFolder);
+				hasDownloads.downloadFile("webdrivermanager.png", downloadFolder);
 				Path file = downloadFolder.resolve("webdrivermanager.png");
 				Assert.assertTrue(Files.exists(file));
 			} catch (WebDriverException e) {
-				waitForDownloadedFile(downloadFolder.toFile(), 15, 0);
+
 			}
 		} else if (Utils.testIsInLocalEnv()) {
 			log.info("Test uruchomiony lokalnie.");
