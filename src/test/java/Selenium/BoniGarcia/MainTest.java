@@ -4,7 +4,6 @@ import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
 import Base.Utils.RandomUtils;
 import Base.Utils.Screenshot;
-import Base.Utils.Utils;
 import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.BaseTest.BaseTest;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;

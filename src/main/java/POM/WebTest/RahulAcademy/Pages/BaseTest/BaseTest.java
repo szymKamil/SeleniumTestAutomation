@@ -10,6 +10,9 @@ import org.testng.annotations.Optional;
 
 
 import java.lang.reflect.Method;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class BaseTest {
 
@@ -20,22 +23,28 @@ public class BaseTest {
     public Logger logger = LoggerFactory.getLogger("Logger Rahul Tests");
 
 
-    @Parameters({"browser", "timeout"})
+    @Parameters({"browser", "timeout", "url"})
     @BeforeMethod(alwaysRun = true)
-    public void config(@Optional("chrome") String browser, @Optional("25") int timeout, Method method) throws InterruptedException {
-            DriverFactory.initDriver(browser, timeout);
-            logger.info("Rozpoczynam test: {}", method.getName());
-            Class<?> testClass = method.getDeclaringClass();
-            if (testClass.getName().contains("LocatorsFormLoginTests")) {
-                DriverFactory.getDriver().get(FORM_TEST_PAGE);
-            } else if (testClass.getName().contains("ShopPageTests")) {
-                DriverFactory.getDriver().get(SHOP_LOGIN_PAGE);
-            } else if (testClass.getName().contains("VegetableShopTests")) {
-                DriverFactory.getDriver().get(VEGETABLE_SHOP_PAGE);
-            } else {
-                logger.error("Błędnie podany adres URL, test nie został uruchomiony.");
-                throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
-            }
+    public void config(@Optional("chrome") String browser, @Optional("55") int timeout, @Optional("local") String url, Method method) throws URISyntaxException, MalformedURLException {
+        if (url.equals("local")){
+            logger.info("Uruchamiam test lokalnie, na przeglądarce: {}, z timeoutem: {}", browser, timeout);
+            DriverFactory.initDriver(browser, 30);
+        } else {
+            logger.info("Uruchamiam test zdalnie, na przeglądarce: {}, z timeoutem: {}, łączę się z URL: {}", browser, timeout, url);
+            DriverFactory.initDriver(browser, 30, new URI(url).toURL());
+        }
+        logger.info("Rozpoczynam test: {}", method.getName());
+        Class<?> testClass = method.getDeclaringClass();
+        if (testClass.getName().contains("LocatorsFormLoginTests")) {
+            DriverFactory.getDriver().get(FORM_TEST_PAGE);
+        } else if (testClass.getName().contains("ShopPageTests")) {
+            DriverFactory.getDriver().get(SHOP_LOGIN_PAGE);
+        } else if (testClass.getName().contains("VegetableShopTests")) {
+            DriverFactory.getDriver().get(VEGETABLE_SHOP_PAGE);
+        } else {
+            logger.error("Błędnie podany adres URL, test nie został uruchomiony.");
+            throw new RuntimeException("Nie mogę uruchomić testu z powodu braku URL do strony testowej!!!");
+        }
     }
 
     @AfterMethod(alwaysRun = true)
