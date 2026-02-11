@@ -1,0 +1,117 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_HOST = 'tcp://host.docker.internal:2375'
+    }
+
+    tools {
+        maven 'Maven'
+        jdk 'JDK'
+    }
+
+
+    options {
+        skipDefaultCheckout()
+        disableConcurrentBuilds()
+    }
+    stages {
+        stage('Clean') {
+            steps {
+                echo "Czyszczenie przestrzeni roboczej..."
+                cleanWs()
+            }
+        }
+
+        stage('Check Selenium Grid') {
+            steps {
+                script {
+                    // Sprawdzamy czy Grid żyje, zanim pobierzemy kod
+                    def response
+                    try {
+                        response = sh(script: "docker exec jenkins curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
+                    } catch (Exception e){
+                        echo 'Błąd podczas połączenia z selenium grid ' + e.message
+                    }
+                    if (response != '200') {
+                        echo "Selenium Grid nie działa! Uruchamiam go osobno w Dockerze."
+                        sh '''
+                                docker start selenium-hub-env
+                                docker start firefox-node-env
+                                docker start chrome-node-env
+                                docker start edge-node-env
+                                sleep 15
+                        '''
+                    } else {
+                        echo "✅ Grid OK — kontynuuję testy."
+                    }
+                    def retries = 5
+                    while (retries > 0) {
+                        response = sh(script: "docker exec jenkins curl -s -o /dev/null -w '%{http_code}' http://selenium-hub-env:4444/wd/hub/status", returnStdout: true).trim()
+                        if (response == '200') break
+                        retries--
+                        sleep 5
+                    }
+                    if (response != '200') {
+                        error "Nie udało się uruchomić Selenium Grid!"
+                    }
+                }
+            }
+        }
+
+        stage('Checkout') {
+            steps {
+                echo "Pobieranie kodu z repozytorium..."
+                git branch: 'master',
+                        url: 'https://github.com/szymKamil/SeleniumTestAutomation.git',
+                        credentialsId: 'github-token'
+            }
+        }
+
+        stage('Compile Maven') {
+            steps {
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Build and Run Tests') {
+            steps {
+                echo 'Uruchamianie testów TestNG...'
+                sh 'mvn clean test -DsuiteXmlFile=src/test/java/Selenium/RahulAcademy/rahulAcademyTestNG.xml'
+            }
+        }
+
+    }
+
+    post {
+        always {
+            allure([
+                    includeProperties: false,
+                    jdk: '',
+                    commandline: 'allure',
+                    results: [[path: 'target/allure-results']]
+            ])
+            echo 'Pipeline zakończony — czyszczenie'
+            script {
+                try {
+                    echo  "Zatrzymuję środowisko gridowe"
+                    sh '''
+                      docker stop selenium-hub-env
+                      docker stop firefox-node-env
+                      docker stop chrome-node-env
+                      docker stop edge-node-env
+                    '''
+                } catch (Exception e) {
+                    echo "Nie udało się zatrzymać wszystkich kontenerów: ${e.message}"
+                    echo "Kończe testy"
+                }
+            }
+        }
+        success {
+            echo '✅ Testy przeszły pomyślnie!'
+        }
+        failure {
+            echo '❌ Błąd testów!'
+        }
+    }
+}
