@@ -9,43 +9,45 @@
           name="Chrome RahulAcademyTest">
         <parameter name="browser" value="chrome"/>
         <parameter name="timeout" value="25"/>
-<!--        <parameter name="url" value=""></parameter>-->
+        <parameter name="url" value="http://selenium-hub-env:4444"/>
         <classes>
-<!--            <class name="Selenium.RahulAcademy.LocatorsFormLoginTests">-->
+            <class name="Selenium.RahulAcademy.LocatorsFormLoginTests">
 <!--                <methods>-->
 <!--                    <parameter name="radio" value="admin"/>-->
 <!--                    <parameter name="role" value="student"/>-->
 <!--                </methods>-->
-<!--            </class>-->
-<!--            <class name="Selenium.RahulAcademy.ShopPageTests"></class>-->
+            </class>
+            <class name="Selenium.RahulAcademy.ShopPageTests"></class>
             <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
         </classes>
     </test>
 <test verbose="2" preserve-order="true" name="Firefox RahulAcademyTest" enabled="true">
     <parameter name="browser" value="firefox"/>
     <parameter name="timeout" value="25"/>
+    <parameter name="url" value="http://selenium-hub-env:4444"/>
     <classes>
-<!--        <class name="Selenium.RahulAcademy.LocatorsFormLoginTests">-->
+        <class name="Selenium.RahulAcademy.LocatorsFormLoginTests">
 <!--            <methods>-->
 <!--                <parameter name="radio" value="admin"/>-->
 <!--                <parameter name="role" value="student"/>-->
 <!--            </methods>-->
-<!--        </class>-->
-<!--        <class name="Selenium.RahulAcademy.ShopPageTests"></class>-->
+        </class>
+        <class name="Selenium.RahulAcademy.ShopPageTests"></class>
         <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
     </classes>
 </test>
 <test name="Edge RahulAcademyTest" enabled="true">
     <parameter name="browser" value="edge"/>
     <parameter name="timeout" value="25"/>
+    <parameter name="url" value="http://selenium-hub-env:4444"/>
     <classes>
-<!--        <class name="Selenium.RahulAcademy.ShopPageTests">-->
+        <class name="Selenium.RahulAcademy.ShopPageTests"/>
 <!--            <methods>-->
 <!--                <parameter name="radio" value="admin"/>-->
 <!--                <parameter name="role" value="student"/>-->
 <!--            </methods>-->
 <!--        </class>-->
-<!--        <class name="Selenium.RahulAcademy.ShopPageTests"></class>-->
+        <class name="Selenium.RahulAcademy.ShopPageTests"></class>
         <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
     </classes>
 </test>
