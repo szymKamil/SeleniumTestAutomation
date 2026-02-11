@@ -1,13 +1,8 @@
 package Base.BiDi;
 
-import Base.Drivers.DriverFactory;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.bidi.HasBiDi;
-import org.openqa.selenium.bidi.emulation.GeolocationCoordinates;
-import org.openqa.selenium.bidi.emulation.SetGeolocationOverrideParameters;
 import org.openqa.selenium.bidi.log.*;
-
-import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 import java.util.concurrent.ConcurrentLinkedQueue;

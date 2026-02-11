@@ -3,6 +3,7 @@ package POM.WebTest.RahulAcademy.Pages.VegetablesShop;
 
 import Base.Drivers.DriverFactory;
 import Base.Utils.JavaScriptUtils;
+import Base.Utils.Utils;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -121,7 +122,14 @@ public class MainPageShop {
 	}
 
 	public void addElementToCart(WebElement element){
-		element.findElement(addToCartBtn).click();
+		try {
+			JavaScriptUtils.scrollToElementJSTypeOfScroll(DriverFactory.getDriver(), element, "false");
+			wait.until(ExpectedConditions.visibilityOf(element.findElement(addToCartBtn))).click();
+			element.findElement(addToCartBtn).click();
+		} catch (Exception _){
+			JavaScriptUtils.scrollToElementJSTypeOfScroll(DriverFactory.getDriver(), element, "true");
+			wait.until(ExpectedConditions.visibilityOf(element.findElement(addToCartBtn))).click();
+		}
 	}
 
 	public void openCart() {

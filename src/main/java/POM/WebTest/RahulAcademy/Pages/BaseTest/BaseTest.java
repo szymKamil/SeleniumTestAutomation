@@ -1,22 +1,19 @@
-package Selenium.RahulAcademy.Base;
+package POM.WebTest.RahulAcademy.Pages.BaseTest;
 
 
 import Base.Drivers.DriverFactory;
-import Selenium.RahulAcademy.LocatorsFormLoginTests;
-import Selenium.RahulAcademy.ShopPageTests;
-import Selenium.RahulAcademy.VegetableShopTests;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.ITestResult;
 import org.testng.annotations.*;
+import org.testng.annotations.Optional;
+
 
 import java.lang.reflect.Method;
-import java.net.URI;
 
 public class BaseTest {
 
 
-    protected final URI uri = null; /*= URI.create("http://192.168.1.108:4444")*/;
     private final String FORM_TEST_PAGE = "https://rahulshettyacademy.com/locatorspractice/";
     private final String SHOP_LOGIN_PAGE = "https://rahulshettyacademy.com/loginpagePractise/";
     private final String VEGETABLE_SHOP_PAGE = "https://rahulshettyacademy.com/seleniumPractise/#/";
@@ -29,11 +26,11 @@ public class BaseTest {
             DriverFactory.initDriver(browser, timeout);
             logger.info("Rozpoczynam test: {}", method.getName());
             Class<?> testClass = method.getDeclaringClass();
-            if (testClass.equals(LocatorsFormLoginTests.class)) {
+            if (testClass.getName().contains("LocatorsFormLoginTests")) {
                 DriverFactory.getDriver().get(FORM_TEST_PAGE);
-            } else if (testClass.equals(ShopPageTests.class)) {
+            } else if (testClass.getName().contains("ShopPageTests")) {
                 DriverFactory.getDriver().get(SHOP_LOGIN_PAGE);
-            } else if (testClass.equals(VegetableShopTests.class)) {
+            } else if (testClass.getName().contains("VegetableShopTests")) {
                 DriverFactory.getDriver().get(VEGETABLE_SHOP_PAGE);
             } else {
                 logger.error("Błędnie podany adres URL, test nie został uruchomiony.");

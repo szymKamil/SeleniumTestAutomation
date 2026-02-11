@@ -26,7 +26,7 @@ public class LoginPageCucumberSteps {
 
 	@When("Użytkownik wpisuje {string} oraz {string} w pola i loguje się do aplikacji")
 	public void logIn(String login, String password)  {
-		loginPageTest = new LoginFormPage(driver, wait);
+		loginPageTest = new LoginFormPage();
 		loginPageTest.elementShouldBeVisible(loginPageTest.formBdy)
 				.verifyElementText(loginPageTest.submitBtn, "SIGN IN")
 				.logInTo(login, password)

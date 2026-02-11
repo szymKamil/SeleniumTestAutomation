@@ -18,10 +18,10 @@ public class ShopPage extends ShopLoginPageForm {
     WebElementActions actions;
     ShopLoginPageForm loginForm;
 
-    public ShopPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
-        actions = new WebElementActions(DriverFactory.getDriver(), DriverFactory.getWait());
-        loginForm = new ShopLoginPageForm(DriverFactory.getDriver(), DriverFactory.getWait());
+    public ShopPage() {
+        super();
+        actions = new WebElementActions();
+        loginForm = new ShopLoginPageForm();
     }
 
 
@@ -76,7 +76,7 @@ public class ShopPage extends ShopLoginPageForm {
 
     public CheckoutPage goToCheckout(){
         actions.find(checkoutBtn).click();
-        return new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
+        return new CheckoutPage();
     }
 
 }

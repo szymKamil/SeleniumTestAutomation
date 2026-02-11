@@ -1,5 +1,6 @@
 package POM.WebTest.RahulAcademy.Pages.SignInFormTest;
 
+import Base.Drivers.DriverFactory;
 import Base.Utils.CredentialsAES;
 
 import POM.WebTest.RahulAcademy.TestActionUtils.WebElementActions;
@@ -27,10 +28,10 @@ public class LoginFormPage  {
     private WebElementActions actions;
 
 
-    public LoginFormPage(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
-        actions = new WebElementActions(driver, wait);
+    public LoginFormPage() {
+        this.driver = DriverFactory.getDriver();
+        this.wait = DriverFactory.getWait();
+        actions = new WebElementActions();
         PageFactory.initElements(driver, this);
     }
 
@@ -160,7 +161,7 @@ public class LoginFormPage  {
 
 
     public LoginFormPage shouldHaveSuccessMessageColor(){
-         assertThat(actions.find(rahulShettyStrong).getCss("color").contains("255, 75, 43, 1")).isTrue();
+         assertThat(actions.find(rahulShettyStrong).getCss("color").contains("255, 75, 43")).isTrue();
          return this;
     }
 

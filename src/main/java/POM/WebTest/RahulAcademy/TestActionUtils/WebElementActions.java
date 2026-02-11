@@ -1,5 +1,6 @@
 package POM.WebTest.RahulAcademy.TestActionUtils;
 
+import Base.Drivers.DriverFactory;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -18,9 +19,9 @@ public class WebElementActions {
     List<WebElementActions> elements;
 
 
-    public WebElementActions(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
+    public WebElementActions() {
+        this.driver = DriverFactory.getDriver();
+        this.wait = DriverFactory.getWait();
     }
 
 

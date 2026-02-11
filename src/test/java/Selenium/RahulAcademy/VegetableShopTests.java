@@ -1,10 +1,10 @@
 package Selenium.RahulAcademy;
 
 import Base.Drivers.DriverFactory;
+import POM.WebTest.RahulAcademy.Pages.BaseTest.BaseTest;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.CheckoutPage;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.MainPageShop;
 import POM.WebTest.RahulAcademy.Pages.VegetablesShop.OrderConfirmationPage;
-import Selenium.RahulAcademy.Base.BaseTest;
 import org.testng.annotations.DataProvider;
 import org.testng.annotations.Test;
 
@@ -45,7 +45,7 @@ public class VegetableShopTests extends BaseTest {
 				{Map.of("Carrot", 4, "Apple", 6, "Grapes", 10)},
 				{Map.of("Orange", 4, "Almonds", 3, "Water Melon", 3, "Apple", 10)},
 				{Map.of("Beetroot ", 15, "Beans", 4, "Onion", 15)},
-				{Map.of("Mango", 1, "Nuts Mixture", 2, "Brocolli", 7)},
+				{Map.of("Mango", 1, "Nuts Mixture", 2, "Broccoli", 7)},
 				{Map.of("Orange", 50, "Raspberry", 8, "Capsicum", 8)}
 		};
 	}

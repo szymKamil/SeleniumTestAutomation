@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+<suite name="All Test Suite" parallel="methods" thread-count="1" configfailurepolicy="continue">
+    <listeners>
+        <listener class-name="POM.WebTest.RahulAcademy.Listener.TestNGListener"/>
+        <listener class-name="POM.WebTest.RahulAcademy.Listener.Reporter"/>
+    </listeners>
+    <test verbose="2" preserve-order="true"
+          name="Chrome RahulAcademyTest">
+        <parameter name="browser" value="chrome"/>
+        <parameter name="timeout" value="25"/>
+<!--        <parameter name="url" value=""></parameter>-->
+        <classes>
+<!--            <class name="Selenium.RahulAcademy.LocatorsFormLoginTests">-->
+<!--                <methods>-->
+<!--                    <parameter name="radio" value="admin"/>-->
+<!--                    <parameter name="role" value="student"/>-->
+<!--                </methods>-->
+<!--            </class>-->
+<!--            <class name="Selenium.RahulAcademy.ShopPageTests"></class>-->
+            <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
+        </classes>
+    </test>
+<test verbose="2" preserve-order="true" name="Firefox RahulAcademyTest" enabled="true">
+    <parameter name="browser" value="firefox"/>
+    <parameter name="timeout" value="25"/>
+    <classes>
+<!--        <class name="Selenium.RahulAcademy.LocatorsFormLoginTests">-->
+<!--            <methods>-->
+<!--                <parameter name="radio" value="admin"/>-->
+<!--                <parameter name="role" value="student"/>-->
+<!--            </methods>-->
+<!--        </class>-->
+<!--        <class name="Selenium.RahulAcademy.ShopPageTests"></class>-->
+        <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
+    </classes>
+</test>
+<test name="Edge RahulAcademyTest" enabled="true">
+    <parameter name="browser" value="edge"/>
+    <parameter name="timeout" value="25"/>
+    <classes>
+<!--        <class name="Selenium.RahulAcademy.ShopPageTests">-->
+<!--            <methods>-->
+<!--                <parameter name="radio" value="admin"/>-->
+<!--                <parameter name="role" value="student"/>-->
+<!--            </methods>-->
+<!--        </class>-->
+<!--        <class name="Selenium.RahulAcademy.ShopPageTests"></class>-->
+        <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
+    </classes>
+</test>
+</suite>

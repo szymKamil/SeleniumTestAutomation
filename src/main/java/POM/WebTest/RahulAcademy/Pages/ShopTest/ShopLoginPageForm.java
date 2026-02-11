@@ -19,10 +19,10 @@ public class ShopLoginPageForm  {
     WebElementActions actions;
 
 
-    public ShopLoginPageForm(WebDriver driver, WebDriverWait wait) {
-        this.driver = driver;
-        this.wait = wait;
-        actions = new WebElementActions(DriverFactory.getDriver(), DriverFactory.getWait());
+    public ShopLoginPageForm() {
+        this.driver = DriverFactory.getDriver();
+        this.wait = DriverFactory.getWait();
+        actions = new WebElementActions();
         log = LoggerFactory.getLogger("Logger");
     }
 
@@ -91,7 +91,7 @@ public class ShopLoginPageForm  {
 
     public ShopPage clickSignIn(){
         actions.find(signInBtn).click();
-        return new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
+        return new ShopPage();
     }
 
 

@@ -20,14 +20,14 @@ public class CredentialsAES extends Utils {
 
     public static String encrypt(String strToEncode) throws NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, InvalidKeyException {
         SecretKeySpec keySpec = new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), "AES");
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.ENCRYPT_MODE, keySpec);
         return Base64.getEncoder().encodeToString(cipher.doFinal(strToEncode.getBytes()));
     }
 
     public static String decrypt(String strToDecode) throws NoSuchAlgorithmException, IllegalBlockSizeException, NoSuchPaddingException, BadPaddingException, InvalidKeyException{
         SecretKeySpec keySpec = new SecretKeySpec(System.getenv("SECRET_KEY").getBytes(), "AES");
-        Cipher cipher = Cipher.getInstance("AES/GCM/NoPadding");
+        Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, keySpec);
         return new String(cipher.doFinal(Base64.getDecoder().decode(strToDecode)));
     }

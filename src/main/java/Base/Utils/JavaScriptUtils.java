@@ -17,6 +17,11 @@ public abstract class JavaScriptUtils extends Utils{
         ((JavascriptExecutor) driver).executeScript(jsScroll, element);
     }
 
+    public static void scrollToElementJSTypeOfScroll(WebDriver driver, WebElement element, String type){
+        String jsScroll = "arguments[0].scrollIntoView(" + type + ");";
+        ((JavascriptExecutor) driver).executeScript(jsScroll, element);
+    }
+
     /**
      * Utils pozwalający na scroll za pomocą JS do wskazanego lokatora.
      * @param driver przekazujemy uruchomiony driver.
@@ -25,6 +30,17 @@ public abstract class JavaScriptUtils extends Utils{
     public static void scrollToElementByJS(WebDriver driver, By locator){
         WebElement element = driver.findElement(locator);
         String jsScroll = "arguments[0].scrollIntoView(false);";
+        ((JavascriptExecutor) driver).executeScript(jsScroll, element);
+    }
+
+    /**
+     * Utils pozwalający na scroll za pomocą JS do wskazanego lokatora.
+     * @param driver przekazujemy uruchomiony driver.
+     * @param locator przekazujemy element w formie lokatora (By).
+     */
+    public static void scrollToElementByJSTypeOfScroll(WebDriver driver, By locator, String type){
+        WebElement element = driver.findElement(locator);
+        String jsScroll = "arguments[0].scrollIntoView(" + type + ");";
         ((JavascriptExecutor) driver).executeScript(jsScroll, element);
     }
 

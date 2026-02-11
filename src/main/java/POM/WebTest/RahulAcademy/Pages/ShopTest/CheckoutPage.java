@@ -20,10 +20,10 @@ public class CheckoutPage extends ShopPage {
     WebElementActions actions;
     ShopPage shopPage;
 
-    public CheckoutPage(WebDriver driver, WebDriverWait wait) {
-        super(driver, wait);
-        actions = new WebElementActions(DriverFactory.getDriver(), DriverFactory.getWait());
-        shopPage = new ShopPage(DriverFactory.getDriver(), DriverFactory.getWait());
+    public CheckoutPage() {
+        super();
+        actions = new WebElementActions();
+        shopPage = new ShopPage();
     }
 
     //Elementy

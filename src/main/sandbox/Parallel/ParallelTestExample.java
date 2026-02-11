@@ -28,7 +28,7 @@ public class ParallelTestExample {
         driverThread2.set(driver);
         WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
         waitThread.set(wait);
-        loginPageTestThread.set(new LoginFormPage(driverThread2.get(), waitThread.get()));
+        loginPageTestThread.set(new LoginFormPage());
     }
 
     @AfterMethod

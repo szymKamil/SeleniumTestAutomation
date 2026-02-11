@@ -69,6 +69,7 @@ public class OrderConfirmationPage {
 				break;
 			}
 		}
+		wait.until(ExpectedConditions.presenceOfElementLocated(termsAndConditionsInfo));
 		String tAndC = driver.findElement(termsAndConditionsInfo).getText();
 		Assert.assertEquals(tAndC, TERMS_TEXT);
 		driver.close();

@@ -2,7 +2,9 @@ package Selenium.BoniGarcia;
 
 import Base.Drivers.DriverFactory;
 import Base.Utils.FileDownloadUtils;
+import Base.Utils.RandomUtils;
 import Base.Utils.Screenshot;
+import Base.Utils.Utils;
 import POM.WebTest.BoniGarcia.Pages.*;
 import POM.WebTest.BoniGarcia.BaseTest.BaseTest;
 import POM.WebTest.BoniGarcia.Utils.DropdownOptions;
@@ -249,9 +251,8 @@ public class MainTest extends BaseTest {
 		LongPage longPage = new LongPage(DriverFactory.getDriver(), DriverFactory.getWait());
 		longPage.verifyAbstractPage();
 		longPage.scrollToLastParagraph();
-		longPage.getTextFromParagraph(3);
-		longPage.printAllParagraphs();
-
+		//Losowy numer paragrafu do wrzucenia do logu
+		longPage.getTextFromParagraph(RandomUtils.getRandomInt(0, 6));
 	}
 
 	/**
