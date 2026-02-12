@@ -70,14 +70,14 @@ public final class DriverFactory {
 					default -> throw new IllegalArgumentException("Błędnie wybrana przeglądarka!!! Dozwolone wartości to chrome, firefox i edge. Wpisałeś: " + browser);
 				}
 			}
-			var decoratedDriver = Objects.requireNonNull(decorate(driver, new TestStepsListener()), "Udekorowany driver jest null, wystąpił błąd!");
 			Augmenter augmenter = new Augmenter();
-			var augmentedDriver = Objects.requireNonNull(augmenter.augment(decoratedDriver));
-				augmentedDriver.manage()
+			var augmentedDriver = Objects.requireNonNull(augmenter.augment(driver));
+			var decoratedDriver = Objects.requireNonNull(decorate(augmentedDriver, new TestStepsListener()), "Udekorowany driver jest null, wystąpił błąd!");
+			decoratedDriver.manage()
 						.window()
 						.maximize();
-			DRIVER_THREAD.set(augmentedDriver);
-			WAIT_THREAD.set(new WebDriverWait(augmentedDriver, Duration.ofSeconds(time)));
+			DRIVER_THREAD.set(decoratedDriver);
+			WAIT_THREAD.set(new WebDriverWait(decoratedDriver, Duration.ofSeconds(time)));
 			logger.info("Driver uruchomiony pomyślnie dla wątku: {}", Thread.currentThread().threadId());
 		} catch (WebDriverException | IOException | NoSuchFieldException e) {
 			logger.error("Błąd podczas inicjalizacji drivera: {}", e.getMessage());
