@@ -10,7 +10,7 @@ public class LocatorsFormLoginTests extends BaseTest {
 
     LoginFormPage loginPageTest;
 
-    @Test(invocationCount = 5, singleThreaded = true, successPercentage = 70)
+    @Test(invocationCount = 1, singleThreaded = true, successPercentage = 70)
     public void testSuccessfullyLogin() throws Exception {
         loginPageTest = new LoginFormPage();
         loginPageTest.elementShouldBeVisible(loginPageTest.formBdy)

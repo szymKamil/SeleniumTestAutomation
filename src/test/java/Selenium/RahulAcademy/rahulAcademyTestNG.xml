@@ -21,7 +21,7 @@
             <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
         </classes>
     </test>
-<test verbose="1" preserve-order="true" name="Firefox RahulAcademyTest" enabled="false">
+<test verbose="1" preserve-order="true" name="Firefox RahulAcademyTest" enabled="true">
     <parameter name="browser" value="firefox"/>
     <parameter name="timeout" value="25"/>
     <parameter name="url" value="http://selenium-hub-env:4444"/>
@@ -36,7 +36,7 @@
         <class name="Selenium.RahulAcademy.VegetableShopTests"></class>
     </classes>
 </test>
-<test name="Edge RahulAcademyTest" enabled="false">
+<test name="Edge RahulAcademyTest" enabled="true">
     <parameter name="browser" value="edge"/>
     <parameter name="timeout" value="25"/>
     <parameter name="url" value="http://selenium-hub-env:4444"/>
