@@ -30,7 +30,7 @@ public class AbstractPage {
 
     //Elementy
     public static final String PAGE_TITLE = "Hands-On Selenium WebDriver with Java";
-    public static final String COPYRIGHTS = "Copyright © 2021-2025";
+    public static final String COPYRIGHTS = "Copyright © 2021-2026";
     public static final By MAIN_HEADER = By.xpath("//h1[@class='display-4']");
     public static final By MAIN_ICON = By.cssSelector("img.img-fluid");
 

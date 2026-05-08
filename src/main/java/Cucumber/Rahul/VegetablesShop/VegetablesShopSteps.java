@@ -26,15 +26,15 @@ public class VegetablesShopSteps {
 
 	Map<String, Integer> mapOfProducts;
 
-	@Before()
-	public void setUp()  {
-		DriverFactory.initDriver("chrome", 15);
-		driver = DriverFactory.getDriver();
-		wait = DriverFactory.getWait();
-		shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
-		checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
-		driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
-	}
+//	@Before()
+//	public void setUp()  {
+//		DriverFactory.initDriver("chrome", 15);
+//		driver = DriverFactory.getDriver();
+//		wait = DriverFactory.getWait();
+//		shopPage = new MainPageShop(DriverFactory.getDriver(), DriverFactory.getWait());
+//		checkoutPage = new CheckoutPage(DriverFactory.getDriver(), DriverFactory.getWait());
+//		driver.get("https://rahulshettyacademy.com/seleniumPractise/#/");
+//	}
 
 
 	//Scenariusz 1: Użytkownik korzysta z wyszukiwarki w celu szybszego odnalezienia produktu
@@ -99,10 +99,10 @@ public class VegetablesShopSteps {
 
 
 
-	@After
-	public void tearDown(){
-		driver.quit();
-	}
+//	@After
+//	public void tearDown(){
+//		driver.quit();
+//	}
 
 
 

@@ -1,7 +1,11 @@
 package Cucumber.Rahul.LoginPage;
 
+import Base.Drivers.DriverFactory;
 import POM.WebTest.RahulAcademy.Pages.SignInFormTest.LoginFormPage;
+import POM.WebTest.RahulAcademy.Pages.VegetablesShop.CheckoutPage;
+import POM.WebTest.RahulAcademy.Pages.VegetablesShop.MainPageShop;
 import io.cucumber.java.After;
+import io.cucumber.java.Before;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
@@ -17,11 +21,13 @@ public class LoginPageCucumberSteps {
 	WebDriverWait wait;
 	LoginFormPage loginPageTest;
 
+
 	@Given("Użytkownik uruchamia aplikację")
 	public void setUp() {
-		driver = new ChromeDriver();
+		DriverFactory.initDriver("chrome", 15);
+		driver = DriverFactory.getDriver();
+		wait = DriverFactory.getWait();
 		driver.get("https://rahulshettyacademy.com/locatorspractice/");
-		wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 	}
 
 	@When("Użytkownik wpisuje {string} oraz {string} w pola i loguje się do aplikacji")
@@ -43,9 +49,7 @@ public class LoginPageCucumberSteps {
 	}
 
 	@After
-	public void tearDown() {
-		if (driver != null) {
-			driver.quit();
-		}
+	public void tearDown(){
+		driver.quit();
 	}
 }
